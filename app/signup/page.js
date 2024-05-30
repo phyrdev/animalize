@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/Navbar";
+import { createOrganization } from "@/prisma/organization";
 import {
   Button,
   Checkbox,
@@ -50,29 +51,62 @@ function SignUp() {
 
   const [organization, setOrganization] = useState({
     name: "Lenus Vet Labs",
-    email: "lab@gmail.com",
+    email: "priyangsu26@gmail.com",
     phone: "9647045453",
     zipcode: "713216",
     type: "Pathology Lab",
     size: "6-10",
+    currency: "INR",
   });
+  const [agreed, setAgreed] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    if (!isValidEmail(organization.email)) {
-      toast.error("Please enter a valid email address");
-    } else {
-      setLoading(true);
-      let { success, message } = await RegisterOrganization(organization);
-      if (success) {
-        toast.success(message);
-        router.push("/");
-      } else {
-        toast.error(message);
-      }
-      setLoading(false);
+  const performChecks = () => {
+    let emailregex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    let phoneregex = /^\d{10}$/;
+    let zipregex = /^\d{6}$/;
+
+    if (!organization.name) {
+      toast.error("Organization name is required");
+      return false;
     }
+    if (!emailregex.test(organization.email)) {
+      toast.error("Invalid email address");
+      return false;
+    }
+    if (!phoneregex.test(organization.phone)) {
+      toast.error("Invalid phone number");
+      return false;
+    }
+
+    if (!zipregex.test(organization.zipcode)) {
+      toast.error("Invalid zipcode");
+      return false;
+    }
+
+    if (!agreed) {
+      toast.error("Please agree to the terms and conditions");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    if (!performChecks()) return;
+    setLoading(true);
+    toast.loading("Submitting application");
+    let response = await createOrganization(organization);
+    toast.remove();
+    if (response.success) {
+      toast.success(response.message);
+      //router.push("/");
+    } else {
+      toast.error(response.message);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -164,6 +198,10 @@ function SignUp() {
         />
         <Select
           radius="sm"
+          selectedKeys={[organization.currency]}
+          onChange={(e) => {
+            setOrganization({ ...organization, currency: e.target.value });
+          }}
           classNames={{
             innerWrapper: "px-3",
             label: "px-3",
@@ -171,7 +209,7 @@ function SignUp() {
           label="Billing currency"
         >
           {currencies.map((currency, i) => (
-            <SelectItem key={i}>{currency.name}</SelectItem>
+            <SelectItem key={currency.abbr}>{currency.name}</SelectItem>
           ))}
         </Select>
         <div className="md:col-span-2 pt-6">
@@ -243,7 +281,10 @@ function SignUp() {
         </div>
         <div className="md:col-span-2 mt-10 flex flex-wrap items-center gap-8">
           <div className="shrink-0">
-            <Checkbox />
+            <Checkbox
+              isSelected={agreed}
+              onValueChange={(value) => setAgreed(value)}
+            />
             <span className="text-sm text-neutral-600">
               I agree to the terms and conditions
             </span>
