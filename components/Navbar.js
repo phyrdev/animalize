@@ -19,17 +19,16 @@ function Navbar() {
         <Link href="/signup">
           <Button
             radius="full"
-            className="px-6 md:bg-transparent bg-neutral-100 text-sm"
+            className="px-6 md:bg-transparent bg-neutral-100 text-sm hidden md:block"
           >
             Sign up
           </Button>
         </Link>
-        <Button
-          radius="full"
-          className="px-6 text-white bg-blue-500 text-sm hidden md:block"
-        >
-          Sign in
-        </Button>
+        <Link href="/signin">
+          <Button radius="full" className="px-6 text-white bg-blue-500 text-sm">
+            Sign in
+          </Button>
+        </Link>
       </div>
     </nav>
   );

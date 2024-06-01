@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Organization {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   name       String
@@ -28,4 +27,20 @@ model Organization {
   facilities Json?
   verified   Boolean    @default(false)
   createdAt  DateTime   @default(now())
+  employees  Employee[]
+}
+
+model Employee {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String
+  password     String
+  phone        String
+  empno        String       @unique
+  address      String?
+  zipcode      String?
+  role         String
+  organization Organization @relation(fields: [orgno], references: [orgno])
+  orgno        String
+  createdAt    DateTime     @default(now())
 }

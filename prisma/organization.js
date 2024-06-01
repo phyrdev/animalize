@@ -1,7 +1,9 @@
 "use server";
+
 import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
+import { generateSuperAdmin } from "./employee";
 
 export const createOrganization = async (data) => {
   try {
@@ -18,7 +20,6 @@ export const createOrganization = async (data) => {
       },
     });
     if (org) {
-      console.log(org);
       let message = `We are currently reviewing your application. Your organization number is ${org.orgno}. Please use this number for all future communication.`;
       await sendMail(data.email, "Application Submitted", message);
 
@@ -55,5 +56,46 @@ export const generateOrgno = async () => {
     return generateOrgno();
   } else {
     return orgno;
+  }
+};
+
+export const updateVerification = async (orgno, state) => {
+  try {
+    let org = await prisma.organization.update({
+      where: {
+        orgno: orgno,
+      },
+      data: {
+        verified: state,
+      },
+    });
+    if (org) {
+      let superAdminReq = await generateSuperAdmin(orgno);
+      if (superAdminReq.success) {
+        let message = `Greetings from Animalize! Your organization has been verified.<br><br>Super Admin credentials:<br>Username (Emp. No): ${superAdminReq.data.empno}<br>Password: ${superAdminReq.data.password}<br><br>Reagrds<br>Animalize HQ`;
+        if (state == true) {
+          await sendMail(
+            org.email,
+            "Congratulations! Organization Verified",
+            message
+          );
+          return {
+            success: true,
+            message: "Organization verification updated",
+          };
+        }
+      }
+    } else {
+      return {
+        success: false,
+        message: "Failed to update organization verification",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 };
