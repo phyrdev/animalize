@@ -12,7 +12,7 @@ export const generateSuperAdmin = async (orgno) => {
       charset: "alphanumeric",
     });
 
-    password = await bcrypt.hash(password, 10);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     let organization = await prisma.organization.findUnique({
       where: {
@@ -23,7 +23,7 @@ export const generateSuperAdmin = async (orgno) => {
     let superAdmin = await prisma.employee.create({
       data: {
         empno,
-        password,
+        password: hashedPassword,
         role: "Super Admin",
         email: organization.email,
         name: organization.name + " Super Admin",
@@ -102,4 +102,65 @@ export const validateCredentials = async (empno, password) => {
       };
     }
   } catch (error) {}
+};
+
+export const authorizeCredentials = async (empno, password) => {
+  try {
+    let emp = await prisma.employee.findUnique({
+      where: {
+        empno,
+      },
+    });
+
+    if (emp && (await bcrypt.compare(password, emp.password))) {
+      return {
+        success: true,
+        message: "Password validated successfully.",
+        data: {
+          name: emp.name,
+          email: emp.empno,
+          role: emp.role,
+          orgno: emp.orgno,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: "Invalid employee number or password.",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getEmployeeData = async (empno) => {
+  try {
+    let emp = await prisma.employee.findUnique({
+      where: {
+        empno,
+      },
+    });
+
+    if (emp) {
+      return {
+        success: true,
+        message: "Employee data retrieved successfully.",
+        data: emp,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Employee not found.",
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
 };

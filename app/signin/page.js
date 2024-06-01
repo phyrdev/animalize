@@ -2,13 +2,14 @@
 import Navbar from "@/components/Navbar";
 import { validateCredentials } from "@/prisma/employee";
 import { Button, Input } from "@nextui-org/react";
+import { signIn, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 function SignIn() {
   const [isVisible, setIsVisible] = useState(false);
-  const [empno, setEmpno] = useState("");
-  const [password, setPassword] = useState("");
+  const [empno, setEmpno] = useState("71648414");
+  const [password, setPassword] = useState("0jdDZLCC");
   const [loading, setLoading] = useState(false);
 
   const performChecks = () => {
@@ -29,6 +30,10 @@ function SignIn() {
     let validateReq = await validateCredentials(empno, password);
     if (validateReq.success) {
       toast.success(validateReq.message);
+      await signIn("credentials", {
+        empno,
+        password,
+      });
     } else {
       toast.error(validateReq.message);
     }
@@ -58,7 +63,6 @@ function SignIn() {
         <p className="mt-2 text-center text-sm md:text-base leading-7 md:leading-9 text-neutral-500">
           Enter your emp. no and password to access your account
         </p>
-
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -90,7 +94,7 @@ function SignIn() {
             onChange={(e) => setPassword(e.target.value)}
             isRequired
             radius="sm"
-            className="mt-5"
+            className="mt-3"
             endContent={
               <button
                 type="button"

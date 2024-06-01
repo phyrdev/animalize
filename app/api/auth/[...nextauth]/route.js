@@ -1,5 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
+import { getEmployeeData, validateCredentials } from "@/prisma/employee";
 
 export const authOptions = {
   providers: [
@@ -7,21 +8,18 @@ export const authOptions = {
       name: "credentials",
       credentials: {},
       async authorize(credentials) {
-        // let { success, message, employee } = await ValidateCredentials(
-        //   credentials.empno,
-        //   credentials.password,
-        //   true
-        // );
-        // if (success) {
-        //   return {
-        //     name: employee.name,
-        //     email: employee.empno,
-        //   };
-        // } else {
-        //   return null;
-        // }
-
-        return null;
+        let { success, message, data } = await validateCredentials(
+          credentials.empno,
+          credentials.password
+        );
+        if (success) {
+          return {
+            name: data.name,
+            email: data.empno,
+          };
+        } else {
+          return null;
+        }
       },
     }),
   ],
@@ -29,29 +27,23 @@ export const authOptions = {
   callbacks: {
     async session({ session, user, token }) {
       if (!session) return;
-
-      //   let { success, employee } = await GetEmployee(session.user.email);
-      //   if (success) {
-      //     return {
-      //       ...session,
-      //       user: {
-      //         ...session.user,
-      //         name: employee.name,
-      //         email: employee.email,
-      //         roles: employee.roles,
-      //         image: employee.image,
-      //         phone: employee.phone,
-      //         designation: employee.designation,
-      //         empno: employee.empno,
-      //         organization: employee.organization,
-      //       },
-      //     };
-      //   } else {
-      //     // logout
-      //     return null;
-      //   }
-
-      return session;
+      let { success, data } = await getEmployeeData(session.user.email);
+      if (success) {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            role: data.role,
+            empno: data.empno,
+            orgno: data.orgno,
+          },
+        };
+      } else {
+        return null;
+      }
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
