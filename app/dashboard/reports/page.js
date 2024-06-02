@@ -31,6 +31,10 @@ function Reports() {
           Create report
         </Button>
       </div>
+      {
+        // desktop view
+      }
+
       <div className="hidden md:block whitespace-nowrap overflow-auto shrink-0 pb-24">
         <table className="w-fit lg:w-full text-left">
           <thead className="bg-neutral-100 border-y">
@@ -113,6 +117,11 @@ function Reports() {
           </tbody>
         </table>
       </div>
+
+      {
+        // mobile view
+      }
+
       <div className="px-5 md:hidden">
         <div className="flex items-center text-sm text-neutral-600">
           <span>0-24 of 100 reports</span>
