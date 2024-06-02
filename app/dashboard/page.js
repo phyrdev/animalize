@@ -79,10 +79,10 @@ function Dashboard() {
       <div className="mt-16">
         <span className="text-neutral-700 font-medium">Open issues</span>
 
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          <div className="p-4 border">
+        <div className="mt-6 md:mt-4 grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-3">
+          <div className="md:p-4 md:border border-b pb-5 md:rounded">
             <h2 className="font-medium">Issue title</h2>
-            <p className="text-sm leading-6 mt-2 text-neutral-600">
+            <p className="text-sm leading-7 md:leading-7 mt-2 text-neutral-600">
               This is a demo issue. You can create a new issue by clicking the
               button below.
             </p>
@@ -93,22 +93,9 @@ function Dashboard() {
               <span className="text-xs">2 June, 2024</span>
             </div>
           </div>
-          <div className="p-4 border">
+          <div className="md:p-4 md:border border-b last:border-b-0 md:last:border pb-5 md:rounded">
             <h2 className="font-medium">Issue title</h2>
-            <p className="text-sm leading-6 mt-2 text-neutral-600">
-              This is a demo issue. You can create a new issue by clicking the
-              button below.
-            </p>
-            <div className="flex items-center justify-between mt-3">
-              <button className="text-sm text-blue-500 font-medium">
-                Respond
-              </button>
-              <span className="text-xs">2 June, 2024</span>
-            </div>
-          </div>
-          <div className="p-4 border">
-            <h2 className="font-medium">Issue title</h2>
-            <p className="text-sm leading-6 mt-2 text-neutral-600">
+            <p className="text-sm leading-7 md:leading-7 mt-2 text-neutral-600">
               This is a demo issue. You can create a new issue by clicking the
               button below.
             </p>

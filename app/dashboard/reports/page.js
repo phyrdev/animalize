@@ -141,7 +141,7 @@ function Reports() {
               <span className="text-sm text-neutral-600 ml-auto">Paid</span>
             </div>
             <div className="font-normal mt-5 text-sm items-center flex">
-              <Button className="rounded bg-transparent border border-neutral-400">
+              <Button className="rounded-md bg-transparent border border-neutral-400">
                 Collect sample
               </Button>
               <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
