@@ -149,16 +149,25 @@ function SignIn() {
               Forgot password?
             </a>
           </div>
-
           <Button
-            className="mt-5 py-3 h-fit w-full bg-neutral-800 text-white text-base"
-            size="large"
-            radius="sm"
             type="submit"
-            isLoading={loading}
             isDisabled={loading}
+            isLoading={loading}
+            className="w-full h-12 bg-neutral-800 text-white mt-5"
+            radius="sm"
           >
-            Sign in
+            <span>Proceed to login</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={28}
+              height={28}
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M13.47 8.53a.75.75 0 0 1 1.06-1.06l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06l2.72-2.72H6.5a.75.75 0 0 1 0-1.5h9.69z"
+              ></path>
+            </svg>
           </Button>
         </form>
       </div>
