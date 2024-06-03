@@ -14,6 +14,7 @@ import Link from "next/link";
 import React from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
+import CustonList from "../../components/CustonList";
 
 function CreateReport() {
   const species = [
@@ -120,7 +121,7 @@ function CreateReport() {
                 placeholder="Canine"
                 options={species}
               />
-              <CustomSelect
+              <CustonList
                 label="Breed"
                 placeholder="Breed name"
                 options={breeds}
