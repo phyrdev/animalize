@@ -281,7 +281,7 @@ function CreateReport() {
                 placeholder="Canine"
                 options={paymentstatus}
               />
-              <CustomInput label="Due amt." placeholder="0" />
+              <CustomInput label="Paid amt." placeholder="0" />
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
