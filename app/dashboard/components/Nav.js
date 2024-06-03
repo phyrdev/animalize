@@ -142,7 +142,7 @@ function Nav() {
         console.log(`/${path[0]}`);
         setCurrent(`/${path[0]}`);
         break;
-      case 2:
+      default:
         setCurrent(`/${path[0]}/${path[1]}`);
         break;
     }
@@ -197,9 +197,6 @@ function Nav() {
 
           <ul className="px-5 mt-6 space-y-2">
             {menu.map((item, index) => {
-              if (item.path == current) {
-                console.log("current", current);
-              }
               return (
                 <li
                   key={index}
