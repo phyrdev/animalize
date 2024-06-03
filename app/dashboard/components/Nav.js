@@ -1,6 +1,6 @@
 "use client";
 import { navmenuitems } from "@/static/lists";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 function Nav() {
   const [current, setCurrent] = useState("dashboard");
   const pathname = usePathname();
+  const session = useSession();
 
   useEffect(() => {
     const path = pathname.split("/");

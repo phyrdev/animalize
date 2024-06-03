@@ -39,6 +39,7 @@ export const petsex = [
 export const petspecies = [
   { label: "Canine", value: "canine" },
   { label: "Feline", value: "feline" },
+  { label: "Avian", value: "avian" },
 ];
 
 export const petbreeds = [
@@ -63,6 +64,13 @@ export const navmenuitems = [
   {
     name: "Home",
     visibleSm: true,
+    access: [
+      "super-admin",
+      "admin",
+      "receptionist",
+      "pathologist",
+      "sample-collector",
+    ],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -81,6 +89,13 @@ export const navmenuitems = [
   {
     name: "Reports",
     visibleSm: true,
+    access: [
+      "super-admin",
+      "admin",
+      "receptionist",
+      "pathologist",
+      "sample-collector",
+    ],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -103,6 +118,7 @@ export const navmenuitems = [
   },
   {
     name: "People",
+    access: ["admin", "super-admin"],
     visibleSm: true,
     icon: (
       <svg
@@ -122,6 +138,7 @@ export const navmenuitems = [
   {
     name: "Issues",
     visibleSm: true,
+    access: ["super-admin", "admin"],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -144,6 +161,7 @@ export const navmenuitems = [
   {
     name: "Facilities",
     visibleSm: false,
+    access: ["super-admin", "admin"],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -166,6 +184,7 @@ export const navmenuitems = [
   {
     name: "Payments",
     visibleSm: true,
+    access: ["super-admin", "admin"],
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -191,6 +210,13 @@ export const navmenuitems = [
   },
   {
     name: "Settings",
+    access: [
+      "super-admin",
+      "admin",
+      "receptionist",
+      "pathologist",
+      "sample-collector",
+    ],
     visibleSm: true,
     icon: (
       <svg
@@ -226,4 +252,12 @@ export const paymentstatus = [
   { label: "Pending", value: "pending" },
   { label: "Failed", value: "failed" },
   { label: "Refunded", value: "refunded" },
+];
+
+export const employeeroles = [
+  { label: "Super Admin", value: "super-admin" },
+  { label: "Admin", value: "admin" },
+  { label: "Receptionist", value: "receptionist" },
+  { label: "Pathologist", value: "pathologist" },
+  { label: "Sample Collector", value: "sample-collector" },
 ];

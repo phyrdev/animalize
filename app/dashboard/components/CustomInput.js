@@ -5,6 +5,8 @@ function CustomInput({
   placeholder,
   type = "text",
   endContent = null,
+  value = "",
+  onChange = () => {},
 }) {
   return (
     <div className="h-12 border-b md:border md:rounded overflow-hidden flex items-center relative">
@@ -14,6 +16,8 @@ function CustomInput({
       <div className="absolute right-3">{endContent}</div>
       <input
         type={type}
+        value={value}
+        onChange={onChange}
         defaultValue={type == "date" ? "2021-08-01" : ""}
         placeholder={placeholder}
         style={{

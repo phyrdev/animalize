@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   BreadcrumbItem,
@@ -14,7 +15,7 @@ import Link from "next/link";
 import React from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
-import CustonList from "../../components/CustonList";
+import CustomList from "../../components/CustomList";
 import {
   paymentmodes,
   paymentstatus,
@@ -22,8 +23,67 @@ import {
   petsex,
   petspecies,
 } from "@/static/lists";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 function CreateReport() {
+  const [isRegistered, setIsRegistered] = React.useState(false);
+  const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
+
+  const [pFile, setPFile] = React.useState({
+    accPin: "",
+    petName: "",
+    petSpecies: "",
+    petBreed: "",
+    petSex: "",
+    petWeight: "",
+    petDob: "",
+    parentFirstName: "",
+    parentLastName: "",
+    parentEmail: "",
+    parentPhone: "",
+    parentZipcode: "",
+    parentAddress: "",
+  });
+  const [tempPets, setTempPets] = React.useState([]);
+  const [tempPetIndex, setTempPetIndex] = React.useState(null);
+
+  const closeAllDetails = () => {
+    document.getElementById("auto-fill-dd").open = false;
+    document.getElementById("pet-details-dd").open = false;
+    document.getElementById("parent-details-dd").open = false;
+    document.getElementById("test-details-dd").open = false;
+    document.getElementById("billing-details-dd").open = false;
+  };
+
+  const searchPets = async (e) => {
+    if (pFile.accPin.trim().length == 0) {
+      return toast.error("Please enter a valid account pin");
+    }
+    let url = "https://www.doctordoggy.vet/api/public/pets/get-pets-by-ac-pin";
+    toast.loading("Searching pets...");
+    let response = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": "Bearer iladunwo84ikchw9dfhwojc",
+        "x-account-id": pFile.accPin.toString().trim(),
+      },
+    });
+    toast.remove();
+
+    if (response.data.success) {
+      setTempPets(response.data.user.pets);
+      setPFile({
+        ...pFile,
+        parentFirstName: response.data.user.name.split(" ")[0],
+        parentLastName: response.data.user.name.split(" ")[1],
+        parentEmail: response.data.user.email,
+        parentPhone: response.data.user.phone,
+        parentZipcode: response.data.user.zipCode,
+      });
+    }
+  };
+
   return (
     <div>
       <div className="px-5 md:px-10 py-5 flex items-center">
@@ -65,18 +125,25 @@ function CreateReport() {
             <RadioGroup
               label="Select an appropriate option"
               orientation="horizontal"
+              value={isRegistered}
+              onValueChange={setIsRegistered}
               classNames={{
                 wrapper: "flex flex-wrap gap-6",
                 label: "pb-2 text-sm",
               }}
             >
-              <Radio value="buenos-aires">Yes</Radio>
-              <Radio value="sydney">No</Radio>
+              <Radio value={true}>Yes</Radio>
+              <Radio value={false}>No</Radio>
             </RadioGroup>
             <div className="border-b pb-6 h-14 flex items-center justify-end">
               <Button
                 onClick={() => {
-                  document.getElementById("auto-fill-dd").open = false;
+                  closeAllDetails();
+                  if (isRegistered) {
+                    setIsAutoFillOn(true);
+                  } else {
+                    document.getElementById("pet-details-dd").open = true;
+                  }
                 }}
                 className="rounded"
               >
@@ -93,20 +160,38 @@ function CreateReport() {
           </summary>
           <div className="pt-5 md:pl-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
-              <CustomInput label="Pet name" placeholder="Roxy" />
+              <CustomInput
+                value={pFile.petName}
+                onChange={(e) =>
+                  setPFile({ ...pFile, petName: e.target.value })
+                }
+                label="Pet name"
+                placeholder="Roxy"
+              />
               <CustomSelect
                 label="Species"
+                value={pFile.petSpecies}
+                onChange={(e) =>
+                  setPFile({ ...pFile, petSpecies: e.target.value })
+                }
                 placeholder="Canine"
                 options={petspecies}
               />
-              <CustonList
+              <CustomList
                 label="Breed"
+                value={pFile.petBreed}
+                onChange={(e) =>
+                  setPFile({ ...pFile, petBreed: e.target.value })
+                }
                 placeholder="Breed name"
                 options={petbreeds}
               />
+
               <CustomSelect
                 placeholder="Male intact"
                 label="Sex"
+                value={pFile.petSex}
+                onChange={(e) => setPFile({ ...pFile, petSex: e.target.value })}
                 options={petsex}
               />
               <CustomInput
@@ -114,14 +199,25 @@ function CreateReport() {
                 endContent={
                   <span className="text-neutral-500 text-sm">Kg</span>
                 }
+                value={pFile.petWeight}
+                onChange={(e) =>
+                  setPFile({ ...pFile, petWeight: e.target.value })
+                }
                 placeholder="24"
               />
-              <CustomInput label="D.O.B" type="date" placeholder="1234567890" />
+              <CustomInput
+                value={pFile.petDob}
+                onChange={(e) => setPFile({ ...pFile, petDob: e.target.value })}
+                label="D.O.B"
+                type="date"
+                placeholder="1234567890"
+              />
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
-                  document.getElementById("auto-fill-dd").open = false;
+                  closeAllDetails();
+                  document.getElementById("auto-fill-dd").open = true;
                 }}
                 className="rounded bg-transparent"
               >
@@ -129,7 +225,8 @@ function CreateReport() {
               </Button>
               <Button
                 onClick={() => {
-                  document.getElementById("auto-fill-dd").open = false;
+                  closeAllDetails();
+                  document.getElementById("parent-details-dd").open = true;
                 }}
                 className="rounded"
               >
@@ -146,18 +243,57 @@ function CreateReport() {
           </summary>
           <div className="pt-5 md:pl-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
-              <CustomInput label="First name" placeholder="John" />
-              <CustomInput label="Last name" placeholder="Doe" />
-              <CustomInput label="Email" placeholder="abc@gmai.com" />
-              <CustomInput label="Phone no." placeholder="1234567890" />
-              <CustomInput label="Zipcode" placeholder="713216" />
+              <CustomInput
+                value={pFile.parentFirstName}
+                onChange={(e) =>
+                  setPFile({ ...pFile, parentFirstName: e.target.value })
+                }
+                label="First name"
+                placeholder="John"
+              />
+              <CustomInput
+                value={pFile.parentLastName}
+                onChange={(e) =>
+                  setPFile({ ...pFile, parentLastName: e.target.value })
+                }
+                label="Last name"
+                placeholder="Doe"
+              />
+              <CustomInput
+                value={pFile.parentEmail}
+                onChange={(e) =>
+                  setPFile({ ...pFile, parentEmail: e.target.value })
+                }
+                label="Email"
+                placeholder="abc@gmai.com"
+              />
+              <CustomInput
+                value={pFile.parentPhone}
+                onChange={(e) =>
+                  setPFile({ ...pFile, parentPhone: e.target.value })
+                }
+                label="Phone no."
+                placeholder="1234567890"
+              />
+              <CustomInput
+                value={pFile.parentZipcode}
+                onChange={(e) =>
+                  setPFile({ ...pFile, parentZipcode: e.target.value })
+                }
+                label="Zipcode"
+                placeholder="713216"
+              />
               <div className="border-b md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
                 <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
                   Address
                 </span>
                 <textarea
-                  className="w-full h-full resize-none p-3"
+                  className="w-full h-full resize-none p-3 outline-none"
                   placeholder="Residential address"
+                  value={pFile.parentAddress}
+                  onChange={(e) =>
+                    setPFile({ ...pFile, parentAddress: e.target.value })
+                  }
                   name=""
                   id=""
                 ></textarea>
@@ -166,7 +302,8 @@ function CreateReport() {
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
-                  document.getElementById("auto-fill-dd").open = false;
+                  closeAllDetails();
+                  document.getElementById("pet-details-dd").open = true;
                 }}
                 className="rounded bg-transparent"
               >
@@ -174,7 +311,8 @@ function CreateReport() {
               </Button>
               <Button
                 onClick={() => {
-                  document.getElementById("auto-fill-dd").open = false;
+                  closeAllDetails();
+                  document.getElementById("test-details-dd").open = true;
                 }}
                 className="rounded"
               >
@@ -304,6 +442,153 @@ function CreateReport() {
           </div>
         </details>
       </div>
+
+      <>
+        {isAutoFillOn && (
+          <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
+            <div className="bg-white md:rounded-lg p-5 min-h-[50%] h-fit md:h-fit w-full md:w-[450px]">
+              <div className="flex items-center">
+                <img
+                  src="https://www.doctordoggy.vet/logoDark.png"
+                  alt=""
+                  className="h-8"
+                />
+                <span className="text-lg font-medium ml-3">Doctordoggy</span>
+                <button
+                  onClick={() => {
+                    setIsAutoFillOn(false);
+                  }}
+                  className="ml-auto text-neutral-600"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.55"
+                      d="M18 6L6 18M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {tempPets.length == 0 ? (
+                <>
+                  <p className="mt-6 leading-7 text-neutral-600">
+                    Please provide the doctor doggy account pin of the pet
+                    parent to proceed
+                  </p>
+                  <p className="text-sm text-neutral-500 mt-4">
+                    <span className="text-neutral-800">Note:</span> account pin
+                    is case sensitive
+                  </p>
+                  <div className="mt-6">
+                    <Input
+                      label="Account pin"
+                      radius="sm"
+                      value={pFile.accPin}
+                      onChange={(e) =>
+                        setPFile({ ...pFile, accPin: e.target.value })
+                      }
+                    />
+                    <div className="flex items-center justify-end mt-8">
+                      <Button
+                        onClick={searchPets}
+                        isDisabled={pFile.accPin.length == 0}
+                        className="rounded bg-neutral-900 text-white disabled:opacity-50"
+                      >
+                        Proceed
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="mt-6 leading-7 text-neutral-600">
+                    Select the pet from the list below
+                  </p>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-6">
+                    {tempPets.map((pet, index) => (
+                      <div
+                        style={{
+                          background:
+                            tempPetIndex == index ? "rgb(229 229 229)" : "",
+                        }}
+                        key={index}
+                        onClick={() => {
+                          setTempPetIndex(index);
+                        }}
+                        className="rounded-md hover:bg-neutral-100 py-5 px-2 flex flex-col items-center justify-center cursor-pointer"
+                      >
+                        <img
+                          src={pet.image}
+                          className="h-14 w-14 rounded-full object-cover"
+                          alt=""
+                        />
+                        <p className="text-base mt-3 font-semibold text-center">
+                          {pet.name}
+                        </p>
+                        <p className="text-sm text-center mt-2 line-clamp-1 text-neutral-700">
+                          {pet.breed}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-12">
+                    <div className="flex items-center justify-end gap-3">
+                      <Button
+                        onClick={() => {
+                          setTempPets([]);
+                          setTempPetIndex(null);
+                        }}
+                        className="rounded bg-neutral-200 text-black disabled:opacity-50"
+                      >
+                        Try again
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (tempPetIndex == null)
+                            return toast.error(
+                              "Please select a pet to proceed"
+                            );
+                          let specie = petspecies.find(
+                            (species) =>
+                              species.value == tempPets[tempPetIndex].species
+                          );
+                          setPFile({
+                            ...pFile,
+                            petName: tempPets[tempPetIndex].name,
+                            petSpecies: specie.value,
+                            petBreed: tempPets[tempPetIndex].breed,
+                            petDob:
+                              tempPets[tempPetIndex].dateOfBirth.split("T")[0],
+                            petWeight: tempPets[tempPetIndex].bodyWeight,
+                          });
+
+                          setIsAutoFillOn(false);
+                          closeAllDetails();
+                          document.getElementById("pet-details-dd").open = true;
+                        }}
+                        isDisabled={setTempPetIndex == null}
+                        className="rounded bg-neutral-900 text-white disabled:opacity-50"
+                      >
+                        Fill details
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </>
     </div>
   );
 }

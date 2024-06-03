@@ -1,6 +1,12 @@
 import React from "react";
 
-function CustomSelect({ label = "Species", placeholder, options = [] }) {
+function CustomSelect({
+  label = "Species",
+  placeholder,
+  options = [],
+  value = "",
+  onChange = () => {},
+}) {
   return (
     <div className="h-12 border-b md:border md:rounded overflow-hidden flex items-center relative">
       <span className="h-full w-24 px-3 border-r bg-neutral-50 flex items-center text-sm text-neutral-500 shrink-0">
@@ -26,6 +32,8 @@ function CustomSelect({ label = "Species", placeholder, options = [] }) {
       <select
         name=""
         id=""
+        value={value}
+        onChange={onChange}
         className="w-full h-full appearance-none bg-transparent px-3 outline-none relative cursor-pointer"
       >
         {options.map((option) => (
