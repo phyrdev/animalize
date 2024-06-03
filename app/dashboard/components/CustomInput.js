@@ -14,7 +14,7 @@ function CustomInput({
       <div className="absolute right-3">{endContent}</div>
       <input
         type={type}
-        defaultValue={type == "date" && "2021-08-01"}
+        defaultValue={type == "date" ? "2021-08-01" : ""}
         placeholder={placeholder}
         style={{
           width: type == "date" ? "fit-content" : "100%",
