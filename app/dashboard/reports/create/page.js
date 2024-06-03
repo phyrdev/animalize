@@ -79,7 +79,7 @@ function CreateReport() {
             </div>
           </div>
         </details>
-        <details id="pet-details-dd" className="mt-8" open>
+        <details id="pet-details-dd" className="mt-8">
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
               Pet details
@@ -218,7 +218,7 @@ function CreateReport() {
             </div>
           </div>
         </details>
-        <details id="test-details-dd" className="mt-8">
+        <details id="billing-details-dd" className="mt-8">
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
               Billing details
