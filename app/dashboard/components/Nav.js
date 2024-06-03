@@ -74,6 +74,8 @@ function Nav() {
 
           <ul className="px-5 mt-6 space-y-2">
             {navmenuitems.map((item, index) => {
+              if (item.access.includes(session?.data?.user?.role) == false)
+                return;
               return (
                 <li
                   key={index}
@@ -203,6 +205,8 @@ function Nav() {
         <div className="flex items-center justify-evenly h-full">
           {navmenuitems.map((item, index) => {
             if (item.visibleSm == false) return;
+            if (item.access.includes(session?.data?.user?.role) == false)
+              return;
             return (
               <Link
                 key={index}
@@ -221,6 +225,7 @@ function Nav() {
       </div>
     );
   };
+
   return (
     <>
       <SideBar />
