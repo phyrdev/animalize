@@ -13,8 +13,38 @@ import { RadioGroup, Radio } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
 import CustomInput from "../../components/CustomInput";
+import CustomSelect from "../../components/CustomSelect";
 
 function CreateReport() {
+  const species = [
+    { label: "Canine", value: "canine" },
+    { label: "Feline", value: "feline" },
+  ];
+
+  const breeds = [
+    { label: "Labrador", value: "labrador" },
+    { label: "Pug", value: "pug" },
+    { label: "Beagle", value: "beagle" },
+    { label: "Bulldog", value: "bulldog" },
+    { label: "Boxer", value: "boxer" },
+    { label: "Dalmatian", value: "dalmatian" },
+    { label: "German Shepherd", value: "german-shepherd" },
+    { label: "Golden Retriever", value: "golden-retriever" },
+    { label: "Poodle", value: "poodle" },
+    { label: "Rottweiler", value: "rottweiler" },
+    { label: "Shih Tzu", value: "shih-tzu" },
+    { label: "Siberian Husky", value: "siberian-husky" },
+    { label: "Yorkshire Terrier", value: "yorkshire-terrier" },
+    { label: "Siamese", value: "siamese" },
+    { label: "Persian", value: "persian" },
+  ];
+
+  const sex = [
+    { label: "Male intact", value: "male-intact" },
+    { label: "Male neutered", value: "male-neutered" },
+    { label: "Female intact", value: "femamale-intact" },
+    { label: "Female spayed", value: "femamale-spayed" },
+  ];
   return (
     <div>
       <div className="px-5 md:px-10 py-5 flex items-center">
@@ -85,9 +115,17 @@ function CreateReport() {
           <div className="pt-5 md:pl-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
               <CustomInput label="Pet name" placeholder="Roxy" />
-              <CustomInput label="Species" placeholder="Canine" />
-              <CustomInput label="Email" placeholder="abc@gmai.com" />
-              <CustomInput label="Phone no." placeholder="1234567890" />
+              <CustomSelect label="Species" options={species} />
+              <CustomSelect label="Breed" options={breeds} />
+              <CustomSelect label="Sex" options={sex} />
+              <CustomInput
+                label="Weight"
+                endContent={
+                  <span className="text-neutral-500 text-sm">Kg</span>
+                }
+                placeholder="24"
+              />
+              <CustomInput label="D.O.B" type="date" placeholder="1234567890" />
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
