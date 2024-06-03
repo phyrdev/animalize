@@ -24,7 +24,7 @@ export const generateSuperAdmin = async (orgno) => {
       data: {
         empno,
         password: hashedPassword,
-        role: "Super Admin",
+        role: "super-admin",
         email: organization.email,
         name: organization.name + " Super Admin",
         phone: organization.phone,
