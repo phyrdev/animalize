@@ -65,7 +65,11 @@ function Reports() {
                 Ready for S. coll.
               </td>
               <td className="font-normal px-5 py-4 text-sm">Paid</td>
-              <td className="font-normal px-5 py-4 text-sm">Clct. sample</td>
+              <td className="font-normal px-5 py-4 text-sm">
+                <Button className="rounded-md bg-transparent border border-neutral-400">
+                  Collect sample
+                </Button>
+              </td>
               <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
                 <button className="bg-sky-100 hover:bg-sky-200 h-10 w-10 rounded transition-all flex items-center justify-center">
                   <svg

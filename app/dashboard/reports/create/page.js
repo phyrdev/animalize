@@ -4,6 +4,7 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Checkbox,
   Input,
   Textarea,
 } from "@nextui-org/react";
@@ -25,12 +26,16 @@ import {
 } from "@/static/lists";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 function CreateReport() {
+  const session = useSession();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
 
   const [pFile, setPFile] = React.useState({
+    empno: "",
+    orgno: "",
     accPin: "",
     petName: "",
     petSpecies: "",
@@ -44,7 +49,16 @@ function CreateReport() {
     parentPhone: "",
     parentZipcode: "",
     parentAddress: "",
+    tests: [],
+    subtotal: 0,
+    paymentMode: "",
+    paymentStatus: "",
+    paidAmount: "",
+    contentDeclaration: false,
+    createDoctordoggyAccount: false,
+    additionalNotes: "",
   });
+
   const [tempPets, setTempPets] = React.useState([]);
   const [tempPetIndex, setTempPetIndex] = React.useState(null);
 
@@ -135,7 +149,7 @@ function CreateReport() {
               <Radio value={true}>Yes</Radio>
               <Radio value={false}>No</Radio>
             </RadioGroup>
-            <div className="border-b pb-6 h-14 flex items-center justify-end">
+            <div className="pb-6 h-14 flex items-center justify-end">
               <Button
                 onClick={() => {
                   closeAllDetails();
@@ -213,7 +227,7 @@ function CreateReport() {
                 placeholder="1234567890"
               />
             </div>
-            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+            <div className="pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
                   closeAllDetails();
@@ -283,7 +297,7 @@ function CreateReport() {
                 label="Zipcode"
                 placeholder="713216"
               />
-              <div className="border-b md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+              <div className="md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
                 <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
                   Address
                 </span>
@@ -299,7 +313,7 @@ function CreateReport() {
                 ></textarea>
               </div>
             </div>
-            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+            <div className="pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
                   closeAllDetails();
@@ -342,7 +356,7 @@ function CreateReport() {
                 />
               </svg>
             </Button>
-            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+            <div className="pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
                   document.getElementById("auto-fill-dd").open = false;
@@ -408,20 +422,45 @@ function CreateReport() {
               </div>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 md:gap-2">
+            <p className="mt-12 text-base font-medium">Record payment</p>
+
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-2 md:gap-2 border-t md:border-none">
               <CustomSelect
                 label="Mode"
                 placeholder="Cash"
+                value={pFile.paymentMode}
+                onChange={(e) =>
+                  setPFile({ ...pFile, paymentMode: e.target.value })
+                }
                 options={paymentmodes}
               />
               <CustomSelect
                 label="Status"
                 placeholder="Canine"
+                value={pFile.paymentStatus}
+                onChange={(e) =>
+                  setPFile({ ...pFile, paymentStatus: e.target.value })
+                }
                 options={paymentstatus}
               />
-              <CustomInput label="Paid amt." placeholder="0" />
+              <CustomInput
+                label="Paid amt."
+                placeholder="0"
+                endContent={<span className="text-neutral-500 text-sm">₹</span>}
+                value={pFile.paidAmount}
+                onChange={(e) =>
+                  setPFile({ ...pFile, paidAmount: e.target.value })
+                }
+              />
             </div>
-            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+
+            {pFile.paymentStatus == "pending" && (
+              <span className="text-sm mt-6 inline-block">
+                Due amount : ₹{5000 - pFile.paidAmount}
+              </span>
+            )}
+
+            <div className="pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
                   document.getElementById("auto-fill-dd").open = false;
@@ -438,6 +477,39 @@ function CreateReport() {
               >
                 Proceed
               </Button>
+            </div>
+          </div>
+        </details>
+        <details id="billing-details-dd" className="mt-8">
+          <summary>
+            <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+              Declaration
+            </div>
+          </summary>
+          <div className="pt-5 md:pl-5 space-y-3 md:space-y-4">
+            <div className="flex items-start space-x-1">
+              <Checkbox className="text-sm"></Checkbox>
+              <p className="text-sm leading-6 -mt-[5px] md:-mt-[2px] text-neutral-600">
+                I hereby declare that the above information is true to the best
+                of my knowledge
+              </p>
+            </div>
+            <div className="flex items-start space-x-1">
+              <Checkbox className="text-sm"></Checkbox>
+              <p className="text-sm leading-6 -mt-[5px] md:-mt-[2px] text-neutral-600">
+                Create a doctordoggy account for the pet parent
+              </p>
+            </div>
+            <div className="pt-7">
+              <p className="text-sm text-neutral-600">Additional notes</p>
+              <textarea
+                value={pFile.additionalNotes}
+                onChange={(e) =>
+                  setPFile({ ...pFile, additionalNotes: e.target.value })
+                }
+                className="w-full h-24 resize-y p-3 outline-none border rounded-md mt-3"
+                placeholder="Some additional notes"
+              ></textarea>
             </div>
           </div>
         </details>
@@ -490,6 +562,10 @@ function CreateReport() {
                   <div className="mt-6">
                     <Input
                       label="Account pin"
+                      classNames={{
+                        label: "pl-2",
+                        input: "pl-2",
+                      }}
                       radius="sm"
                       value={pFile.accPin}
                       onChange={(e) =>
