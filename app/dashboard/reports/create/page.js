@@ -15,7 +15,13 @@ import React from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import CustonList from "../../components/CustonList";
-import { petbreeds, petsex, petspecies } from "@/static/lists";
+import {
+  paymentmodes,
+  paymentstatus,
+  petbreeds,
+  petsex,
+  petspecies,
+} from "@/static/lists";
 
 function CreateReport() {
   return (
@@ -258,10 +264,24 @@ function CreateReport() {
                   <span className="ml-auto">₹2500</span>
                 </div>
               </div>
-              <div className="flex items-center bg-neutral-50 border-y px-5 py-2 font-medium mt-4">
+              <div className="flex items-center border-t px-5 py-2 font-medium mt-4">
                 <span className="text-base text-black">Subtotal</span>
                 <span className="ml-auto">₹5000</span>
               </div>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 md:gap-2">
+              <CustomSelect
+                label="Mode"
+                placeholder="Cash"
+                options={paymentmodes}
+              />
+              <CustomSelect
+                label="Status"
+                placeholder="Canine"
+                options={paymentstatus}
+              />
+              <CustomInput label="Due amt." placeholder="0" />
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button

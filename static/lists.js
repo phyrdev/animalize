@@ -212,3 +212,18 @@ export const navmenuitems = [
     path: "/dashboard/settings",
   },
 ];
+
+export const paymentmodes = [
+  { label: "Cash", value: "cash" },
+  { label: "Card", value: "card" },
+  { label: "Cheque", value: "cheque" },
+  { label: "Wallets", value: "wallets" },
+  { label: "UPI", value: "upi" },
+];
+
+export const paymentstatus = [
+  { label: "Paid", value: "paid" },
+  { label: "Pending", value: "pending" },
+  { label: "Failed", value: "failed" },
+  { label: "Refunded", value: "refunded" },
+];
