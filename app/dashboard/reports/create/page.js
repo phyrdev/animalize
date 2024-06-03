@@ -28,7 +28,7 @@ import axios from "axios";
 
 function CreateReport() {
   const [isRegistered, setIsRegistered] = React.useState(false);
-  const [isAutoFillOn, setIsAutoFillOn] = React.useState(true);
+  const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
 
   const [pFile, setPFile] = React.useState({
     accPin: "",
