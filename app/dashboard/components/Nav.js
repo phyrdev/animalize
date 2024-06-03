@@ -322,7 +322,7 @@ function Nav() {
 
   const BottomNav = () => {
     return (
-      <div className="w-full h-14 bg-neutral-100 fixed bottom-0 inset-x-0 md:hidden z-10">
+      <div className="w-full h-14 bg-neutral-100 fixed bottom-0 inset-x-0 md:hidden z-20">
         <div className="flex items-center justify-evenly h-full">
           {menu.map((item, index) => {
             return (
@@ -344,10 +344,10 @@ function Nav() {
     );
   };
   return (
-    <div>
+    <>
       <SideBar />
       <BottomNav />
-    </div>
+    </>
   );
 }
 
