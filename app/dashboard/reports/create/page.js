@@ -76,48 +76,18 @@ function CreateReport() {
             </div>
           </div>
         </details>
-        <details id="pet-details-dd" className="mt-8">
+        <details id="pet-details-dd" className="mt-8" open>
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
               Pet details
             </div>
           </summary>
           <div className="pt-5 md:pl-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-3">
-              <Input label="Pet name" radius="none" />
-              <Select
-                label="Select pet species"
-                radius="none"
-                classNames={{
-                  mainWrapper: "rounded-none",
-                }}
-              >
-                <SelectItem key={"canine"}>Canine</SelectItem>
-                <SelectItem key={"feline"}>Feline</SelectItem>
-              </Select>
-              <Select
-                label="Select pet breed"
-                radius="none"
-                classNames={{
-                  mainWrapper: "rounded-none",
-                }}
-              >
-                <SelectItem key={"canaine"}>Canine</SelectItem>
-                <SelectItem key={"feline"}>Feline</SelectItem>
-              </Select>
-              <Select
-                label="Select pet sex"
-                radius="none"
-                classNames={{
-                  mainWrapper: "rounded-none",
-                }}
-              >
-                <SelectItem key={"canaine"}>Male intact</SelectItem>
-                <SelectItem key={"canaine"}>Male neutered</SelectItem>
-                <SelectItem key={"feline"}>Feline</SelectItem>
-              </Select>
-              <Input label="Body weight (Kg)" radius="none" type="number" />
-              <DateInput label={"Pet date of birth"} radius="none" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
+              <CustomInput label="Pet name" placeholder="Roxy" />
+              <CustomInput label="Species" placeholder="Canine" />
+              <CustomInput label="Email" placeholder="abc@gmai.com" />
+              <CustomInput label="Phone no." placeholder="1234567890" />
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
@@ -139,7 +109,7 @@ function CreateReport() {
             </div>
           </div>
         </details>
-        <details id="parent-details-dd" className="mt-8" open>
+        <details id="parent-details-dd" className="mt-8">
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
               Parent details
@@ -151,18 +121,18 @@ function CreateReport() {
               <CustomInput label="Last name" placeholder="Doe" />
               <CustomInput label="Email" placeholder="abc@gmai.com" />
               <CustomInput label="Phone no." placeholder="1234567890" />
-              <CustomInput label="Phone no." placeholder="1234567890" />
-            </div>
-            <div className="border-b md:border w-full md:mt-2 md:rounded flex h-20">
-              <span className="h-full w-24 px-3 border-r bg-neutral-50 flex items-center text-sm text-neutral-500 shrink-0">
-                Address
-              </span>
-              <textarea
-                className="w-full h-full resize-none p-3"
-                placeholder="Residential address"
-                name=""
-                id=""
-              ></textarea>
+              <CustomInput label="Zipcode" placeholder="713216" />
+              <div className="border-b md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+                <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
+                  Address
+                </span>
+                <textarea
+                  className="w-full h-full resize-none p-3"
+                  placeholder="Residential address"
+                  name=""
+                  id=""
+                ></textarea>
+              </div>
             </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
