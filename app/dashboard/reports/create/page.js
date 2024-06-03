@@ -28,7 +28,7 @@ import axios from "axios";
 
 function CreateReport() {
   const [isRegistered, setIsRegistered] = React.useState(false);
-  const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
+  const [isAutoFillOn, setIsAutoFillOn] = React.useState(true);
 
   const [pFile, setPFile] = React.useState({
     accPin: "",
@@ -446,7 +446,7 @@ function CreateReport() {
       <>
         {isAutoFillOn && (
           <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
-            <div className="bg-white md:rounded-lg p-5 min-h-[50%] h-fit md:h-fit w-full md:w-[450px]">
+            <div className="bg-white md:rounded-lg p-5 min-h-[50%] h-fit md:min-h-fit md:h-fit w-full md:w-[450px]">
               <div className="flex items-center">
                 <img
                   src="https://www.doctordoggy.vet/logoDark.png"
