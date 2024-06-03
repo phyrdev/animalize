@@ -1,39 +1,22 @@
 import React from "react";
 
-function CustomSelect({ label = "Species", placeholder, options = [] }) {
+function CustomSelect({ label = "Species", placeholder = "", options = [] }) {
   return (
     <div className="h-12 border-b md:border md:rounded overflow-hidden flex items-center relative">
       <span className="h-full w-24 px-3 border-r bg-neutral-50 flex items-center text-sm text-neutral-500 shrink-0">
         {label}
       </span>
-      <button className="absolute right-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 48 48"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="4"
-            d="M36 18L24 30L12 18"
-          />
-        </svg>
-      </button>
-      <select
-        name=""
-        id=""
-        className="w-full h-full appearance-none bg-transparent px-3 outline-none relative cursor-pointer"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
+      <input
+        placeholder={placeholder}
+        list={label + "-list"}
+        className="h-full w-full px-3 outline-none bg-transparent appearance-none"
+      />
+
+      <datalist id={label + "-list"}>
+        {options.map((option, index) => (
+          <option key={index} value={option.label} />
         ))}
-      </select>
+      </datalist>
     </div>
   );
 }

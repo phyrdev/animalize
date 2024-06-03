@@ -115,9 +115,21 @@ function CreateReport() {
           <div className="pt-5 md:pl-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
               <CustomInput label="Pet name" placeholder="Roxy" />
-              <CustomSelect label="Species" options={species} />
-              <CustomSelect label="Breed" options={breeds} />
-              <CustomSelect label="Sex" options={sex} />
+              <CustomSelect
+                label="Species"
+                placeholder="Canine"
+                options={species}
+              />
+              <CustomSelect
+                label="Breed"
+                placeholder="Breed name"
+                options={breeds}
+              />
+              <CustomSelect
+                placeholder="Male intact"
+                label="Sex"
+                options={sex}
+              />
               <CustomInput
                 label="Weight"
                 endContent={
