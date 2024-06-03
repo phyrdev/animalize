@@ -6,11 +6,11 @@ function CustomSelect({ label = "Species", placeholder, options = [] }) {
       <span className="h-full w-24 px-3 border-r bg-neutral-50 flex items-center text-sm text-neutral-500 shrink-0">
         {label}
       </span>
-      <button className="absolute right-3">
+      <button className="absolute right-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
+          width="16"
+          height="16"
           viewBox="0 0 48 48"
         >
           <path
