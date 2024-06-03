@@ -1,7 +1,8 @@
 "use client";
 import { BreadcrumbItem, Breadcrumbs, Button, Input } from "@nextui-org/react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DateInput } from "@nextui-org/date-input";
+import { DateInput } from "@nextui-org/react";
+import { CalendarDate } from "@internationalized/date";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
@@ -37,7 +38,7 @@ function CreateReport() {
         </Link>
       </div>
 
-      <div className="md:px-10 px-5 mt-5">
+      <div className="md:px-10 px-5 mt-5 max-w-4xl">
         <details id="auto-fill-dd" open>
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
@@ -75,15 +76,10 @@ function CreateReport() {
             </div>
           </summary>
           <div className="pt-5 md:pl-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-2">
-              <Input
-                label="Pet name"
-                placeholder="Enter pet name"
-                radius="none"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-3">
+              <Input label="Pet name" radius="none" />
               <Select
                 label="Select pet species"
-                placeholder="Enter pet species"
                 radius="none"
                 classNames={{
                   mainWrapper: "rounded-none",
@@ -94,7 +90,6 @@ function CreateReport() {
               </Select>
               <Select
                 label="Select pet breed"
-                placeholder="Enter pet breed"
                 radius="none"
                 classNames={{
                   mainWrapper: "rounded-none",
@@ -105,7 +100,6 @@ function CreateReport() {
               </Select>
               <Select
                 label="Select pet sex"
-                placeholder="Enter pet sex"
                 radius="none"
                 classNames={{
                   mainWrapper: "rounded-none",
@@ -115,15 +109,18 @@ function CreateReport() {
                 <SelectItem key={"canaine"}>Male neutered</SelectItem>
                 <SelectItem key={"feline"}>Feline</SelectItem>
               </Select>
-              <Input
-                label="Pet body weight (Kg)"
-                placeholder="Enter pet body weight"
-                radius="none"
-                type="number"
-              />
-              <DateInput label={"Birth date"} radius="none" />
+              <Input label="Body weight (Kg)" radius="none" type="number" />
+              <DateInput label={"Pet date of birth"} radius="none" />
             </div>
-            <div className="border-b pb-6 h-14 flex items-center justify-end">
+            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+              <Button
+                onClick={() => {
+                  document.getElementById("auto-fill-dd").open = false;
+                }}
+                className="rounded bg-transparent"
+              >
+                Back
+              </Button>
               <Button
                 onClick={() => {
                   document.getElementById("auto-fill-dd").open = false;
