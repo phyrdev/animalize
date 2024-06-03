@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import { createOrganization } from "@/prisma/organization";
+import { currencies, organizationTypes } from "@/static/lists";
 import {
   Button,
   Checkbox,
@@ -19,36 +20,6 @@ import toast from "react-hot-toast";
 
 function SignUp() {
   const router = useRouter();
-  const organizationTypes = [
-    "Veterinary Clinic",
-    "Animal Hospital",
-    "Pathology Lab",
-  ];
-
-  const currencies = [
-    {
-      abbr: "USD",
-      name: "United States Dollar",
-      symbol: "$",
-    },
-    {
-      abbr: "EUR",
-      name: "Euro",
-      symbol: "€",
-    },
-
-    {
-      abbr: "INR",
-      name: "Indian Rupee",
-      symbol: "₹",
-    },
-
-    {
-      abbr: "GBP",
-      name: "British Pound",
-      symbol: "£",
-    },
-  ];
 
   const [organization, setOrganization] = useState({
     name: "Lenus Vet Labs",

@@ -15,37 +15,9 @@ import React from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import CustonList from "../../components/CustonList";
+import { petbreeds, petsex, petspecies } from "@/static/lists";
 
 function CreateReport() {
-  const species = [
-    { label: "Canine", value: "canine" },
-    { label: "Feline", value: "feline" },
-  ];
-
-  const breeds = [
-    { label: "Labrador", value: "labrador" },
-    { label: "Pug", value: "pug" },
-    { label: "Beagle", value: "beagle" },
-    { label: "Bulldog", value: "bulldog" },
-    { label: "Boxer", value: "boxer" },
-    { label: "Dalmatian", value: "dalmatian" },
-    { label: "German Shepherd", value: "german-shepherd" },
-    { label: "Golden Retriever", value: "golden-retriever" },
-    { label: "Poodle", value: "poodle" },
-    { label: "Rottweiler", value: "rottweiler" },
-    { label: "Shih Tzu", value: "shih-tzu" },
-    { label: "Siberian Husky", value: "siberian-husky" },
-    { label: "Yorkshire Terrier", value: "yorkshire-terrier" },
-    { label: "Siamese", value: "siamese" },
-    { label: "Persian", value: "persian" },
-  ];
-
-  const sex = [
-    { label: "Male intact", value: "male-intact" },
-    { label: "Male neutered", value: "male-neutered" },
-    { label: "Female intact", value: "femamale-intact" },
-    { label: "Female spayed", value: "femamale-spayed" },
-  ];
   return (
     <div>
       <div className="px-5 md:px-10 py-5 flex items-center">
@@ -119,17 +91,17 @@ function CreateReport() {
               <CustomSelect
                 label="Species"
                 placeholder="Canine"
-                options={species}
+                options={petspecies}
               />
               <CustonList
                 label="Breed"
                 placeholder="Breed name"
-                options={breeds}
+                options={petbreeds}
               />
               <CustomSelect
                 placeholder="Male intact"
                 label="Sex"
-                options={sex}
+                options={petsex}
               />
               <CustomInput
                 label="Weight"
@@ -205,7 +177,7 @@ function CreateReport() {
             </div>
           </div>
         </details>
-        <details id="parent-details-dd" className="mt-8">
+        <details id="test-details-dd" className="mt-8">
           <summary>
             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
               Choose tests to be done
@@ -226,6 +198,71 @@ function CreateReport() {
                 />
               </svg>
             </Button>
+            <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
+              <Button
+                onClick={() => {
+                  document.getElementById("auto-fill-dd").open = false;
+                }}
+                className="rounded bg-transparent"
+              >
+                Back
+              </Button>
+              <Button
+                onClick={() => {
+                  document.getElementById("auto-fill-dd").open = false;
+                }}
+                className="rounded"
+              >
+                Proceed
+              </Button>
+            </div>
+          </div>
+        </details>
+        <details id="test-details-dd" className="mt-8">
+          <summary>
+            <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+              Billing details
+            </div>
+          </summary>
+          <div className="pt-5 md:pl-5">
+            <div className="w-full flex flex-wrap gap-3 md:gap-6">
+              <div className="text-sm">
+                <span className="text-neutral-500">Patient name:</span>{" "}
+                <span>Roxy</span>
+              </div>
+              <div className="text-sm">
+                <span className="text-neutral-500">Parent name:</span>{" "}
+                <span>Priyangsu Banerjee</span>
+              </div>
+              <div className="text-sm">
+                <span className="text-neutral-500">Tests to be done:</span>{" "}
+                <span>CBC, LFT</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="flex items-center bg-neutral-50 border-y px-5 py-2 text-sm font-medium text-neutral-500">
+                <span className="w-16">S.no</span>
+                <span className="ml-3">Test name</span>
+                <span className="ml-auto">Price</span>
+              </div>
+              <div className="space-y-3 mt-4">
+                <div className="flex items-center px-5">
+                  <span className="w-16">1</span>
+                  <span className="ml-3 text-sm">C.B.C</span>
+                  <span className="ml-auto">₹2500</span>
+                </div>
+                <div className="flex items-center px-5">
+                  <span className="w-16">2</span>
+                  <span className="ml-3 text-sm">C.B.C</span>
+                  <span className="ml-auto">₹2500</span>
+                </div>
+              </div>
+              <div className="flex items-center bg-neutral-50 border-y px-5 py-2 font-medium mt-4">
+                <span className="text-base text-black">Subtotal</span>
+                <span className="ml-auto">₹5000</span>
+              </div>
+            </div>
             <div className="border-b pb-6 flex items-center justify-end gap-2 mt-6">
               <Button
                 onClick={() => {
