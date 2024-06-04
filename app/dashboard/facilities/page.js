@@ -299,6 +299,16 @@ function Facilities() {
                   })}
                 </ul>
               </div>
+
+              <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
+                <div className="w-full md:w-[450px] md:h-fit h-full max-h-svh md:max-h-[700px] overflow-auto bg-white rounded-md">
+                  <div className="p-5">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-lg font-semibold">Preview</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>
