@@ -52,7 +52,12 @@ function Facilities() {
         </p>
 
         <div className="font-normal mt-3 text-sm items-center flex">
-          <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+          <button
+            onClick={() => {
+              setSelectedForPreview(facility);
+            }}
+            className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={18}
@@ -127,7 +132,12 @@ function Facilities() {
           {facility.duration} hrs
         </td>
         <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
-          <button className="bg-sky-100 hover:bg-sky-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+          <button
+            onClick={() => {
+              setSelectedForPreview(facility);
+            }}
+            className="bg-sky-100 hover:bg-sky-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={18}
@@ -300,15 +310,111 @@ function Facilities() {
                 </ul>
               </div>
 
-              <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
-                <div className="w-full md:w-[450px] md:h-fit h-full max-h-svh md:max-h-[700px] overflow-auto bg-white rounded-md">
-                  <div className="p-5">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-lg font-semibold">Preview</h2>
+              {selectedForPreview && (
+                <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
+                  <div className="w-full md:w-[450px] md:h-fit h-1/2 max-h-svh md:max-h-[700px] overflow-auto bg-white md:rounded-md">
+                    <div className="p-5">
+                      <div className="flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.55"
+                            d="M6 18h8M3 22h18m-7 0a7 7 0 1 0 0-14h-1m-4 6h2m-2-2a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Zm3-6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"
+                          />
+                        </svg>
+                        <h2 className="text-lg font-medium ml-2">
+                          {selectedForPreview.name}
+                        </h2>
+                        <button
+                          onClick={() => {
+                            setSelectedForPreview(null);
+                          }}
+                          className="ml-auto text-neutral-600"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="1.55"
+                              d="M18 6L6 18M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div className="mt-5 space-y-3">
+                        <p className="text-sm text-neutral-700">
+                          Created on:&nbsp;
+                          {new Date(
+                            selectedForPreview.createdAt
+                          ).toLocaleDateString("en-US", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </p>
+                        <p className="text-sm text-neutral-700">
+                          Average time:&nbsp;{selectedForPreview.duration} hrs
+                        </p>
+                        <p className="text-sm text-neutral-700">
+                          Cost:&nbsp;{" "}
+                          {getCurrencySymbol(session.data.user.currency)}
+                          {selectedForPreview.cost}
+                        </p>
+                        <p className="text-sm text-neutral-700">
+                          Availability:&nbsp;
+                          {capitalizeFirstLetter(
+                            selectedForPreview.availability
+                          )}
+                        </p>
+                      </div>
+
+                      <div className="mt-5">
+                        <ul>
+                          <li className="text-sm text-neutral-700 grid grid-cols-4 font-medium bg-neutral-100 px-2 py-2">
+                            <span>Parameter</span>
+                            <span>Description</span>
+                            <span>Unit</span>
+                            <span>Normal range</span>
+                          </li>
+                          {selectedForPreview.parameters.map(
+                            (parameter, index) => {
+                              return (
+                                <li
+                                  key={index}
+                                  className="text-sm text-neutral-700 grid grid-cols-4 px-2 mt-3"
+                                >
+                                  <span>{parameter.name}</span>
+                                  <span>{parameter.desciption}</span>
+                                  <span>{parameter.unit}</span>
+                                  <span>
+                                    {parameter.low}-{parameter.high}
+                                  </span>
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </div>
