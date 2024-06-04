@@ -326,3 +326,18 @@ export const actionslist = [
     ],
   },
 ];
+
+export const facilityavailability = [
+  {
+    label: "Available",
+    value: "available",
+  },
+  {
+    label: "Unavailable",
+    value: "unavailable",
+  },
+  {
+    label: "Permanently removed",
+    value: "permanently-removed",
+  },
+];
