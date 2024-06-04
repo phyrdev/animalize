@@ -1,5 +1,7 @@
 "use server";
 
+import prisma from "./prisma";
+
 export const createFacility = async (facility) => {
   try {
     await prisma.facility.create({
