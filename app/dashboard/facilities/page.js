@@ -188,8 +188,8 @@ function Facilities() {
   };
 
   const getOrgFacilities = async (orgno) => {
-    let { success, data } = await getFacilities(orgno);
-    console.log(success, data);
+    let { success, data, message } = await getFacilities(orgno);
+    console.log(success, data, message);
     if (success) {
       setFacilities(data);
       setVisibleFacilities(data);
