@@ -8,19 +8,62 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import { facilityavailability } from "@/static/lists";
 import { permissions } from "@/static/permissions";
+import PermissionDenied from "../../components/PermissionDenied";
+import toast from "react-hot-toast";
 
 function CreateFacility() {
   const session = useSession();
+  const [pFacility, setPFacility] = React.useState({
+    name: "",
+    cost: "",
+    duration: "",
+    availability: "",
+    parameters: [],
+  });
+
+  const [tempParameter, setTempParameter] = React.useState({
+    name: "",
+    description: "",
+    unit: "mg/dL",
+    low: "",
+    high: "",
+  });
+
+  const addFacility = () => {
+    if (
+      tempParameter.name == "" ||
+      tempParameter.unit == "" ||
+      tempParameter.low == "" ||
+      tempParameter.high == ""
+    ) {
+      toast("Fill name, unit, low and high fields.");
+      console.log(tempParameter);
+      return;
+    }
+
+    setPFacility({
+      ...pFacility,
+      parameters: [...pFacility.parameters, tempParameter],
+    });
+    setTempParameter({
+      name: "",
+      description: "",
+      unit: "mg/dL",
+      low: "",
+      high: "",
+    });
+  };
 
   if (session.status == "authenticated") {
     if (
       permissions.manageFacilities.includes(session.data.user.role) == false
     ) {
+      return <PermissionDenied />;
     } else {
       return (
         <div>
@@ -47,30 +90,50 @@ function CreateFacility() {
               </svg>
             </Button>
 
-            <Link href="/dashboard/reports/create">
-              <Button className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white">
-                Save facility
-              </Button>
-            </Link>
+            <Button
+              onClick={() => {}}
+              className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white"
+            >
+              Save facility
+            </Button>
           </div>
           <div className="md:px-10 px-5 mt-5 max-w-4xl">
-            <details id="details-fill-dd">
+            <details id="details-fill-dd" open>
               <summary>
                 <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                   Facility details
                 </div>
               </summary>
               <div className="pt-5 md:pl-5">
-                <div className="grid grid-cols-2 gap-2">
-                  <CustomInput label="Name" placeholder={"Liver func. test"} />
+                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+                  <CustomInput
+                    value={pFacility.name}
+                    onChange={(e) =>
+                      setPFacility({ ...pFacility, name: e.target.value })
+                    }
+                    label="Name"
+                    placeholder={"Liver func. test"}
+                  />
                   <CustomInput
                     label="Cost"
                     type="number"
+                    value={pFacility.cost}
+                    onChange={(e) =>
+                      setPFacility({ ...pFacility, cost: e.target.value })
+                    }
                     endContent={<span className="text-neutral-600">₹</span>}
                     placeholder={"1000"}
                   />
                   <CustomInput
                     label="Duration"
+                    type="number"
+                    value={pFacility.duration}
+                    onChange={(e) =>
+                      setPFacility({
+                        ...pFacility,
+                        duration: e.target.value,
+                      })
+                    }
                     endContent={
                       <span className="text-neutral-500 text-sm">hours</span>
                     }
@@ -78,6 +141,13 @@ function CreateFacility() {
                   />
                   <CustomSelect
                     label="Avail. stat."
+                    value={pFacility.availability}
+                    onChange={(e) =>
+                      setPFacility({
+                        ...pFacility,
+                        availability: e.target.value,
+                      })
+                    }
                     options={facilityavailability}
                   />
                 </div>
@@ -89,61 +159,233 @@ function CreateFacility() {
                 </p>
               </div>
             </details>
-            <details id="parameter-fill-dd" className="mt-16">
+
+            <details id="parameter-fill-dd" className="mt-10" open>
               <summary>
                 <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                   Parameters
                 </div>
               </summary>
-              <div className="pt-5 md:pl-5">
-                <div className="grid grid-cols-5 gap-2 bg-neutral-100 border-y px-3 text-sm py-2 font-medium text-neutral-600">
-                  <span>Name</span>
-                  <span>Descripion</span>
-                  <span>Unit</span>
-                  <span>Normal range</span>
-                  <span></span>
-                </div>
-                <div className="grid grid-cols-5 gap-2 mt-3">
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    className="border py-2 px-3 rounded"
-                    name=""
-                    id=""
-                  />
-                  <input
-                    type="text"
-                    placeholder="Description"
-                    className="border py-2 px-3 rounded"
-                    name=""
-                    id=""
-                  />
-                  <input
-                    type="text"
-                    placeholder="Unit"
-                    className="border py-2 px-3 rounded"
-                    name=""
-                    id=""
-                  />
-                  <div className="grid grid-cols-2 gap-1">
-                    <input
-                      type="text"
-                      placeholder="Low"
-                      className="border py-2 text-center rounded"
-                      name=""
-                      id=""
-                    />
-                    <input
-                      type="text"
-                      placeholder="High"
-                      className="border py-2 text-center rounded"
-                      name=""
-                      id=""
-                    />
+
+              <div className="w-full overflow-auto">
+                <div className="pt-5 md:pl-5 min-w-[900px] md:min-w-fit">
+                  <div className="grid grid-cols-5 gap-2 bg-neutral-100 border-y px-3 text-sm py-2 font-medium text-neutral-600">
+                    <span>Name</span>
+                    <span>Descripion</span>
+                    <span>Unit</span>
+                    <span>Normal range</span>
+                    <span></span>
                   </div>
-                  <Button className="w-full rounded-md bg-neutral-800 text-white">
-                    Add parameter
-                  </Button>
+                  <div className="grid grid-cols-5 gap-2 mt-3">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={tempParameter.name}
+                      onChange={(e) =>
+                        setTempParameter({
+                          ...tempParameter,
+                          name: e.target.value,
+                        })
+                      }
+                      className="border py-2 px-3 rounded"
+                      name=""
+                      id=""
+                    />
+                    <input
+                      type="text"
+                      placeholder="Description"
+                      value={tempParameter.description}
+                      onChange={(e) =>
+                        setTempParameter({
+                          ...tempParameter,
+                          description: e.target.value,
+                        })
+                      }
+                      className="border py-2 px-3 rounded"
+                      name=""
+                      id=""
+                    />
+                    <div className="w-full border rounded overflow-hidden px-3">
+                      <select
+                        name=""
+                        id=""
+                        value={tempParameter.unit}
+                        onChange={(e) => {
+                          if (e.target.value.toLowerCase() == "boolean") {
+                            setTempParameter({
+                              ...tempParameter,
+                              unit: e.target.value,
+                              low: "true",
+                              high: "false",
+                            });
+                          } else {
+                            setTempParameter({
+                              ...tempParameter,
+                              unit: e.target.value,
+                              low:
+                                tempParameter.low == "true"
+                                  ? ""
+                                  : tempParameter.low,
+                              high:
+                                tempParameter.high == "false"
+                                  ? ""
+                                  : tempParameter.high,
+                            });
+                          }
+                        }}
+                        className="h-full w-full outline-none cursor-pointer"
+                      >
+                        <option value="mg/dL">mg/dL</option>
+                        <option value="g/dL">g/dL</option>
+                        <option value="IU/L">IU/L</option>
+                        <option value="mmol/L">mmol/L</option>
+                        <option value="boolean">boolean</option>
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      <input
+                        type="text"
+                        placeholder="Low"
+                        value={tempParameter.low}
+                        onChange={(e) =>
+                          setTempParameter({
+                            ...tempParameter,
+                            low: e.target.value,
+                          })
+                        }
+                        readOnly={tempParameter.unit.toLowerCase() == "boolean"}
+                        className="border py-2 text-center rounded"
+                        name=""
+                        id=""
+                      />
+                      <input
+                        type="text"
+                        value={tempParameter.high}
+                        onChange={(e) =>
+                          setTempParameter({
+                            ...tempParameter,
+                            high: e.target.value,
+                          })
+                        }
+                        readOnly={tempParameter.unit.toLowerCase() == "boolean"}
+                        placeholder="High"
+                        className="border py-2 text-center rounded"
+                        name=""
+                        id=""
+                      />
+                    </div>
+                    <Button
+                      onClick={() => addFacility()}
+                      className="w-full rounded-md bg-neutral-800 text-white"
+                    >
+                      Add parameter
+                    </Button>
+                  </div>
+
+                  <div className="mt-4">
+                    {pFacility.parameters.map((param, index) => (
+                      <div className="grid grid-cols-5 gap-2 mt-2" key={index}>
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          value={param.name}
+                          onChange={(e) => {
+                            let temp = pFacility.parameters;
+                            temp[index].name = e.target.value;
+                            setPFacility({ ...pFacility, parameters: temp });
+                          }}
+                          className="py-2 px-3 rounded"
+                          name=""
+                          id=""
+                        />
+                        <input
+                          type="text"
+                          placeholder="Description"
+                          value={param.description}
+                          onChange={(e) => {
+                            let temp = pFacility.parameters;
+                            temp[index].description = e.target.value;
+                            setPFacility({ ...pFacility, parameters: temp });
+                          }}
+                          className="py-2 px-3 rounded"
+                          name=""
+                          id=""
+                        />
+                        <div className="w-full rounded overflow-hidden px-3">
+                          <select
+                            name=""
+                            id=""
+                            value={param.unit}
+                            onChange={(e) => {
+                              let temp = pFacility.parameters;
+                              temp[index].unit = e.target.value;
+                              if (e.target.value.toLowerCase() == "boolean") {
+                                temp[index].low = "true";
+                                temp[index].high = "false";
+                              } else {
+                                temp[index].low =
+                                  temp[index].low == "true"
+                                    ? ""
+                                    : temp[index].low;
+                                temp[index].high =
+                                  temp[index].high == "false"
+                                    ? ""
+                                    : temp[index].high;
+                              }
+                              setPFacility({ ...pFacility, parameters: temp });
+                            }}
+                            className="h-full w-full outline-none cursor-pointer"
+                          >
+                            <option value="mg/dL">mg/dL</option>
+                            <option value="g/dL">g/dL</option>
+                            <option value="IU/L">IU/L</option>
+                            <option value="mmol/L">mmol/L</option>
+                            <option value="boolean">boolean</option>
+                          </select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1">
+                          <input
+                            type="text"
+                            placeholder="Low"
+                            readOnly={param.unit.toLowerCase() == "boolean"}
+                            value={param.low}
+                            onChange={(e) => {
+                              let temp = pFacility.parameters;
+                              temp[index].low = e.target.value;
+                              setPFacility({ ...pFacility, parameters: temp });
+                            }}
+                            className="py-2 text-center rounded"
+                            name=""
+                            id=""
+                          />
+                          <input
+                            type="text"
+                            readOnly={param.unit.toLowerCase() == "boolean"}
+                            value={param.high}
+                            onChange={(e) => {
+                              let temp = pFacility.parameters;
+                              temp[index].high = e.target.value;
+                              setPFacility({ ...pFacility, parameters: temp });
+                            }}
+                            placeholder="High"
+                            className="py-2 text-center rounded"
+                            name=""
+                            id=""
+                          />
+                        </div>
+                        <Button
+                          onClick={() => {
+                            let temp = pFacility.parameters;
+                            temp.splice(index, 1);
+                            setPFacility({ ...pFacility, parameters: temp });
+                          }}
+                          className="w-fit rounded-md bg-transparent text-red-500"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </details>
