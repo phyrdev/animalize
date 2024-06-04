@@ -21,6 +21,7 @@ function Facilities() {
   const [facilities, setFacilities] = useState([]);
   const [visibleFacilities, setVisibleFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedForPreview, setSelectedForPreview] = useState(null);
 
   const FacilityCard = ({ facility, index }) => {
     return (

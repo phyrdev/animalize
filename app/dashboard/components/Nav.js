@@ -60,7 +60,9 @@ function Nav() {
           </div>
           <div className="ml-4">
             <p className="text-sm text-neutral-600">Good morning</p>
-            <p className="mt-1 font-medium">Priyangsu Banerjee</p>
+            <p className="mt-1 font-medium line-clamp-1">
+              {session?.data?.user?.name}
+            </p>
           </div>
         </div>
 
