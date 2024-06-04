@@ -183,6 +183,12 @@ function Facilities() {
     }
   }, [searchQuery]);
 
+  useEffect(() => {
+    if (searchOpen) {
+      document.getElementById("search-input").focus();
+    }
+  }, [searchOpen]);
+
   if (session.status == "authenticated") {
     if (
       permissions.manageFacilities.includes(session.data.user.role) == false
@@ -260,12 +266,12 @@ function Facilities() {
                   </svg>
                   <input
                     type="text"
+                    id="search-input"
                     placeholder="Search for a facility"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent text-sm outline-none h-full w-full ml-3"
                     name=""
-                    id=""
                   />
                   <button
                     onClick={() => {
