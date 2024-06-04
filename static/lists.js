@@ -261,3 +261,63 @@ export const employeeroles = [
   { label: "Pathologist", value: "pathologist" },
   { label: "Sample Collector", value: "sample-collector" },
 ];
+
+export const actionslist = [
+  {
+    label: "Create fresh report",
+    url: "/dashboard/reports/create",
+    access: ["super-admin", "admin", "receptionist"],
+  },
+  {
+    label: "Add new facility",
+    url: "/dashboard/facilities/create",
+    access: ["super-admin", "admin"],
+  },
+  {
+    label: "Collect samples",
+    url: "/dashboard/reports/",
+    access: ["sample-collector"],
+  },
+  {
+    label: "Manage employees",
+    url: "/dashboard/people/",
+    access: ["super-admin", "admin"],
+  },
+  {
+    label: "Manage facilities",
+    url: "/dashboard/facilities/",
+    access: ["super-admin", "admin"],
+  },
+  {
+    label: "Manage payments",
+    url: "/dashboard/payments/",
+    access: ["super-admin", "admin"],
+  },
+  {
+    label: "Manage issues",
+    url: "/dashboard/issues/",
+    access: ["super-admin", "admin"],
+  },
+  {
+    label: "Report an issue",
+    url: "/dashboard/issues/create",
+    access: [
+      "super-admin",
+      "admin",
+      "receptionist",
+      "pathologist",
+      "sample-collector",
+    ],
+  },
+  {
+    label: "Account settings",
+    url: "/dashboard/settings",
+    access: [
+      "super-admin",
+      "admin",
+      "receptionist",
+      "pathologist",
+      "sample-collector",
+    ],
+  },
+];
