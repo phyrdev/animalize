@@ -270,7 +270,7 @@ function Facilities() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleFacilities.map((facility, index) => {
+                    {facilities.map((facility, index) => {
                       return (
                         <FacilityRow
                           facility={facility}
@@ -288,7 +288,7 @@ function Facilities() {
                 </div>
 
                 <ul className="mt-5 space-y-2">
-                  {visibleFacilities.map((facility, index) => {
+                  {facilities.map((facility, index) => {
                     return (
                       <FacilityCard
                         facility={facility}
