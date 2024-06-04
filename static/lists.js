@@ -279,6 +279,11 @@ export const actionslist = [
     access: ["sample-collector"],
   },
   {
+    label: "Review reports",
+    url: "/dashboard/reports/",
+    access: ["pathologist"],
+  },
+  {
     label: "Manage employees",
     url: "/dashboard/people/",
     access: ["super-admin", "admin"],
