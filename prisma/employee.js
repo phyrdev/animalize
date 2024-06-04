@@ -143,6 +143,9 @@ export const getEmployeeData = async (empno) => {
       where: {
         empno,
       },
+      include: {
+        organization: true,
+      },
     });
 
     if (emp) {

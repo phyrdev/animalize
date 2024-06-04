@@ -24,10 +24,10 @@ model Organization {
   type       String
   size       String
   currency   String
-  facilities Json?
   verified   Boolean    @default(false)
   createdAt  DateTime   @default(now())
   employees  Employee[]
+  facilities Facility[]
 }
 
 model Employee {
@@ -40,6 +40,19 @@ model Employee {
   address      String?
   zipcode      String?
   role         String
+  organization Organization @relation(fields: [orgno], references: [orgno])
+  orgno        String
+  createdAt    DateTime     @default(now())
+}
+
+model Facility {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  cost         String
+  duration     String
+  availability       String
+  empno        String
+  parameters   Json?
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   createdAt    DateTime     @default(now())

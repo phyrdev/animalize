@@ -15,14 +15,18 @@ import { facilityavailability } from "@/static/lists";
 import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
 import toast from "react-hot-toast";
+import { createFacility } from "@/prisma/facility";
+import { useRouter } from "next/navigation";
 
 function CreateFacility() {
   const session = useSession();
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
   const [pFacility, setPFacility] = React.useState({
     name: "",
     cost: "",
     duration: "",
-    availability: "",
+    availability: "available",
     parameters: [],
   });
 
@@ -59,6 +63,38 @@ function CreateFacility() {
     });
   };
 
+  const handleSave = async () => {
+    if (
+      pFacility.name == "" ||
+      pFacility.cost == "" ||
+      pFacility.duration == "" ||
+      pFacility.availability == ""
+    ) {
+      toast.error("Fill all the fields.");
+      return;
+    } else if (pFacility.parameters.length == 0) {
+      toast.error("Add atleast one parameter.");
+      return;
+    } else {
+      let facility = {
+        ...pFacility,
+        orgno: session.data.user.orgno,
+        empno: session.data.user.empno,
+      };
+      setLoading(true);
+      let createfacilityReq = await createFacility(facility);
+      if (createfacilityReq.success) {
+        toast.success(createfacilityReq.message);
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      } else {
+        toast.error(createfacilityReq.message);
+      }
+      setLoading(false);
+    }
+  };
+
   if (session.status == "authenticated") {
     if (
       permissions.manageFacilities.includes(session.data.user.role) == false
@@ -91,7 +127,9 @@ function CreateFacility() {
             </Button>
 
             <Button
-              onClick={() => {}}
+              onClick={() => handleSave()}
+              isLoading={loading}
+              isDisabled={loading}
               className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white"
             >
               Save facility

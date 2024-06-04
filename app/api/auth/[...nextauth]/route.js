@@ -39,6 +39,7 @@ export const authOptions = {
             role: data.role,
             empno: data.empno,
             orgno: data.orgno,
+            currency: data.organization.currency,
           },
         };
       } else {
