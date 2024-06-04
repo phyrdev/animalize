@@ -351,6 +351,10 @@ function CreateReport() {
                       id=""
                     ></textarea>
                   </div>
+                  <p className="text-sm mt-4 text-neutral-600">
+                    Collect the residential address in case of door step
+                    service.
+                  </p>
                 </div>
                 <div className="pb-6 flex items-center justify-end gap-2 mt-6">
                   <Button
