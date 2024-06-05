@@ -28,6 +28,7 @@ model Organization {
   createdAt  DateTime   @default(now())
   employees  Employee[]
   facilities Facility[]
+  issues     Issue[]
 }
 
 model Employee {
@@ -42,6 +43,7 @@ model Employee {
   role         String
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
+  issues       Issue[]
   createdAt    DateTime     @default(now())
 }
 
@@ -50,9 +52,22 @@ model Facility {
   name         String
   cost         String
   duration     String
-  availability       String
+  availability String
   empno        String
   parameters   Json?
+  organization Organization @relation(fields: [orgno], references: [orgno])
+  orgno        String
+  createdAt    DateTime     @default(now())
+}
+
+model Issue {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String
+  status       String
+  priority     String
+  employee     Employee     @relation(fields: [empno], references: [empno])
+  empno        String
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   createdAt    DateTime     @default(now())

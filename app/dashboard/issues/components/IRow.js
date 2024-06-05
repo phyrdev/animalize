@@ -1,40 +1,43 @@
-import React from "react";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { useSession } from "next-auth/react";
+import { capitalizeFirstLetter } from "@/helper/refactor";
+import { deleteIssue } from "@/prisma/issue";
 import {
+  Button,
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
   DropdownItem,
-} from "@nextui-org/dropdown";
-import { Button } from "@nextui-org/react";
-import { deleteFacility } from "@/prisma/facility";
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
+import React from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
-function FRow({ facility, index, deleteCallback = () => {} }) {
-  const router = useRouter();
-  const session = useSession();
+function IRow({ issue, index, deleteCallback = () => {} }) {
   return (
-    <tr className="border-b hover:bg-neutral-50">
+    <tr key={index} className="border-b hover:bg-neutral-50">
       <td className="font-normal px-5 py-4 text-sm first:pl-10">{index + 1}</td>
-      <td className="font-normal px-5 py-4 text-sm">{facility.name}</td>
       <td className="font-normal px-5 py-4 text-sm">
-        {getCurrencySymbol(session.data.user.currency)}&nbsp;
-        {facility.cost}
+        {issue.title.length > 20
+          ? issue.title.substring(0, 20) + "..."
+          : issue.title}
+      </td>
+      <td className="font-normal px-5 py-4 text-sm cursor-pointer">
+        {issue.description.length > 20
+          ? issue.description.substring(0, 20) + "..."
+          : issue.description}
       </td>
       <td className="font-normal px-5 py-4 text-sm">
-        {capitalizeFirstLetter(facility.availability)}
+        {capitalizeFirstLetter(issue.status)}
       </td>
       <td className="font-normal px-5 py-4 text-sm">
-        {new Date(facility.createdAt).toLocaleDateString("en-US", {
+        {capitalizeFirstLetter(issue.priority)}
+      </td>
+      <td className="font-normal px-5 py-4 text-sm">{issue.empno}</td>
+      <td className="font-normal px-5 py-4 text-sm">
+        {new Date(issue.createdAt).toLocaleDateString("en-US", {
           day: "numeric",
           month: "short",
           year: "numeric",
         })}
       </td>
-      <td className="font-normal px-5 py-4 text-sm">{facility.duration} hrs</td>
       <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
         <button className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
           <svg
@@ -74,21 +77,16 @@ function FRow({ facility, index, deleteCallback = () => {} }) {
           <DropdownMenu
             onAction={async (key) => {
               switch (key) {
-                case "create-issue":
-                  router.push(
-                    `/dashboard/issues/create?title=Facility - ${facility.name}&description=This is an issue with ${facility.name} facility&priority=medium`
-                  );
+                case "issue":
+                  console.log("Create new issue");
                   break;
                 case "delete":
-                  if (
-                    confirm("Are you sure you want to delete this facility?")
-                  ) {
-                    toast.loading("Deleting facility...");
-                    let { success, message } = await deleteFacility(
-                      facility.id
-                    );
+                  if (confirm("Are you sure you want to delete this issue?")) {
+                    toast.loading("Deleting issue...");
+                    let { success, message } = await deleteIssue(issue.id);
                     toast.dismiss();
                     if (success) {
+                      toast.success("Issue deleted successfully");
                       deleteCallback();
                     } else {
                       toast.error(message);
@@ -101,9 +99,10 @@ function FRow({ facility, index, deleteCallback = () => {} }) {
             }}
             aria-label="Static Actions"
           >
-            <DropdownItem key="create-issue">Create new issue</DropdownItem>
+            <DropdownItem key="issue">Mark as closed</DropdownItem>
+            <DropdownItem key="issue">Mark as open</DropdownItem>
             <DropdownItem key="delete" className="text-danger" color="danger">
-              Delete facility
+              Delete issue
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -112,4 +111,4 @@ function FRow({ facility, index, deleteCallback = () => {} }) {
   );
 }
 
-export default FRow;
+export default IRow;

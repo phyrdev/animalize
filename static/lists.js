@@ -341,3 +341,29 @@ export const facilityavailability = [
     value: "permanently-removed",
   },
 ];
+
+export const issuestatus = [
+  {
+    label: "Open",
+    value: "open",
+  },
+  {
+    label: "Closed",
+    value: "closed",
+  },
+];
+
+export const issuepriorities = [
+  {
+    label: "Low",
+    value: "low",
+  },
+  {
+    label: "Medium",
+    value: "medium",
+  },
+  {
+    label: "High",
+    value: "high",
+  },
+];
