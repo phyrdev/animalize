@@ -305,7 +305,7 @@ export const resetPassword = async (empno) => {
     });
 
     if (employee) {
-      let message = `Greetings from Animalize! Your password has been reset successfully.<br>Employee no: ${empno}<br><br>Password: ${password}<br><br>Reagrds<br>Animalize HQ`;
+      let message = `Greetings from Animalize! Your password has been reset successfully.<br><br>Employee no: ${empno}<br>Password: ${password}<br><br>Reagrds<br>Animalize HQ`;
 
       await sendMail(employee.email, "Password Reset", message);
 
