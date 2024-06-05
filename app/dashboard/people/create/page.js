@@ -130,7 +130,7 @@ function CreatePerson() {
                     endContent={
                       <span className="text-neutral-500 text-sm">@</span>
                     }
-                    placeholder={"24"}
+                    placeholder={"abc@gmail.com"}
                   />
                   <CustomSelect
                     label="Role"

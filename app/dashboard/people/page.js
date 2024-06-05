@@ -202,6 +202,7 @@ function People() {
                           key={employee.id}
                           person={employee}
                           index={index}
+                          deleteCallback={getOrgEmployees}
                         />
                       );
                     })}

@@ -99,3 +99,22 @@ export const updateVerification = async (orgno, state) => {
     };
   }
 };
+
+export const getOrganization = async (orgno) => {
+  let organization = await prisma.organization.findUnique({
+    where: {
+      orgno: orgno,
+    },
+  });
+  if (organization) {
+    return {
+      success: true,
+      data: organization,
+    };
+  } else {
+    return {
+      success: false,
+      message: "Organization not found",
+    };
+  }
+};

@@ -14,7 +14,7 @@ export async function sendMail(to = "", subject = "", html = "", text = "") {
 
   try {
     await transporter.sendMail({
-      from: '"Animalize - Accounts Manager" <noreply@phyr.global>', // sender address
+      from: '"Animalize - Lms" <noreply@phyr.global>', // sender address
       to,
       subject,
       text,

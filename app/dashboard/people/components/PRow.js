@@ -1,4 +1,5 @@
 import { getRole } from "@/helper/refactor";
+import { deleteEmployee } from "@/prisma/employee";
 import {
   Button,
   Dropdown,
@@ -7,8 +8,9 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import React from "react";
+import toast from "react-hot-toast";
 
-function PRow({ person, index }) {
+function PRow({ person, index, deleteCallback }) {
   return (
     <tr className="border-b hover:bg-neutral-50">
       <td className="font-normal px-5 py-4 text-sm first:pl-10">{index + 1}</td>
@@ -75,6 +77,27 @@ function PRow({ person, index }) {
                   console.log("Create new issue");
                   break;
                 case "delete":
+                  if (person.role == "super-admin") {
+                    return toast.error("You can't delete a super admin.");
+                  }
+
+                  if (
+                    window.confirm(
+                      "Are you sure you want to delete this employee?"
+                    )
+                  ) {
+                    toast.loading("Deleting employee...");
+                    let { success, message } = await deleteEmployee(
+                      person.empno
+                    );
+                    toast.remove();
+                    if (success) {
+                      toast.success(message);
+                      deleteCallback();
+                    } else {
+                      console.error(message);
+                    }
+                  }
                   break;
                 default:
                   break;

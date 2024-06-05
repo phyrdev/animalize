@@ -3,6 +3,7 @@
 import randomstring from "randomstring";
 import prisma from "./prisma";
 import bcrypt from "bcrypt";
+import { sendMail } from "@/helper/mail";
 
 export const generateSuperAdmin = async (orgno) => {
   try {
@@ -175,6 +176,7 @@ export const getEmployees = async (orgno) => {
         orgno,
       },
       select: {
+        id: true,
         empno: true,
         name: true,
         email: true,
@@ -219,9 +221,20 @@ export const createEmployee = async (data) => {
         zipcode: data.zipcode,
         orgno: data.orgno,
       },
+      include: {
+        organization: true,
+      },
     });
 
     if (employee) {
+      let message = `Greetings from ${employee.organization.name}. Your credentials:<br/><br/>Employee number: ${empno}<br/>Password: ${password}<br/><br/>Please use these credentials to login. We advise you to change your password after first login. <br><br> Regards, <br> Animalize accounts management.`;
+
+      await sendMail(
+        data.email,
+        `Welcome to ${employee.organization.name}!`,
+        message
+      );
+
       return {
         success: true,
         message: "Employee created successfully.",
@@ -234,6 +247,34 @@ export const createEmployee = async (data) => {
       return {
         success: false,
         message: "Error creating employee.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const deleteEmployee = async (empno) => {
+  try {
+    let employee = await prisma.employee.delete({
+      where: {
+        empno,
+      },
+    });
+
+    if (employee) {
+      return {
+        success: true,
+        message: "Employee deleted successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Error deleting employee.",
       };
     }
   } catch (error) {
