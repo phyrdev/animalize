@@ -40,6 +40,7 @@ export const authOptions = {
             empno: data.empno,
             orgno: data.orgno,
             currency: data.organization.currency,
+            orgname: data.organization.name,
           },
         };
       } else {

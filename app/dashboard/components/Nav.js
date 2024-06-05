@@ -41,11 +41,11 @@ function Nav() {
                 d="M5.25 4a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0m12 12a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0M16 11.25a1.25 1.25 0 1 0 0-2.5a1.25 1.25 0 0 0 0 2.5M17.25 4a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0M10 17.25a1.25 1.25 0 1 0 0-2.5a1.25 1.25 0 0 0 0 2.5M11.25 10a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0M10 5.25a1.25 1.25 0 1 0 0-2.5a1.25 1.25 0 0 0 0 2.5M5.25 16a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0M4 11.25a1.25 1.25 0 1 0 0-2.5a1.25 1.25 0 0 0 0 2.5"
               ></path>
             </svg>
-            <span>Lenus labs</span>
+            <span className="text-sm">{session?.data?.user?.orgname}</span>
           </div>
         </div>
         <div className="flex mt-4 items-center px-5 py-3">
-          <div className="h-12 w-12 bg-neutral-200 rounded-md flex items-center justify-center">
+          <div className="h-12 w-12 bg-neutral-200 rounded-md flex items-center justify-center shrink-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={24}
