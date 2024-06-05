@@ -227,7 +227,7 @@ export const createEmployee = async (data) => {
     });
 
     if (employee) {
-      let message = `Greetings from ${employee.organization.name}. Your credentials:<br/><br/>Employee number: ${empno}<br/>Password: ${password}<br/><br/>Please use these credentials to login. We advise you to change your password after first login. <br><br> Regards, <br> Animalize accounts management.`;
+      let message = `Greetings from ${employee.organization.name}. Your credentials:<br/><br/>Employee number: ${empno}<br/>Password: ${password}<br/><br/>Please use these credentials to login. We advise you to change your password after first login. <br><br> Regards, <br> Animalize HQ`;
 
       await sendMail(
         data.email,
@@ -275,6 +275,48 @@ export const deleteEmployee = async (empno) => {
       return {
         success: false,
         message: "Error deleting employee.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const resetPassword = async (empno) => {
+  try {
+    let password = randomstring.generate({
+      length: 8,
+      charset: "alphanumeric",
+    });
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    let employee = await prisma.employee.update({
+      where: {
+        empno,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    if (employee) {
+      let message = `Greetings from Animalize! Your password has been reset successfully.<br>Employee no: ${empno}<br><br>Password: ${password}<br><br>Reagrds<br>Animalize HQ`;
+
+      await sendMail(employee.email, "Password Reset", message);
+
+      return {
+        success: true,
+        message: "Password reset successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Error resetting password.",
       };
     }
   } catch (error) {

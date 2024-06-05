@@ -1,5 +1,5 @@
 import { getRole } from "@/helper/refactor";
-import { deleteEmployee } from "@/prisma/employee";
+import { deleteEmployee, resetPassword } from "@/prisma/employee";
 import {
   Button,
   Dropdown,
@@ -73,8 +73,20 @@ function PRow({ person, index, deleteCallback }) {
           <DropdownMenu
             onAction={async (key) => {
               switch (key) {
-                case "issue":
-                  console.log("Create new issue");
+                case "reset-pass":
+                  if (person.role == "super-admin") {
+                    return toast.error(
+                      "You can't reset password of a super admin."
+                    );
+                  }
+                  toast.loading("Resetting password...");
+                  let { success, message } = await resetPassword(person.empno);
+                  toast.remove();
+                  if (success) {
+                    toast.success(message);
+                  } else {
+                    console.error(message);
+                  }
                   break;
                 case "delete":
                   if (person.role == "super-admin") {
@@ -105,7 +117,7 @@ function PRow({ person, index, deleteCallback }) {
             }}
             aria-label="Static Actions"
           >
-            <DropdownItem key="issue">Reset password</DropdownItem>
+            <DropdownItem key="reset-pass">Reset password</DropdownItem>
             <DropdownItem key="delete" className="text-danger" color="danger">
               Remove employee
             </DropdownItem>

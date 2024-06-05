@@ -146,7 +146,7 @@ function People() {
                   <input
                     type="text"
                     id="search-input"
-                    placeholder="Search for a facility"
+                    placeholder="Search for an employee..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent text-sm outline-none h-full w-full ml-3"
