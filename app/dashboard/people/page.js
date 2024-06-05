@@ -1,48 +1,53 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { permissions } from "@/static/permissions";
 import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import PermissionDenied from "../components/PermissionDenied";
-import { getFacilities } from "@/prisma/facility";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import FCard from "./components/FCard";
-import FRow from "./components/FRow";
+import FRow from "../facilities/components/FRow";
+import FCard from "../facilities/components/FCard";
+import { useRouter } from "next/navigation";
+import { permissions } from "@/static/permissions";
+import { getEmployees } from "@/prisma/employee";
+import PRow from "./components/PRow";
+import { getRole } from "@/helper/refactor";
+import PCard from "./components/PCard";
 
-function Facilities() {
+function People() {
   const router = useRouter();
-  const session = useSession();
-
-  const [facilities, setFacilities] = useState([]);
-  const [visibleFacilities, setVisibleFacilities] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [visibleEmployees, setVisibleEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getOrgFacilities = async () => {
-    let { success, data, message } = await getFacilities(
+  const session = useSession();
+
+  const getOrgEmployees = async () => {
+    let { success, data, message } = await getEmployees(
       session.data.user.orgno
     );
-    console.log(success, data, message);
     if (success) {
-      setFacilities(data);
-      setVisibleFacilities(data);
+      setEmployees(data);
+      setVisibleEmployees(data);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      if (permissions.manageFacilities.includes(session.data.user.role)) {
-        if (facilities.length == 0) {
-          getOrgFacilities();
+      if (permissions.manageEmployees.includes(session.data.user.role)) {
+        if (employees.length == 0) {
+          getOrgEmployees();
         }
       }
     }
@@ -50,12 +55,12 @@ function Facilities() {
 
   useEffect(() => {
     if (searchQuery == "") {
-      setVisibleFacilities(facilities);
+      setVisibleEmployees(employees);
     } else {
-      let filteredFacilities = facilities.filter((facility) => {
-        return facility.name.toLowerCase().includes(searchQuery.toLowerCase());
+      let filteredEmployees = employees.filter((employee) => {
+        return employee.name.toLowerCase().includes(searchQuery.toLowerCase());
       });
-      setVisibleFacilities(filteredFacilities);
+      setVisibleEmployees(filteredEmployees);
     }
   }, [searchQuery]);
 
@@ -66,9 +71,7 @@ function Facilities() {
   }, [searchOpen]);
 
   if (session.status == "authenticated") {
-    if (
-      permissions.manageFacilities.includes(session.data.user.role) == false
-    ) {
+    if (permissions.manageEmployees.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       return (
@@ -76,13 +79,13 @@ function Facilities() {
           <div className="px-5 md:px-10 py-5 flex items-center">
             <Breadcrumbs className="hidden md:block">
               <BreadcrumbItem>Dashboard</BreadcrumbItem>
-              <BreadcrumbItem>Facilities</BreadcrumbItem>
+              <BreadcrumbItem>People</BreadcrumbItem>
             </Breadcrumbs>
-            <span className="text-xl font-semibold md:hidden">Facilities</span>
+            <span className="text-xl font-semibold md:hidden">People</span>
             <Button
               onClick={() => {
                 setSearchOpen(!searchOpen);
-                setVisibleFacilities(facilities);
+                setVisibleEmployees(employees);
                 setSearchQuery("");
               }}
               isIconOnly
@@ -105,14 +108,14 @@ function Facilities() {
               </svg>
             </Button>
 
-            {permissions.manageFacilities.includes(session.data.user.role) && (
+            {permissions.manageEmployees.includes(session.data.user.role) && (
               <Button
                 onClick={() => {
-                  router.push("/dashboard/facilities/create");
+                  router.push("/dashboard/people/create");
                 }}
                 className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white"
               >
-                Add Facility
+                Add person
               </Button>
             )}
           </div>
@@ -152,7 +155,7 @@ function Facilities() {
                   <button
                     onClick={() => {
                       setSearchOpen(false);
-                      setVisibleFacilities(facilities);
+                      setVisibleEmployees(employees);
                       setSearchQuery("");
                     }}
                   >
@@ -179,30 +182,26 @@ function Facilities() {
                       <th className="font-medium px-5 py-4 text-sm first:pl-10">
                         S. no.
                       </th>
+                      <th className="font-medium px-5 py-4 text-sm">Emp. no</th>
                       <th className="font-medium px-5 py-4 text-sm">
-                        Facility name
+                        Employee name
                       </th>
-                      <th className="font-medium px-5 py-4 text-sm">Cost</th>
+                      <th className="font-medium px-5 py-4 text-sm">Role</th>
+                      <th className="font-medium px-5 py-4 text-sm">Phone</th>
+                      <th className="font-medium px-5 py-4 text-sm">Email</th>
                       <th className="font-medium px-5 py-4 text-sm">
-                        Available
-                      </th>
-                      <th className="font-medium px-5 py-4 text-sm">
-                        Created on
-                      </th>
-                      <th className="font-medium px-5 py-4 text-sm">
-                        Average time
+                        Date of joining
                       </th>
                       <th className="font-medium px-5 py-4 text-sm"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleFacilities.map((facility, index) => {
+                    {visibleEmployees.map((employee, index) => {
                       return (
-                        <FRow
-                          facility={facility}
-                          key={index}
+                        <PRow
+                          key={employee.id}
+                          person={employee}
                           index={index}
-                          deleteCallback={() => getOrgFacilities()}
                         />
                       );
                     })}
@@ -211,18 +210,13 @@ function Facilities() {
               </div>
               <div className="px-5 md:hidden mt-5">
                 <div className="flex items-center text-sm text-neutral-600">
-                  <span>0 - 10 of {facilities.length}&nbsp;facilities</span>
+                  <span>0 - 10 of {employees.length}&nbsp;employees</span>
                 </div>
 
                 <ul className="mt-5 space-y-2">
-                  {visibleFacilities.map((facility, index) => {
+                  {visibleEmployees.map((person, index) => {
                     return (
-                      <FCard
-                        facility={facility}
-                        key={index}
-                        index={index}
-                        deleteCallback={() => getOrgFacilities()}
-                      />
+                      <PCard key={person.id} person={person} index={index} />
                     );
                   })}
                 </ul>
@@ -235,4 +229,4 @@ function Facilities() {
   }
 }
 
-export default Facilities;
+export default People;

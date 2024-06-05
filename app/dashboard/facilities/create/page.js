@@ -85,9 +85,7 @@ function CreateFacility() {
       let createfacilityReq = await createFacility(facility);
       if (createfacilityReq.success) {
         toast.success(createfacilityReq.message);
-        setTimeout(() => {
-          location.reload();
-        }, 2000);
+        router.push("/dashboard/facilities");
       } else {
         toast.error(createfacilityReq.message);
       }

@@ -41,3 +41,24 @@ export const getFacilities = async (orgno) => {
     };
   }
 };
+
+export const deleteFacility = async (id) => {
+  try {
+    await prisma.facility.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Facility deleted successfully.",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

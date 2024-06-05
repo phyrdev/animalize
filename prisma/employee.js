@@ -167,3 +167,80 @@ export const getEmployeeData = async (empno) => {
     };
   }
 };
+
+export const getEmployees = async (orgno) => {
+  try {
+    const employees = await prisma.employee.findMany({
+      where: {
+        orgno,
+      },
+      select: {
+        empno: true,
+        name: true,
+        email: true,
+        role: true,
+        phone: true,
+        password: false,
+        createdAt: true,
+      },
+    });
+
+    return {
+      success: true,
+      data: employees,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const createEmployee = async (data) => {
+  try {
+    let empno = await generateUniqueEmpno();
+    let password = randomstring.generate({
+      length: 8,
+      charset: "alphanumeric",
+    });
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+
+    let employee = await prisma.employee.create({
+      data: {
+        empno,
+        password: hashedPassword,
+        role: data.role,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        zipcode: data.zipcode,
+        orgno: data.orgno,
+      },
+    });
+
+    if (employee) {
+      return {
+        success: true,
+        message: "Employee created successfully.",
+        data: {
+          empno,
+          password,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: "Error creating employee.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

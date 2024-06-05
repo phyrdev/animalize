@@ -133,7 +133,7 @@ export const navmenuitems = [
         ></path>
       </svg>
     ),
-    path: "/people",
+    path: "/dashboard/people",
   },
   {
     name: "Issues",
@@ -255,7 +255,7 @@ export const paymentstatus = [
 ];
 
 export const employeeroles = [
-  { label: "Super Admin", value: "super-admin" },
+  //   { label: "Super Admin", value: "super-admin" },
   { label: "Admin", value: "admin" },
   { label: "Receptionist", value: "receptionist" },
   { label: "Pathologist", value: "pathologist" },
