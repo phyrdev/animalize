@@ -67,7 +67,7 @@ function PCard({ person }) {
         </button>
         <Dropdown>
           <DropdownTrigger>
-            <Button isIconOnly className="bg-transparent">
+            <Button isIconOnly className="bg-transparent rounded">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={20}
@@ -81,12 +81,44 @@ function PCard({ person }) {
               </svg>
             </Button>
           </DropdownTrigger>
-          <DropdownMenu aria-label="Static Actions">
-            <DropdownItem key="new">New file</DropdownItem>
-            <DropdownItem key="copy">Copy link</DropdownItem>
-            <DropdownItem key="edit">Edit file</DropdownItem>
+          <DropdownMenu
+            onAction={async (key) => {
+              switch (key) {
+                case "issue":
+                  console.log("Create new issue");
+                  break;
+                case "delete":
+                  if (person.role == "super-admin") {
+                    return toast.error("You can't delete a super admin.");
+                  }
+
+                  if (
+                    window.confirm(
+                      "Are you sure you want to delete this employee?"
+                    )
+                  ) {
+                    toast.loading("Deleting employee...");
+                    let { success, message } = await deleteEmployee(
+                      person.empno
+                    );
+                    toast.remove();
+                    if (success) {
+                      toast.success(message);
+                      deleteCallback();
+                    } else {
+                      console.error(message);
+                    }
+                  }
+                  break;
+                default:
+                  break;
+              }
+            }}
+            aria-label="Static Actions"
+          >
+            <DropdownItem key="issue">Reset password</DropdownItem>
             <DropdownItem key="delete" className="text-danger" color="danger">
-              Delete file
+              Remove employee
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

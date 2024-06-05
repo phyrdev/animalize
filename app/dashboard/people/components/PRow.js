@@ -105,7 +105,7 @@ function PRow({ person, index, deleteCallback }) {
             }}
             aria-label="Static Actions"
           >
-            <DropdownItem key="issue">Send reset pass mail</DropdownItem>
+            <DropdownItem key="issue">Reset password</DropdownItem>
             <DropdownItem key="delete" className="text-danger" color="danger">
               Remove employee
             </DropdownItem>
