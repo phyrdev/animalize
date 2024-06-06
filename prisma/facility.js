@@ -62,3 +62,46 @@ export const deleteFacility = async (id) => {
     };
   }
 };
+
+export const updateFacility = async (id, facility) => {
+  try {
+    await prisma.facility.update({
+      where: {
+        id: id,
+      },
+      data: facility,
+    });
+
+    return {
+      success: true,
+      message: "Facility updated successfully.",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getFacilityById = async (id) => {
+  try {
+    const facility = await prisma.facility.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return {
+      success: true,
+      data: facility,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

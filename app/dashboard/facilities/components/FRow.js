@@ -36,7 +36,12 @@ function FRow({ facility, index, deleteCallback = () => {} }) {
       </td>
       <td className="font-normal px-5 py-4 text-sm">{facility.duration} hrs</td>
       <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
-        <button className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button
+          onClick={() =>
+            router.push(`/dashboard/facilities/${facility.id}/edit`)
+          }
+          className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}
