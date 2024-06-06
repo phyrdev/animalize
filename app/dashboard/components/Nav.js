@@ -27,7 +27,7 @@ function Nav() {
 
   const SideBar = () => {
     return (
-      <div className="w-[270px] bg-neutral-100 h-full hidden md:block shrink-0 border-r">
+      <div className="w-[270px] bg-neutral-100 h-full hidden md:block shrink-0 border-r overflow-y-auto">
         <div className="p-5">
           <div className="flex items-center space-x-3">
             <svg
