@@ -8,8 +8,8 @@ import toast from "react-hot-toast";
 
 function SignIn() {
   const [isVisible, setIsVisible] = useState(false);
-  const [empno, setEmpno] = useState("71648414");
-  const [password, setPassword] = useState("0jdDZLCC");
+  const [empno, setEmpno] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const performChecks = () => {
