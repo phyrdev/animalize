@@ -1,7 +1,10 @@
+"use client";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function PermissionDenied() {
+  const router = useRouter();
   return (
     <div className="p-5 md:p-10">
       <svg
@@ -26,7 +29,14 @@ function PermissionDenied() {
         You dont have necessary permissions to access this page. Please refer to
         your administrator.
       </p>
-      <Button className="mt-4 bg-neutral-200 rounded-md">
+      <Button
+        onClick={() => {
+          router.push(
+            "/dashboard/issues/create?title=Permission denied&priority=low"
+          );
+        }}
+        className="mt-4 bg-neutral-200 rounded-md"
+      >
         Create an issue
       </Button>
     </div>
