@@ -3,4 +3,11 @@ export const permissions = {
   manageFacilities: ["admin", "super-admin"],
   manageEmployees: ["admin", "super-admin"],
   manageIssues: ["admin", "super-admin"],
+  createIssue: [
+    "admin",
+    "super-admin",
+    "receptionist",
+    "pathologist",
+    "sample-collector",
+  ],
 };

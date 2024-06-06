@@ -58,3 +58,49 @@ export const deleteIssue = async (id) => {
     };
   }
 };
+
+export const markClosed = async (id) => {
+  try {
+    await prisma.issue.update({
+      where: {
+        id,
+      },
+      data: {
+        status: "closed",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Issue marked as closed",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const markOpen = async (id) => {
+  try {
+    await prisma.issue.update({
+      where: {
+        id,
+      },
+      data: {
+        status: "open",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Issue marked as open",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

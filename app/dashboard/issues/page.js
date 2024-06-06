@@ -8,6 +8,7 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Checkbox,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -28,6 +29,7 @@ function Issues() {
   const [issues, setIssues] = useState([]);
   const [visibleIssues, setVisibleIssues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showClosed, setShowClosed] = useState(true);
 
   const getOrgIssues = async () => {
     let { success, data, message } = await getIssues(session.data.user.orgno);
@@ -123,7 +125,7 @@ function Issues() {
             </div>
           ) : (
             <>
-              {searchOpen && (
+              {searchOpen ? (
                 <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +146,9 @@ function Issues() {
                   <input
                     type="text"
                     id="search-input"
-                    placeholder="Search for an issue..."
+                    placeholder={
+                      showClosed ? "Search all issues" : "Search open issues"
+                    }
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent text-sm outline-none h-full w-full ml-3"
@@ -172,7 +176,38 @@ function Issues() {
                     </svg>
                   </button>
                 </div>
+              ) : (
+                <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M4 3h16a1 1 0 0 1 1 1v1.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707v6.305a1 1 0 0 1-1.243.97l-2-.5a1 1 0 0 1-.757-.97v-5.805a1 1 0 0 0-.293-.707L3.293 6.293A1 1 0 0 1 3 5.586V4a1 1 0 0 1 1-1"
+                    />
+                  </svg>
+                  <span className="ml-3 text-sm text-neutral-600">
+                    Show closed issues
+                  </span>
+
+                  <input
+                    type="checkbox"
+                    checked={showClosed}
+                    onChange={(e) => setShowClosed(!showClosed)}
+                    className="h-4 w-4 ml-3 cursor-pointer"
+                    name=""
+                    id=""
+                  />
+                </div>
               )}
+
               <div className="hidden md:block whitespace-nowrap overflow-auto shrink-0 pb-24">
                 <table className="w-fit lg:w-full text-left">
                   <thead className="bg-neutral-100 border-y">
@@ -203,6 +238,7 @@ function Issues() {
                           issue={issue}
                           index={index}
                           deleteCallback={getOrgIssues}
+                          showClosed={showClosed}
                         />
                       );
                     })}

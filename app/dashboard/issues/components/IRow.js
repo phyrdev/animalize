@@ -1,5 +1,5 @@
 import { capitalizeFirstLetter } from "@/helper/refactor";
-import { deleteIssue } from "@/prisma/issue";
+import { deleteIssue, markClosed, markOpen } from "@/prisma/issue";
 import {
   Button,
   Dropdown,
@@ -10,8 +10,10 @@ import {
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-function IRow({ issue, index, deleteCallback = () => {} }) {
+function IRow({ issue, index, deleteCallback = () => {}, showClosed }) {
   const [expanded, setExpanded] = useState(false);
+
+  if (issue.status == "closed" && !showClosed) return null;
 
   return (
     <>
@@ -88,8 +90,27 @@ function IRow({ issue, index, deleteCallback = () => {} }) {
             <DropdownMenu
               onAction={async (key) => {
                 switch (key) {
-                  case "issue":
-                    console.log("Create new issue");
+                  case "mark-open":
+                    toast.loading("Marking issue as open...");
+                    let mOpenReq = await markOpen(issue.id);
+                    toast.dismiss();
+                    if (mOpenReq.success) {
+                      toast.success("Issue marked as open");
+                      deleteCallback();
+                    } else {
+                      toast.error(mOpenReq.message);
+                    }
+                    break;
+                  case "mark-closed":
+                    toast.loading("Marking issue as closed...");
+                    let mClosedReq = await markClosed(issue.id);
+                    toast.dismiss();
+                    if (mClosedReq.success) {
+                      toast.success("Issue marked as closed");
+                      deleteCallback();
+                    } else {
+                      toast.error(mClosedReq.message);
+                    }
                     break;
                   case "delete":
                     if (
@@ -112,8 +133,8 @@ function IRow({ issue, index, deleteCallback = () => {} }) {
               }}
               aria-label="Static Actions"
             >
-              <DropdownItem key="issue">Mark as closed</DropdownItem>
-              <DropdownItem key="issue">Mark as open</DropdownItem>
+              <DropdownItem key="mark-closed">Mark as closed</DropdownItem>
+              <DropdownItem key="mark-open">Mark as open</DropdownItem>
               <DropdownItem key="delete" className="text-danger" color="danger">
                 Delete issue
               </DropdownItem>

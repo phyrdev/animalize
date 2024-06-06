@@ -45,7 +45,7 @@ function CreateIssue() {
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      if (permissions.manageIssues.includes(session.data.user.role)) {
+      if (permissions.createIssue.includes(session.data.user.role)) {
         setTIssue({
           ...tIssue,
           orgno: session.data.user.orgno,
@@ -59,7 +59,7 @@ function CreateIssue() {
   }, [session.status]);
 
   if (session.status == "authenticated") {
-    if (permissions.manageIssues.includes(session.data.user.role) == false) {
+    if (permissions.createIssue.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       return (
