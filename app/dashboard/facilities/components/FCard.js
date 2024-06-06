@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { useSession } from "next-auth/react";
@@ -11,9 +12,11 @@ import {
 import { Button } from "@nextui-org/react";
 import { deleteFacility } from "@/prisma/facility";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function FCard({ facility, deleteCallback }) {
   const session = useSession();
+  const router = useRouter();
   return (
     <li className="bg-neutral-100 p-4">
       <h2 className="text-lg font-semibold">{facility.name}</h2>
@@ -42,7 +45,12 @@ function FCard({ facility, deleteCallback }) {
       </p>
 
       <div className="font-normal mt-3 text-sm items-center flex">
-        <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button
+          onClick={() =>
+            router.push(`/dashboard/facilities/${facility.id}/edit`)
+          }
+          className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}

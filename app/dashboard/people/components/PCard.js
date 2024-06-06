@@ -15,8 +15,10 @@ import {
 import { Button } from "@nextui-org/react";
 import { resetPassword } from "@/prisma/employee";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function PCard({ person }) {
+  const router = useRouter();
   const session = useSession();
   return (
     <li className="bg-neutral-100 p-4">
@@ -37,18 +39,20 @@ function PCard({ person }) {
         })}
       </p>
 
-      <p className="text-sm text-neutral-700 mt-3">
-        Phone:&nbsp;
-        {person.phone}
-      </p>
+      <p className="text-sm text-neutral-700 mt-3">{person.phone}</p>
 
-      <p className="text-sm text-neutral-700 mt-3">
-        Email:&nbsp;
-        {person.email}
-      </p>
+      <p className="text-sm text-neutral-700 mt-3">{person.email}</p>
 
       <div className="font-normal mt-3 text-sm items-center flex">
-        <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button
+          onClick={() => {
+            if (person.role == "super-admin") {
+              return toast.error("You can't edit a super admin.");
+            }
+            router.push(`/dashboard/people/${person.empno}/edit`);
+          }}
+          className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}

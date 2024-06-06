@@ -327,3 +327,32 @@ export const resetPassword = async (empno) => {
     };
   }
 };
+
+export const updateEmployee = async (empno, data) => {
+  try {
+    let employee = await prisma.employee.update({
+      where: {
+        empno,
+      },
+      data,
+    });
+
+    if (employee) {
+      return {
+        success: true,
+        message: "Employee updated successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Error updating employee.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

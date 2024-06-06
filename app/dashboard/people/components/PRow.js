@@ -1,3 +1,4 @@
+"use client";
 import { getRole } from "@/helper/refactor";
 import { deleteEmployee, resetPassword } from "@/prisma/employee";
 import {
@@ -7,10 +8,12 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
 
 function PRow({ person, index, deleteCallback }) {
+  const router = useRouter();
   return (
     <tr className="border-b hover:bg-neutral-50">
       <td className="font-normal px-5 py-4 text-sm first:pl-10">{index + 1}</td>
@@ -35,7 +38,15 @@ function PRow({ person, index, deleteCallback }) {
         })}
       </td>
       <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
-        <button className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button
+          onClick={() => {
+            if (person.role == "super-admin") {
+              return toast.error("You can't edit a super admin.");
+            }
+            router.push(`/dashboard/people/${person.empno}/edit`);
+          }}
+          className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}
