@@ -29,6 +29,8 @@ model Organization {
   employees  Employee[]
   facilities Facility[]
   issues     Issue[]
+  payments   Payment[]
+  reports    Report[]
 }
 
 model Employee {
@@ -44,6 +46,7 @@ model Employee {
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   issues       Issue[]
+  reports      Report[]
   createdAt    DateTime     @default(now())
 }
 
@@ -68,6 +71,56 @@ model Issue {
   priority     String
   employee     Employee     @relation(fields: [empno], references: [empno])
   empno        String
+  organization Organization @relation(fields: [orgno], references: [orgno])
+  orgno        String
+  createdAt    DateTime     @default(now())
+}
+
+model Report {
+  id                       String       @id @default(auto()) @map("_id") @db.ObjectId
+  accPin                   String?
+  additionalNotes          String?
+  contentDeclaration       Boolean      @default(false)
+  createDoctordoggtAccount Boolean      @default(false)
+  paidAmount               Float        @default(0)
+  parentAddress            String?
+  parentEmail              String
+  parentFirstName          String
+  parentLastName           String
+  parentPhone              String
+  parentZipcode            String?
+  paymentMode              String?      @default("cash")
+  paymentStatus            String?      @default("paid")
+  petBreed                 String
+  petDOB                   DateTime
+  petId                    String?
+  petName                  String
+  petSex                   String
+  petSpecies               String
+  petWeight                String
+  subTotal                 Float        @default(0)
+  tests                    Json?
+  vials                    Json?
+  result                   Json?
+  status                   String
+  priority                 String
+  employee                 Employee     @relation(fields: [empno], references: [empno])
+  empno                    String
+  organization             Organization @relation(fields: [orgno], references: [orgno])
+  orgno                    String
+  payments                 Payment[]
+  createdAt                DateTime     @default(now())
+}
+
+model Payment {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  type         String
+  currency     String
+  totalamount  String
+  status       String
+  amountpaid   String
+  report       Report       @relation(fields: [reportid], references: [id])
+  reportid     String       @db.ObjectId
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   createdAt    DateTime     @default(now())

@@ -41,6 +41,7 @@ export const authOptions = {
             orgno: data.orgno,
             currency: data.organization.currency,
             orgname: data.organization.name,
+            zipcode: data.organization.zipcode,
           },
         };
       } else {

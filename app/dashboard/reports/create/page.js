@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import {
@@ -13,7 +14,7 @@ import { DateInput } from "@nextui-org/react";
 import { CalendarDate } from "@internationalized/date";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import CustomList from "../../components/CustomList";
@@ -29,20 +30,28 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
+import { getFacilities } from "@/prisma/facility";
+import { getCurrencySymbol } from "@/helper/refactor";
 
 function CreateReport() {
   const session = useSession();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
+  const [selectTestsOpen, setSelectTestsOpen] = React.useState(true);
+
+  const [facilities, setFacilities] = React.useState([]);
+  const [visibleFacilities, setVisibleFacilities] = React.useState([]);
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const [pFile, setPFile] = React.useState({
     empno: "",
     orgno: "",
     accPin: "",
+    petId: "",
     petName: "",
-    petSpecies: "",
+    petSpecies: "canine",
     petBreed: "",
-    petSex: "",
+    petSex: "male-intact",
     petWeight: "",
     petDob: "",
     parentFirstName: "",
@@ -53,9 +62,9 @@ function CreateReport() {
     parentAddress: "",
     tests: [],
     subtotal: 0,
-    paymentMode: "",
-    paymentStatus: "",
-    paidAmount: "",
+    paymentMode: "cash",
+    paymentStatus: "paid",
+    paidAmount: 0,
     contentDeclaration: false,
     createDoctordoggyAccount: false,
     additionalNotes: "",
@@ -100,6 +109,132 @@ function CreateReport() {
     }
   };
 
+  const getOrgFacilities = async () => {
+    let { success, data, message } = await getFacilities(
+      session.data.user.orgno
+    );
+    if (success) {
+      setFacilities(data);
+      setVisibleFacilities(data);
+    }
+  };
+
+  useEffect(() => {
+    if (session.status == "authenticated") {
+      if (permissions.createReport.includes(session.data.user.role) == true) {
+        setPFile({
+          ...pFile,
+          orgno: session.data.user.orgno,
+          empno: session.data.user.empno,
+          parentZipcode: session.data.user.zipcode,
+        });
+        getOrgFacilities();
+      }
+    }
+  }, [session.status]);
+
+  useEffect(() => {
+    if (searchQuery == "") {
+      setVisibleFacilities(facilities);
+    } else {
+      let filteredFacilities = facilities.filter((facility) => {
+        return facility.name.toLowerCase().includes(searchQuery.toLowerCase());
+      });
+      setVisibleFacilities(filteredFacilities);
+    }
+  }, [searchQuery]);
+
+  const handleSave = async () => {
+    console.log(pFile);
+    if (performChecks()) {
+      console.log(pFile);
+    }
+  };
+
+  const performChecks = () => {
+    if (pFile.petName.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid pet name");
+      return false;
+    }
+    if (pFile.petSpecies.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid pet species");
+      return false;
+    }
+    if (pFile.petBreed.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid pet breed");
+      return false;
+    }
+    if (pFile.petSex.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid sex");
+      return false;
+    }
+    if (pFile.petWeight.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid weight");
+      return false;
+    }
+    if (pFile.petDob.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("pet-details-dd").open = true;
+      toast.error("Please enter a valid date of birth");
+      return false;
+    }
+    if (pFile.parentFirstName.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("parent-details-dd").open = true;
+      toast.error("Please enter a valid parent first name");
+      return false;
+    }
+
+    if (pFile.parentPhone.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("parent-details-dd").open = true;
+      toast.error("Please enter a valid parent phone");
+      return false;
+    }
+    if (pFile.parentZipcode.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("parent-details-dd").open = true;
+      toast.error("Please enter a valid parent zipcode");
+      return false;
+    }
+
+    if (pFile.tests.length == 0) {
+      closeAllDetails();
+      document.getElementById("test-details-dd").open = true;
+      toast.error("Please select a test");
+      return false;
+    }
+
+    if (pFile.paymentMode.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("billing-details-dd").open = true;
+      toast.error("Please enter a valid payment mode");
+      return false;
+    } else if (pFile.paymentStatus.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("billing-details-dd").open = true;
+      toast.error("Please enter a valid payment status");
+      return false;
+    } else if (pFile.paidAmount.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("billing-details-dd").open = true;
+      toast.error("Please enter a valid paid amount");
+      return false;
+    }
+
+    return true;
+  };
+
   if (session.status == "authenticated") {
     if (permissions.createReport.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
@@ -129,15 +264,16 @@ function CreateReport() {
               </svg>
             </Button>
 
-            <Link href="/dashboard/reports/create">
-              <Button className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white">
-                Save report
-              </Button>
-            </Link>
+            <Button
+              onClick={() => handleSave()}
+              className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white"
+            >
+              Save report
+            </Button>
           </div>
 
           <div className="md:px-10 px-5 mt-5 max-w-4xl">
-            <details id="auto-fill-dd">
+            <details id="auto-fill-dd" open>
               <summary>
                 <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                   Is the pet registered in doctordoggy ?
@@ -358,7 +494,10 @@ function CreateReport() {
                 </div>
               </summary>
               <div className="pt-5 md:pl-5">
-                <Button className="bg-white border">
+                <Button
+                  onClick={() => setSelectTestsOpen(true)}
+                  className="bg-white border"
+                >
                   <span>Choose tests</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -375,7 +514,8 @@ function CreateReport() {
                 <div className="pb-6 flex items-center justify-end gap-2 mt-6">
                   <Button
                     onClick={() => {
-                      document.getElementById("auto-fill-dd").open = false;
+                      closeAllDetails();
+                      document.getElementById("parent-details-dd").open = true;
                     }}
                     className="rounded bg-transparent"
                   >
@@ -383,7 +523,8 @@ function CreateReport() {
                   </Button>
                   <Button
                     onClick={() => {
-                      document.getElementById("auto-fill-dd").open = false;
+                      closeAllDetails();
+                      document.getElementById("billing-details-dd").open = true;
                     }}
                     className="rounded"
                   >
@@ -421,20 +562,27 @@ function CreateReport() {
                     <span className="ml-auto">Price</span>
                   </div>
                   <div className="space-y-3 mt-4">
-                    <div className="flex items-center px-5">
-                      <span className="w-16">1</span>
-                      <span className="ml-3 text-sm">C.B.C</span>
-                      <span className="ml-auto">₹2500</span>
-                    </div>
-                    <div className="flex items-center px-5">
-                      <span className="w-16">2</span>
-                      <span className="ml-3 text-sm">C.B.C</span>
-                      <span className="ml-auto">₹2500</span>
-                    </div>
+                    {pFile.tests.length == 0 && (
+                      <p className="text-sm text-neutral-600 px-5 py-3">
+                        No tests selected
+                      </p>
+                    )}
+                    {pFile.tests.map((test, index) => {
+                      return (
+                        <div key={index} className="flex items-center px-5">
+                          <span className="w-16">{index + 1}</span>
+                          <span className="ml-3 text-sm">{test.name}</span>
+                          <span className="ml-auto">
+                            {getCurrencySymbol(session.data.user.currency)}
+                            {test.cost}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="flex items-center border-t px-5 py-2 font-medium mt-4">
                     <span className="text-base text-black">Subtotal</span>
-                    <span className="ml-auto">₹5000</span>
+                    <span className="ml-auto">₹{pFile.subtotal}</span>
                   </div>
                 </div>
 
@@ -474,7 +622,8 @@ function CreateReport() {
 
                 {pFile.paymentStatus == "pending" && (
                   <span className="text-sm mt-6 inline-block">
-                    Due amount : ₹{5000 - pFile.paidAmount}
+                    Due amount : {getCurrencySymbol(session.data.user.currency)}
+                    {parseFloat(pFile.subtotal) - parseFloat(pFile.paidAmount)}
                   </span>
                 )}
 
@@ -489,7 +638,8 @@ function CreateReport() {
                   </Button>
                   <Button
                     onClick={() => {
-                      document.getElementById("auto-fill-dd").open = false;
+                      closeAllDetails();
+                      document.getElementById("declaration-dd").open = true;
                     }}
                     className="rounded"
                   >
@@ -498,7 +648,7 @@ function CreateReport() {
                 </div>
               </div>
             </details>
-            <details id="billing-details-dd" className="mt-8">
+            <details id="declaration-dd" className="mt-8">
               <summary>
                 <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                   Declaration
@@ -512,12 +662,12 @@ function CreateReport() {
                     best of my knowledge
                   </p>
                 </div>
-                <div className="flex items-start space-x-1">
+                {/* <div className="flex items-start space-x-1">
                   <Checkbox className="text-sm"></Checkbox>
                   <p className="text-sm leading-6 -mt-[5px] md:-mt-[2px] text-neutral-600">
                     Create a doctordoggy account for the pet parent
                   </p>
-                </div>
+                </div> */}
                 <div className="pt-7">
                   <p className="text-sm text-neutral-600">Additional notes</p>
                   <textarea
@@ -661,6 +811,7 @@ function CreateReport() {
                               );
                               setPFile({
                                 ...pFile,
+                                petId: tempPets[tempPetIndex].id,
                                 petName: tempPets[tempPetIndex].name,
                                 petSpecies: specie.value,
                                 petBreed: tempPets[tempPetIndex].breed,
@@ -686,6 +837,158 @@ function CreateReport() {
                       </div>
                     </>
                   )}
+                </div>
+              </div>
+            )}
+          </>
+
+          <>
+            {selectTestsOpen && (
+              <div className="fixed inset-0 h-full w-full bg-black/50 flex items-center justify-center z-20">
+                <div className="h-fit max-h-[500px] w-[550px] bg-white rounded-md relative overflow-auto pb-4">
+                  <div className="sticky top-0 inset-x-0 bg-white">
+                    <div className="p-5 flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.55"
+                          d="M6 18h8M3 22h18m-7 0a7 7 0 1 0 0-14h-1m-4 6h2m-2-2a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Zm3-6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"
+                        />
+                      </svg>
+                      <span className="text-lg font-medium ml-3">
+                        Choose tests
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSelectTestsOpen(false);
+                          setSearchQuery("");
+                          setVisibleFacilities(facilities);
+                        }}
+                        className="ml-auto"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={20}
+                          height={20}
+                          viewBox="0 0 48 48"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={4}
+                            d="m8 8l32 32M8 40L40 8"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="h-12 border-y flex items-center px-5">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={20}
+                        height={20}
+                        className="shrink-0"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.55}
+                          d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                        ></path>
+                      </svg>
+                      <input
+                        type="text"
+                        id="search-input"
+                        placeholder="Search tests"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="bg-transparent text-sm outline-none h-full w-full ml-3"
+                        name=""
+                      />
+                    </div>
+                  </div>
+                  <ul>
+                    <li className="grid grid-cols-3 bg-neutral-100 border-b px-5 text-sm font-medium text-neutral-600 py-2">
+                      <span>Name</span>
+                      <span>Cost</span>
+                      <span>Duration</span>
+                    </li>
+                    {visibleFacilities.map((facility, index) => {
+                      return (
+                        <li
+                          className="grid grid-cols-3 px-5 text-sm mt-3"
+                          key={index}
+                        >
+                          <span>{facility.name}</span>
+                          <span>
+                            {getCurrencySymbol(session.data.user.currency)}
+                            {facility.cost}
+                          </span>
+                          <div className="flex items-center justify-between">
+                            <span>{facility.duration}hrs</span>
+                            <span className="mr-5">
+                              <input
+                                type="checkbox"
+                                checked={pFile.tests.some(
+                                  (test) => test.id == facility.id
+                                )}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    let tempTests = pFile.tests;
+                                    tempTests.push(facility);
+                                    setPFile({
+                                      ...pFile,
+                                      tests: tempTests,
+                                      subtotal:
+                                        parseFloat(pFile.subtotal) +
+                                        parseFloat(facility.cost),
+                                      paidAmount:
+                                        pFile.paymentStatus == "paid"
+                                          ? parseFloat(pFile.paidAmount) +
+                                            parseFloat(facility.cost)
+                                          : pFile.paidAmount,
+                                    });
+                                  } else {
+                                    let tempTests = pFile.tests;
+                                    let index = tempTests.findIndex(
+                                      (test) => test.id == facility.id
+                                    );
+                                    tempTests.splice(index, 1);
+                                    setPFile({
+                                      ...pFile,
+                                      tests: tempTests,
+                                      subtotal:
+                                        parseFloat(pFile.subtotal) -
+                                        parseFloat(facility.cost),
+                                      paidAmount:
+                                        pFile.paymentStatus == "paid"
+                                          ? parseFloat(pFile.paidAmount) -
+                                            parseFloat(facility.cost)
+                                          : pFile.paidAmount,
+                                    });
+                                  }
+                                }}
+                                name=""
+                                id=""
+                              />
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
             )}
