@@ -37,7 +37,7 @@ function CreateReport() {
   const session = useSession();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
-  const [selectTestsOpen, setSelectTestsOpen] = React.useState(true);
+  const [selectTestsOpen, setSelectTestsOpen] = React.useState(false);
 
   const [facilities, setFacilities] = React.useState([]);
   const [visibleFacilities, setVisibleFacilities] = React.useState([]);
@@ -844,8 +844,8 @@ function CreateReport() {
 
           <>
             {selectTestsOpen && (
-              <div className="fixed inset-0 h-full w-full bg-black/50 flex items-center justify-center z-20">
-                <div className="h-fit max-h-[500px] w-[550px] bg-white rounded-md relative overflow-auto pb-4">
+              <div className="fixed inset-0 h-full w-full bg-black/50 flex items-end md:items-center justify-center z-20">
+                <div className="min-h-[500px] h-fit md:h-fit max-h-[600px] w-full md:w-[550px] bg-white md:rounded-md relative overflow-auto pb-4">
                   <div className="sticky top-0 inset-x-0 bg-white">
                     <div className="p-5 flex items-center">
                       <svg
