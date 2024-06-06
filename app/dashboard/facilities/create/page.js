@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
-import { facilityavailability } from "@/static/lists";
+import { facilityavailability, testparameteruits } from "@/static/lists";
 import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
 import toast from "react-hot-toast";
@@ -271,11 +271,11 @@ function CreateFacility() {
                         }}
                         className="h-full w-full outline-none cursor-pointer"
                       >
-                        <option value="mg/dL">mg/dL</option>
-                        <option value="g/dL">g/dL</option>
-                        <option value="IU/L">IU/L</option>
-                        <option value="mmol/L">mmol/L</option>
-                        <option value="boolean">boolean</option>
+                        {testparameteruits.map((unit, index) => (
+                          <option key={index} value={unit.value}>
+                            {unit.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div className="grid grid-cols-2 gap-1">

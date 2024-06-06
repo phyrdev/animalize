@@ -367,3 +367,68 @@ export const issuepriorities = [
     value: "high",
   },
 ];
+
+export const testparameteruits = [
+  {
+    label: "mg/dL",
+    value: "mg/dL",
+  },
+  {
+    label: "g/dL",
+    value: "g/dL",
+  },
+
+  {
+    label: "IU/L",
+    value: "IU/L",
+  },
+
+  {
+    label: "mmol/L",
+    value: "mmol/L",
+  },
+  {
+    label: "g/dL",
+    value: "g/dL",
+  },
+  {
+    label: "10^9/L",
+    value: "10^9/L",
+  },
+  {
+    label: "10^12/L",
+    value: "10^12/L",
+  },
+  {
+    label: "%",
+    value: "%",
+  },
+  {
+    label: "fL",
+    value: "fL",
+  },
+  {
+    label: "pg",
+    value: "pg",
+  },
+  {
+    label: "g/dL",
+    value: "g/dL",
+  },
+  {
+    label: "mEq/L",
+    value: "mEq/L",
+  },
+  {
+    label: "mmom/L",
+    value: "mmom/L",
+  },
+  {
+    label: "U/L",
+    value: "gm/dL",
+  },
+  {
+    label: "boolean",
+    value: "boolean",
+  },
+];
