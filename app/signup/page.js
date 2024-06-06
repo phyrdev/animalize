@@ -22,10 +22,10 @@ function SignUp() {
   const router = useRouter();
 
   const [organization, setOrganization] = useState({
-    name: "Lenus Vet Labs",
-    email: "priyangsu26@gmail.com",
-    phone: "9647045453",
-    zipcode: "713216",
+    name: "",
+    email: "",
+    phone: "",
+    zipcode: "",
     type: "Pathology Lab",
     size: "6-10",
     currency: "INR",
