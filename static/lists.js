@@ -425,6 +425,10 @@ export const testparameteruits = [
   },
   {
     label: "U/L",
+    value: "U/L",
+  },
+  {
+    label: "gm/dL",
     value: "gm/dL",
   },
   {
