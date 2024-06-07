@@ -511,6 +511,19 @@ function CreateReport() {
                     />
                   </svg>
                 </Button>
+                <div className="space-y-3 mt-8 max-w-sm">
+                  {pFile.tests.map((test, index) => {
+                    return (
+                      <div key={index} className="flex items-center px-5">
+                        <span className="w-10">{index + 1}.</span>
+                        <span className="ml-3 text-sm">{test.name}</span>
+                        <span className="ml-auto text-sm">
+                          {test.duration} hrs
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
                 <div className="pb-6 flex items-center justify-end gap-2 mt-6">
                   <Button
                     onClick={() => {
@@ -551,7 +564,14 @@ function CreateReport() {
                   </div>
                   <div className="text-sm">
                     <span className="text-neutral-500">Tests to be done:</span>{" "}
-                    <span>CBC, LFT</span>
+                    {pFile.tests.map((test, index) => {
+                      return (
+                        <span key={index}>
+                          {test.name}
+                          {index + 1 != pFile.tests.length && ", "}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
 
