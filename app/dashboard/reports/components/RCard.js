@@ -2,31 +2,31 @@ import { capitalizeFirstLetter } from "@/helper/refactor";
 import { Button } from "@nextui-org/react";
 import React from "react";
 
-function RRow({ report, index }) {
-  console.log(report);
+function RCard({ report, index }) {
   return (
-    <tr className="border-b hover:bg-neutral-50">
-      <td className="font-normal px-5 py-4 text-sm first:pl-10">{index + 1}</td>
-      <td className="font-normal px-5 py-4 text-sm">{report.reportno}</td>
-      <td className="font-normal px-5 py-4 text-sm">
-        {new Date(report.createdAt).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
-      </td>
-      <td className="font-normal px-5 py-4 text-sm">{report.petName}</td>
-      <td className="font-normal px-5 py-4 text-sm">{report.status}</td>
-      <td className="font-normal px-5 py-4 text-sm">
-        {capitalizeFirstLetter(report.payment.paymentStatus)}
-      </td>
-      <td className="font-normal px-5 py-4 text-sm">
+    <li className="bg-neutral-100 p-4">
+      <div className="flex items-center text-sm">
+        <span className="">{report.reportno}</span>
+        <span className="ml-auto text-neutral-600">
+          {new Date(report.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </span>
+      </div>
+      <h2 className="text-lg font-semibold mt-3">{report.petName}</h2>
+      <div className="mt-2 flex items-center">
+        <span className="text-sm text-neutral-700">{report.status}</span>
+        <span className="text-sm text-neutral-600 ml-auto">
+          {capitalizeFirstLetter(report.payment.paymentStatus)}
+        </span>
+      </div>
+      <div className="font-normal mt-5 text-sm items-center flex">
         <Button className="rounded-md bg-transparent border border-neutral-400">
           Collect sample
         </Button>
-      </td>
-      <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
-        <button className="bg-sky-100 hover:bg-sky-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={18}
@@ -39,7 +39,7 @@ function RRow({ report, index }) {
             </g>
           </svg>
         </button>
-        <button className="bg-neutral-100 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}
@@ -58,7 +58,7 @@ function RRow({ report, index }) {
             ></path>
           </svg>
         </button>
-        <button className="h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}
@@ -71,9 +71,9 @@ function RRow({ report, index }) {
             ></path>
           </svg>
         </button>
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }
 
-export default RRow;
+export default RCard;

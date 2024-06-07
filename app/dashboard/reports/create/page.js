@@ -601,11 +601,11 @@ function CreateReport() {
                 <div className="w-full flex flex-wrap gap-3 md:gap-6">
                   <div className="text-sm">
                     <span className="text-neutral-500">Patient name:</span>{" "}
-                    <span>Roxy</span>
+                    <span>{pFile.petName}</span>
                   </div>
                   <div className="text-sm">
                     <span className="text-neutral-500">Parent name:</span>{" "}
-                    <span>Priyangsu Banerjee</span>
+                    <span>{pFile.parentFirstName}</span>
                   </div>
                   <div className="text-sm">
                     <span className="text-neutral-500">Tests to be done:</span>{" "}
