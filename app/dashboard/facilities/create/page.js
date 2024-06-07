@@ -57,7 +57,7 @@ function CreateFacility() {
     setTempParameter({
       name: "",
       description: "",
-      unit: "mg/dL",
+      unit: tempParameter.unit,
       low: "",
       high: "",
     });

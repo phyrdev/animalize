@@ -62,7 +62,7 @@ function EditFacilityContainer({ o_facility }) {
     setTempParameter({
       name: "",
       description: "",
-      unit: "mg/dL",
+      unit: tempParameter.unit,
       low: "",
       high: "",
     });
