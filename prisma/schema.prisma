@@ -51,6 +51,7 @@ model Employee {
   reports      Report[]
   observations Observation[]
   vials        Vial[]
+  payments     Payment[]
   createdAt    DateTime      @default(now())
 }
 
@@ -82,10 +83,11 @@ model Issue {
 
 model Report {
   id                       String        @id @default(auto()) @map("_id") @db.ObjectId
+  reportno                 String        @unique   
   accPin                   String?
   additionalNotes          String?
   contentDeclaration       Boolean       @default(false)
-  createDoctordoggtAccount Boolean       @default(false)
+  createDoctordoggyAccount Boolean       @default(false)
   parentAddress            String?
   parentEmail              String
   parentFirstName          String
@@ -93,7 +95,7 @@ model Report {
   parentPhone              String
   parentZipcode            String?
   petBreed                 String
-  petDOB                   DateTime
+  petDob                   DateTime
   petId                    String?
   petName                  String
   petSex                   String
@@ -108,8 +110,8 @@ model Report {
   organization             Organization  @relation(fields: [orgno], references: [orgno])
   orgno                    String
   vials                    Vial[]
-  payments                 Payment[]
   observations             Observation[]
+  payment                  Payment[]
   createdAt                DateTime      @default(now())
 }
 
@@ -140,15 +142,16 @@ model Observation {
 
 model Payment {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  type         String
   currency     String
-  totalamount  String
-  status       String
-  amountpaid   String
-  mode         String
-  report       Report       @relation(fields: [reportid], references: [id])
-  reportid     String       @db.ObjectId
+  subtotal  Float
+  paymentStatus       String
+  paidAmount   Float
+  paymentMode         String
+  createdBy    Employee     @relation(fields: [empno], references: [empno])
+  empno        String
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   createdAt    DateTime     @default(now())
+  Report       Report?      @relation(fields: [reportId], references: [id])
+  reportId     String?      @db.ObjectId
 }

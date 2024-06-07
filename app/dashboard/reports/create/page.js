@@ -31,10 +31,13 @@ import { useSession } from "next-auth/react";
 import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
 import { getFacilities } from "@/prisma/facility";
-import { getCurrencySymbol } from "@/helper/refactor";
+import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+import { createReport } from "@/prisma/report";
+import { useRouter } from "next/navigation";
 
 function CreateReport() {
   const session = useSession();
+  const router = useRouter();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
   const [selectTestsOpen, setSelectTestsOpen] = React.useState(false);
@@ -64,6 +67,7 @@ function CreateReport() {
     subtotal: 0,
     paymentMode: "cash",
     paymentStatus: "paid",
+    currency: "",
     paidAmount: 0,
     contentDeclaration: false,
     createDoctordoggyAccount: false,
@@ -72,6 +76,7 @@ function CreateReport() {
 
   const [tempPets, setTempPets] = React.useState([]);
   const [tempPetIndex, setTempPetIndex] = React.useState(null);
+  const [createdReport, setCreatedReport] = React.useState(null);
 
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
@@ -127,6 +132,7 @@ function CreateReport() {
           orgno: session.data.user.orgno,
           empno: session.data.user.empno,
           parentZipcode: session.data.user.zipcode,
+          currency: session.data.user.currency,
         });
         getOrgFacilities();
       }
@@ -145,9 +151,48 @@ function CreateReport() {
   }, [searchQuery]);
 
   const handleSave = async () => {
-    console.log(pFile);
     if (performChecks()) {
-      console.log(pFile);
+      let reportSpecifics = {
+        accPin: pFile.accPin,
+        additionalNotes: pFile.additionalNotes,
+        contentDeclaration: pFile.contentDeclaration,
+        createDoctordoggyAccount: pFile.createDoctordoggyAccount,
+        parentAddress: pFile.parentAddress,
+        parentEmail: pFile.parentEmail,
+        parentFirstName: pFile.parentFirstName,
+        parentLastName: pFile.parentLastName,
+        parentPhone: pFile.parentPhone,
+        parentZipcode: pFile.parentZipcode,
+        petBreed: pFile.petBreed,
+        petDob: new Date(pFile.petDob).toISOString(),
+        petId: pFile.petId,
+        petName: pFile.petName,
+        petSex: pFile.petSex,
+        petSpecies: pFile.petSpecies,
+        petWeight: pFile.petWeight,
+        tests: pFile.tests,
+        empno: pFile.empno,
+        orgno: pFile.orgno,
+      };
+
+      let billingSpecifics = {
+        paidAmount: pFile.paidAmount,
+        paymentMode: pFile.paymentMode,
+        paymentStatus: pFile.paymentStatus,
+        subtotal: pFile.subtotal,
+        empno: pFile.empno,
+        orgno: pFile.orgno,
+        currency: pFile.currency,
+      };
+
+      let createReportReq = await createReport(
+        reportSpecifics,
+        billingSpecifics
+      );
+
+      if (createReportReq.success) {
+        setCreatedReport(createReportReq.data);
+      }
     }
   };
 
@@ -1009,6 +1054,186 @@ function CreateReport() {
                       );
                     })}
                   </ul>
+                </div>
+              </div>
+            )}
+          </>
+
+          <>
+            {createdReport && (
+              <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-center justify-center">
+                <div className="w-[600px] bg-white rounded-md p-5">
+                  <div className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 48 48"
+                    >
+                      <g
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinejoin="round"
+                        strokeWidth={4}
+                      >
+                        <path d="M41 14L24 4L7 14v20l17 10l17-10z"></path>
+                        <path
+                          strokeLinecap="round"
+                          d="M24 22v8m8-12v12m-16-4v4"
+                        ></path>
+                      </g>
+                    </svg>
+                    <span className="text-lg font-medium ml-3">
+                      Report created
+                    </span>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-4">
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Pet name:</span>
+                      <span className="ml-2">{pFile.petName}</span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Parent name:</span>
+                      <span className="ml-2">{pFile.parentFirstName}</span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Report no:</span>
+                      <span className="ml-2">{createdReport.reportno}</span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Number of tests:</span>
+                      <span className="ml-2">{pFile.tests.length}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex flex-wrap gap-4">
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Subtotal:</span>
+                      <span className="ml-2">
+                        {getCurrencySymbol(session.data.user.currency)}
+                        {pFile.subtotal}
+                      </span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Paid amount:</span>
+                      <span className="ml-2">
+                        {getCurrencySymbol(session.data.user.currency)}
+                        {pFile.paidAmount}
+                      </span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Payment status:</span>
+                      <span className="ml-2">
+                        {capitalizeFirstLetter(pFile.paymentStatus)}
+                      </span>
+                    </div>
+                    <div className="text-sm text-neutral-700">
+                      <span className="font-medium">Payment mode:</span>
+                      <span className="ml-2">
+                        {capitalizeFirstLetter(pFile.paymentMode)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-neutral-200 w-full my-6"></div>
+
+                  <div className="inline-flex gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M4 18.646V8.054c0-2.854 0-4.28.879-5.167C5.757 2 7.172 2 10 2h4c2.828 0 4.243 0 5.121.887C20 3.773 20 5.2 20 8.054v10.592c0 1.511 0 2.267-.462 2.565c-.755.486-1.922-.534-2.509-.904c-.485-.306-.727-.458-.997-.467c-.29-.01-.537.137-1.061.467l-1.911 1.205c-.516.325-.773.488-1.06.488s-.544-.163-1.06-.488l-1.91-1.205c-.486-.306-.728-.458-.997-.467c-.291-.01-.538.137-1.062.467c-.587.37-1.754 1.39-2.51.904C4 20.913 4 20.158 4 18.646M11 11H8m6-4H8"
+                        color="currentColor"
+                      />
+                    </svg>
+                    <p className="text-sm text-neutral-600">
+                      A copy of the invoice has been sent to the pet
+                      parent&apos;s email address.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-start mt-4">
+                    <Button isIconOnly className="rounded bg-neutral-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={20}
+                        height={20}
+                        viewBox="0 0 512 512"
+                      >
+                        <rect
+                          width={336}
+                          height={336}
+                          x={128}
+                          y={128}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinejoin="round"
+                          strokeWidth={32}
+                          rx={57}
+                          ry={57}
+                        ></rect>
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={32}
+                          d="m383.5 128l.5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24"
+                        ></path>
+                      </svg>
+                    </Button>
+                    <Button className="rounded ml-3 bg-neutral-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={20}
+                        height={20}
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                        >
+                          <path d="M8 18H6a2 2 0 0 1-2-2V7h16v9a2 2 0 0 1-2 2h-2M8 3h8v4H8z"></path>
+                          <path strokeLinecap="round" d="M12 11H8"></path>
+                          <path d="M8 15h8v6H8z"></path>
+                        </g>
+                      </svg>
+                      <span>Print receipt</span>
+                    </Button>
+                    <Button className="ml-3 rounded bg-neutral-800 text-white">
+                      Resend in email
+                    </Button>
+                  </div>
+                  <div className="h-[1px] bg-neutral-200 w-full my-6"></div>
+                  <div className="flex items-center justify-end mt-4">
+                    <Button
+                      onClick={() => {
+                        router.push("/dashboard/reports");
+                      }}
+                      className="rounded ml-3 bg-neutral-100"
+                    >
+                      <span>Close </span>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        router.push("/dashboard/reports/create");
+                      }}
+                      className="ml-3 rounded bg-neutral-200"
+                    >
+                      Create another report
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
