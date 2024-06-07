@@ -48,3 +48,28 @@ const generateUniqueReportno = async () => {
 
   return reportno;
 };
+
+export const getOrgReports = async (orgno) => {
+  try {
+    const reports = await prisma.report.findMany({
+      where: {
+        orgno,
+      },
+      include: {
+        payment: true,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Reports fetched successfully",
+      data: reports,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

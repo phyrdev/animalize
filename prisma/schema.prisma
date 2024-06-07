@@ -111,7 +111,7 @@ model Report {
   orgno                    String
   vials                    Vial[]
   observations             Observation[]
-  payment                  Payment[]
+  payment                  Payment?
   createdAt                DateTime      @default(now())
 }
 
@@ -152,6 +152,6 @@ model Payment {
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
   createdAt    DateTime     @default(now())
-  Report       Report?      @relation(fields: [reportId], references: [id])
-  reportId     String?      @db.ObjectId
+  report      Report       @relation(fields: [reportid], references: [id])  
+    reportid    String       @db.ObjectId @unique
 }
