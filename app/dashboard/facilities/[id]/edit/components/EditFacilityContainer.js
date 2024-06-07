@@ -377,11 +377,11 @@ function EditFacilityContainer({ o_facility }) {
                             }}
                             className="h-full w-full outline-none cursor-pointer"
                           >
-                            <option value="mg/dL">mg/dL</option>
-                            <option value="g/dL">g/dL</option>
-                            <option value="IU/L">IU/L</option>
-                            <option value="mmol/L">mmol/L</option>
-                            <option value="boolean">boolean</option>
+                            {testparameteruits.map((unit, index) => (
+                              <option key={index} value={unit.value}>
+                                {unit.label}
+                              </option>
+                            ))}
                           </select>
                         </div>
                         <div className="grid grid-cols-2 gap-1">
