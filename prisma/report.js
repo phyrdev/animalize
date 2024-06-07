@@ -30,10 +30,12 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
 };
 
 const generateUniqueReportno = async () => {
-  const reportno = randomstring.generate({
-    length: 10,
-    charset: "alphanumeric",
-  });
+  const reportno = randomstring
+    .generate({
+      length: 10,
+      charset: "alphanumeric",
+    })
+    .toUpperCase();
   const report = await prisma.report.findUnique({
     where: {
       reportno,
