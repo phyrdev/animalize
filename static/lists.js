@@ -436,3 +436,31 @@ export const testparameteruits = [
     value: "boolean",
   },
 ];
+
+export const reportstatus = [
+  {
+    label: "Ready for sample collection",
+    value: "S200",
+    access: ["sample-collector", "admin", "super-admin"],
+  },
+  {
+    label: "Ready for diagnosis",
+    value: "S201",
+    access: ["pathologist", "admin", "super-admin"],
+  },
+  {
+    label: "Ready for review",
+    value: "S202",
+    access: ["pathologist", "admin", "super-admin"],
+  },
+  {
+    label: "Ready for delivery",
+    value: "S203",
+    access: ["receptionist", "admin", "super-admin"],
+  },
+  {
+    label: "Needs retesting",
+    value: "S204",
+    access: ["pathologist", "admin", "super-admin", "receptionist"],
+  },
+];

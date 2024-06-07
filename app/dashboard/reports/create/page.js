@@ -225,7 +225,7 @@ function CreateReport() {
       document.getElementById("billing-details-dd").open = true;
       toast.error("Please enter a valid payment status");
       return false;
-    } else if (pFile.paidAmount.trim().length == 0) {
+    } else if (pFile.paidAmount == 0) {
       closeAllDetails();
       document.getElementById("billing-details-dd").open = true;
       toast.error("Please enter a valid paid amount");

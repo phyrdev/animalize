@@ -86,15 +86,12 @@ model Report {
   additionalNotes          String?
   contentDeclaration       Boolean       @default(false)
   createDoctordoggtAccount Boolean       @default(false)
-  paidAmount               Float         @default(0)
   parentAddress            String?
   parentEmail              String
   parentFirstName          String
   parentLastName           String
   parentPhone              String
   parentZipcode            String?
-  paymentMode              String?       @default("cash")
-  paymentStatus            String?       @default("paid")
   petBreed                 String
   petDOB                   DateTime
   petId                    String?
@@ -102,10 +99,9 @@ model Report {
   petSex                   String
   petSpecies               String
   petWeight                String
-  subTotal                 Float         @default(0)
   tests                    Json?
   failStatement            String?
-  status                   String
+  status                   String        @default("S200")
   priority                 String        @default("medium")
   createdBy                Employee      @relation(fields: [empno], references: [empno])
   empno                    String
@@ -149,6 +145,7 @@ model Payment {
   totalamount  String
   status       String
   amountpaid   String
+  mode         String
   report       Report       @relation(fields: [reportid], references: [id])
   reportid     String       @db.ObjectId
   organization Organization @relation(fields: [orgno], references: [orgno])
