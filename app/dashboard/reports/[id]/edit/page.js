@@ -2,6 +2,8 @@ import { getReportById } from "@/prisma/report";
 import React from "react";
 import EditReportContainer from "./components/EditReportContainer";
 
+export const revalidate = 0;
+
 async function EditReportServer({ params }) {
   const report = await getReportById(params.id);
   if (report.success) {

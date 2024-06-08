@@ -71,9 +71,8 @@ function EditReportContainer({ report }) {
 
       if (createReportReq.success) {
         toast.success(createReportReq.message);
-        // update router & go back
-
-        router.replace("/dashboard/reports");
+        router.push(`/dashboard/reports/`);
+        router.refresh();
       } else {
         toast.error(createReportReq.message);
       }
