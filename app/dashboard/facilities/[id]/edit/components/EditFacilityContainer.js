@@ -91,6 +91,7 @@ function EditFacilityContainer({ o_facility }) {
       if (updatedfacilityReq.success) {
         toast.success(updatedfacilityReq.message);
         router.push("/dashboard/facilities");
+        router.refresh();
       } else {
         toast.error(updatedfacilityReq.message);
       }
