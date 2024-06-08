@@ -1,10 +1,24 @@
 import { capitalizeFirstLetter } from "@/helper/refactor";
-import { Button } from "@nextui-org/react";
+import { flagReport, unflagReport } from "@/prisma/report";
+import { permissions } from "@/static/permissions";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import React from "react";
+import toast from "react-hot-toast";
 
-function RCard({ report, index }) {
+function RCard({ report, index, flagCallback }) {
+  const session = useSession();
   return (
-    <li className="bg-neutral-100 p-4">
+    <li className="bg-neutral-100 p-4 relative">
+      {report.flagged && (
+        <div className="w-1 bg-red-400 h-full left-0 absolute top-0"></div>
+      )}
       <div className="flex items-center text-sm">
         <span className="">{report.reportno}</span>
         <span className="ml-auto text-neutral-600">
@@ -26,19 +40,21 @@ function RCard({ report, index }) {
         <Button className="rounded-md bg-transparent border border-neutral-400">
           Collect sample
         </Button>
-        <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={18}
-            height={18}
-            viewBox="0 0 24 24"
-          >
-            <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
-              <path d="M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"></path>
-              <path d="M12 3c5.592 0 10.29 3.824 11.622 9c-1.332 5.176-6.03 9-11.622 9S1.71 17.176.378 12C1.71 6.824 6.408 3 12 3m0 16c-4.476 0-8.269-2.942-9.543-7C3.731 7.942 7.524 5 12 5c4.476 0 8.269 2.942 9.543 7c-1.274 4.058-5.067 7-9.543 7"></path>
-            </g>
-          </svg>
-        </button>
+        {permissions.previewReport.includes(session.data.user.role) && (
+          <button className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={18}
+              height={18}
+              viewBox="0 0 24 24"
+            >
+              <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+                <path d="M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"></path>
+                <path d="M12 3c5.592 0 10.29 3.824 11.622 9c-1.332 5.176-6.03 9-11.622 9S1.71 17.176.378 12C1.71 6.824 6.408 3 12 3m0 16c-4.476 0-8.269-2.942-9.543-7C3.731 7.942 7.524 5 12 5c4.476 0 8.269 2.942 9.543 7c-1.274 4.058-5.067 7-9.543 7"></path>
+              </g>
+            </svg>
+          </button>
+        )}
         <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,19 +74,83 @@ function RCard({ report, index }) {
             ></path>
           </svg>
         </button>
-        <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={20}
-            height={20}
-            viewBox="0 0 24 24"
+
+        <Dropdown>
+          <DropdownTrigger>
+            <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={20}
+                height={20}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M5 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m14 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m-7 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"
+                ></path>
+              </svg>
+            </button>
+          </DropdownTrigger>
+          <DropdownMenu
+            onAction={async (key) => {
+              switch (key) {
+                case "mark-open":
+                  toast.loading("Marking issue as open...");
+                  let mOpenReq = await markOpen(issue.id);
+                  toast.dismiss();
+                  if (mOpenReq.success) {
+                    toast.success("Issue marked as open");
+                    deleteCallback();
+                  } else {
+                    toast.error(mOpenReq.message);
+                  }
+                  break;
+                case "mark-closed":
+                  toast.loading("Marking issue as closed...");
+                  let mClosedReq = await markClosed(issue.id);
+                  toast.dismiss();
+                  if (mClosedReq.success) {
+                    toast.success("Issue marked as closed");
+                    deleteCallback();
+                  } else {
+                    toast.error(mClosedReq.message);
+                  }
+                  break;
+                case "flag-report":
+                  toast.loading(
+                    report.flagged
+                      ? "Unflagging report..."
+                      : "Flagging report..."
+                  );
+                  let { success, message } = report.flagged
+                    ? await unflagReport(report.id)
+                    : await flagReport(report.id);
+                  toast.dismiss();
+                  if (success) {
+                    toast.success("Report flagged successfully");
+                    flagCallback();
+                  } else {
+                    toast.error(message);
+                  }
+
+                  break;
+                default:
+                  break;
+              }
+            }}
+            aria-label="Static Actions"
           >
-            <path
-              fill="currentColor"
-              d="M5 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m14 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m-7 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"
-            ></path>
-          </svg>
-        </button>
+            <DropdownItem key="mark-open">View invoice</DropdownItem>
+            <DropdownItem key="mark-open">Create an issue</DropdownItem>
+            <DropdownItem
+              key="flag-report"
+              className="text-danger"
+              color="danger"
+            >
+              {report.flagged ? "Unflag report" : "Flag report"}
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
     </li>
   );

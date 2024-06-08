@@ -73,3 +73,61 @@ export const getOrgReports = async (orgno) => {
     };
   }
 };
+
+export const flagReport = async (id) => {
+  try {
+    await prisma.report.update({
+      where: {
+        id,
+      },
+      data: {
+        flagged: true,
+        payment: {
+          update: {
+            flagged: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report flagged successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const unflagReport = async (id) => {
+  try {
+    await prisma.report.update({
+      where: {
+        id,
+      },
+      data: {
+        flagged: false,
+        payment: {
+          update: {
+            flagged: false,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report unflagged successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

@@ -109,6 +109,7 @@ model Report {
   empno                    String
   organization             Organization  @relation(fields: [orgno], references: [orgno])
   orgno                    String
+  flagged                  Boolean       @default(false)
   vials                    Vial[]
   observations             Observation[]
   payment                  Payment?
@@ -154,4 +155,5 @@ model Payment {
   createdAt    DateTime     @default(now())
   report      Report       @relation(fields: [reportid], references: [id])  
     reportid    String       @db.ObjectId @unique
+    flagged    Boolean      @default(false)
 }

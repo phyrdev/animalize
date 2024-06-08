@@ -196,7 +196,12 @@ function Reports() {
                   </thead>
                   <tbody>
                     {visibleReports.map((report, index) => (
-                      <RRow key={index} report={report} index={index} />
+                      <RRow
+                        key={index}
+                        report={report}
+                        index={index}
+                        flagCallback={getOrganizationReports}
+                      />
                     ))}
                   </tbody>
                 </table>
@@ -209,7 +214,14 @@ function Reports() {
 
                 <ul className="mt-5 space-y-3">
                   {visibleReports.map((report, index) => {
-                    return <RCard key={index} report={report} index={index} />;
+                    return (
+                      <RCard
+                        key={index}
+                        report={report}
+                        index={index}
+                        flagCallback={getOrganizationReports}
+                      />
+                    );
                   })}
                 </ul>
               </div>
