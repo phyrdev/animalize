@@ -9,11 +9,13 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
 
 function RCard({ report, index, flagCallback }) {
   const session = useSession();
+  const router = useRouter();
   return (
     <li className="bg-neutral-100 p-4 relative">
       {report.flagged && (
@@ -55,7 +57,12 @@ function RCard({ report, index, flagCallback }) {
             </svg>
           </button>
         )}
-        <button className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center">
+        <button
+          onClick={() => {
+            router.push(`/dashboard/reports/${report.id}/edit`);
+          }}
+          className="ml-2 hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width={20}

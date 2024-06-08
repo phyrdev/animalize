@@ -1,7 +1,9 @@
 "use server";
 
+import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
+import { getCurrencySymbol } from "@/helper/refactor";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
   try {
@@ -13,7 +15,23 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
           create: billingSpecifics,
         },
       },
+      include: {
+        payment: true,
+      },
     });
+
+    reportSpecifics.parentEmail.length != 0 &&
+      (await sendMail(
+        reportSpecifics.parentEmail,
+        "Your case has been created",
+        `Your report number is ${rp.reportno}.<br/><br/>Pet name: ${
+          rp.petName
+        }.<br/>Subtotal: ${getCurrencySymbol(rp.payment.currency)} ${
+          rp.payment.subtotal
+        }<br/>Payment status: ${
+          rp.payment.paymentStatus
+        }. <br/> Payment method: ${rp.payment.paymentMode}`
+      ));
 
     return {
       success: true,
@@ -122,6 +140,60 @@ export const unflagReport = async (id) => {
     return {
       success: true,
       message: "Report unflagged successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const getReportById = async (id) => {
+  try {
+    const report = await prisma.report.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        payment: true,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report fetched successfully",
+      data: report,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const updateReport = async (id, reportSpecifics, billingSpecifics) => {
+  try {
+    await prisma.report.update({
+      where: {
+        id,
+      },
+      data: {
+        ...reportSpecifics,
+        payment: {
+          update: {
+            ...billingSpecifics,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report updated successfully",
     };
   } catch (error) {
     console.log(error);

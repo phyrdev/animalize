@@ -77,6 +77,7 @@ function CreateReport() {
   const [tempPets, setTempPets] = React.useState([]);
   const [tempPetIndex, setTempPetIndex] = React.useState(null);
   const [createdReport, setCreatedReport] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
@@ -152,6 +153,9 @@ function CreateReport() {
 
   const handleSave = async () => {
     if (performChecks()) {
+      setLoading(true);
+      toast.loading("Creating report...");
+
       let reportSpecifics = {
         accPin: pFile.accPin,
         additionalNotes: pFile.additionalNotes,
@@ -190,9 +194,14 @@ function CreateReport() {
         billingSpecifics
       );
 
+      toast.dismiss();
+
       if (createReportReq.success) {
         setCreatedReport(createReportReq.data);
+      } else {
+        toast.error(createReportReq.message);
       }
+      setLoading(false);
     }
   };
 
@@ -678,9 +687,13 @@ function CreateReport() {
                     endContent={
                       <span className="text-neutral-500 text-sm">₹</span>
                     }
-                    value={pFile.paidAmount}
+                    type="number"
+                    value={parseFloat(pFile.paidAmount)}
                     onChange={(e) =>
-                      setPFile({ ...pFile, paidAmount: e.target.value })
+                      setPFile({
+                        ...pFile,
+                        paidAmount: parseFloat(e.target.value),
+                      })
                     }
                   />
                 </div>

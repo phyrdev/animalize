@@ -17,6 +17,9 @@ function CustomInput({
       <input
         type={type}
         value={value}
+        onWheel={(e) => {
+          e.target.blur();
+        }}
         onChange={onChange}
         defaultValue={type == "date" ? "2021-08-01" : ""}
         placeholder={placeholder}
