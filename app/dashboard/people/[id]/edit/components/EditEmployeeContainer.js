@@ -41,6 +41,7 @@ function EditEmployeeContainer({ o_employee }) {
     if (success) {
       toast.success("Employee updated successfully");
       router.push("/dashboard/people");
+      router.refresh();
     } else {
       toast.error(message);
     }
