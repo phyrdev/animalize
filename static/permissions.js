@@ -12,4 +12,5 @@ export const permissions = {
     "pathologist",
     "sample-collector",
   ],
+  managePayments: ["admin", "super-admin"],
 };

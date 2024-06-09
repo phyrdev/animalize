@@ -1,3 +1,4 @@
+"use server";
 import prisma from "./prisma";
 
 export const getOrgPayments = async (orgno) => {

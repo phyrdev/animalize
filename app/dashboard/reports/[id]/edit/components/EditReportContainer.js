@@ -6,7 +6,7 @@ import { updateReport } from "@/prisma/report";
 import { paymentmodes, paymentstatus } from "@/static/lists";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -18,6 +18,7 @@ function EditReportContainer({ report }) {
   const [loading, setLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
+  const params = useSearchParams();
 
   const closeAllDetails = () => {
     document.getElementById("parent-details-dd").open = false;
@@ -71,7 +72,19 @@ function EditReportContainer({ report }) {
 
       if (createReportReq.success) {
         toast.success(createReportReq.message);
-        router.push(`/dashboard/reports/`);
+
+        if (params.get("redirect")) {
+          switch (params.get("redirect")) {
+            case "payments":
+              router.push(`/dashboard/payments/`);
+              break;
+            default:
+              router.push(`/dashboard/reports/`);
+              break;
+          }
+        } else {
+          router.push(`/dashboard/reports/`);
+        }
         router.refresh();
       } else {
         toast.error(createReportReq.message);
