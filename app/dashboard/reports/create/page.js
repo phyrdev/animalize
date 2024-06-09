@@ -102,17 +102,24 @@ function CreateReport() {
       },
     });
     toast.remove();
-
     if (response.data.success) {
-      setTempPets(response.data.user.pets);
-      setPFile({
-        ...pFile,
-        parentFirstName: response.data.user.name.split(" ")[0],
-        parentLastName: response.data.user.name.split(" ")[1],
-        parentEmail: response.data.user.email,
-        parentPhone: response.data.user.phone,
-        parentZipcode: response.data.user.zipCode,
-      });
+      if (response.data.user) {
+        if (response.data.user.pets.length == 0) {
+          toast.error("No pets found for the given account pin");
+          return;
+        }
+        setTempPets(response.data.user.pets);
+        setPFile({
+          ...pFile,
+          parentFirstName: response.data.user.name.split(" ")[0],
+          parentLastName: response.data.user.name.split(" ")[1],
+          parentEmail: response.data.user.email,
+          parentPhone: response.data.user.phone,
+          parentZipcode: response.data.user.zipCode,
+        });
+      } else {
+        toast.error("No user found with the given account pin");
+      }
     }
   };
 
@@ -281,6 +288,11 @@ function CreateReport() {
       toast.error("Please enter a valid payment status");
       return false;
     } else if (pFile.paidAmount == 0) {
+      closeAllDetails();
+      document.getElementById("billing-details-dd").open = true;
+      toast.error("Please enter a valid paid amount");
+      return false;
+    } else if (isNaN(pFile.paidAmount)) {
       closeAllDetails();
       document.getElementById("billing-details-dd").open = true;
       toast.error("Please enter a valid paid amount");
@@ -699,12 +711,27 @@ function CreateReport() {
                   />
                 </div>
 
-                {pFile.paymentStatus == "pending" && (
-                  <span className="text-sm mt-6 inline-block">
-                    Due amount : {getCurrencySymbol(session.data.user.currency)}
-                    {parseFloat(pFile.subtotal) - parseFloat(pFile.paidAmount)}
-                  </span>
-                )}
+                <div className="mt-8 text-sm">
+                  {pFile.paymentStatus == "paid" ? (
+                    <>
+                      Discount: &nbsp;
+                      {getCurrencySymbol(session.data.user.currency)}{" "}
+                      {pFile.paidAmount
+                        ? pFile.subtotal - pFile.paidAmount
+                        : pFile.subtotal}
+                    </>
+                  ) : pFile.paymentStatus == "pending" ? (
+                    <>
+                      Due amount: &nbsp;
+                      {getCurrencySymbol(session.data.user.currency)}{" "}
+                      {pFile.paidAmount
+                        ? pFile.subtotal - pFile.paidAmount
+                        : pFile.subtotal}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
 
                 <div className="pb-6 flex items-center justify-end gap-2 mt-6">
                   <Button

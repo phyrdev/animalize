@@ -114,6 +114,12 @@ function EditReportContainer({ report }) {
       toast.error("Please enter paid amount");
       return false;
     }
+    if (isNaN(pFile.paidAmount)) {
+      closeAllDetails();
+      document.getElementById("billing-details-dd").open = true;
+      toast.error("Please enter a valid paid amount");
+      return false;
+    }
     return true;
   };
 
