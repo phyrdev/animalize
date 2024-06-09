@@ -17,6 +17,7 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
       },
       include: {
         payment: true,
+        organization: true,
       },
     });
 

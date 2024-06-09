@@ -173,12 +173,9 @@ function Invoice({ report }) {
                   <h2 className="text-base font-medium text-neutral-700">
                     Billed from
                   </h2>
-                  <p className="mt-4 text-sm">Lenus Vet Labs</p>
-                  <p className="text-sm mt-2">+91 9647045453</p>
-                  <p className="text-sm mt-2">lenuslab@gmail.com</p>
-                  <p className="text-sm mt-2">
-                    11 / A Rock memorial colony. 713216
-                  </p>
+                  <p className="mt-4 text-sm">{report.organization.name}</p>
+                  <p className="text-sm mt-2">{report.organization.phone}</p>
+                  <p className="text-sm mt-2">{report.organization.email}</p>
                 </div>
               </div>
             </div>
@@ -198,7 +195,9 @@ function Invoice({ report }) {
                 <tbody>
                   {report.tests.map((test, index) => (
                     <tr key={index}>
-                      <td className="font-normal px-5 py-3 text-sm">1</td>
+                      <td className="font-normal px-5 py-3 text-sm first:pl-10">
+                        1
+                      </td>
                       <td className="font-normal px-5 py-3 text-sm">
                         {test.name}
                       </td>
@@ -212,7 +211,7 @@ function Invoice({ report }) {
               </table>
             </div>
 
-            <div className="border-t mt-5 pt-5 flex items-center justify-between pr-20">
+            <div className="border-t mt-5 pt-5 flex items-center justify-between pl-10 pr-24">
               <span className="text-lg font-semibold">Subtotal</span>
               <span className="text-lg">
                 {getCurrencySymbol(report.payment.currency)}{" "}
