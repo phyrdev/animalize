@@ -3,7 +3,9 @@ import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-function PermissionDenied() {
+function PermissionDenied({
+  message = "You dont have necessary permissions to access this page. Please refer to your administrator.",
+}) {
   const router = useRouter();
   return (
     <div className="p-5 md:p-10">
@@ -25,10 +27,7 @@ function PermissionDenied() {
         ></path>
       </svg>
       <h2 className="text-xl font-semibold mt-4">Forbidden</h2>
-      <p className="text-base mt-3 leading-7 text-neutral-700">
-        You dont have necessary permissions to access this page. Please refer to
-        your administrator.
-      </p>
+      <p className="text-base mt-3 leading-7 text-neutral-700">{message}</p>
       <Button
         onClick={() => {
           router.push(

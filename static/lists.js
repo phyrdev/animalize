@@ -448,6 +448,7 @@ export const reportstatus = {
     label: "Ready for diagnosis",
     access: ["pathologist", "admin", "super-admin"],
     buttonLabel: "Feed results",
+    target: "feed-results",
   },
   S202: {
     label: "Ready for review",

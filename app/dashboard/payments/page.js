@@ -168,6 +168,7 @@ function Payments() {
                         Report no.
                       </th>
                       <th className="font-medium px-5 py-4 text-sm">Date</th>
+                      <th className="font-medium px-5 py-4 text-sm">Mode</th>
                       <th className="font-medium px-5 py-4 text-sm">Status</th>
                       <th className="font-medium px-5 py-4 text-sm">Total</th>
                       <th className="font-medium px-5 py-4 text-sm">

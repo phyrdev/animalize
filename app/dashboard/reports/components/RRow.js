@@ -56,27 +56,12 @@ function RRow({ report, index, flagCallback }) {
                 }`
               );
             }}
-            className="rounded-md bg-transparent border border-neutral-400"
+            className="rounded-md bg-transparent border border-neutral-400 w-[85%]"
           >
             {reportstatus[report.status].buttonLabel}
           </Button>
         </td>
         <td className="font-normal py-4 text-sm inline-flex items-center gap-2">
-          {permissions.previewReport.includes(session.data.user.role) && (
-            <button className="bg-sky-100 hover:bg-sky-200 h-10 w-10 rounded transition-all flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={18}
-                height={18}
-                viewBox="0 0 24 24"
-              >
-                <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
-                  <path d="M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"></path>
-                  <path d="M12 3c5.592 0 10.29 3.824 11.622 9c-1.332 5.176-6.03 9-11.622 9S1.71 17.176.378 12C1.71 6.824 6.408 3 12 3m0 16c-4.476 0-8.269-2.942-9.543-7C3.731 7.942 7.524 5 12 5c4.476 0 8.269 2.942 9.543 7c-1.274 4.058-5.067 7-9.543 7"></path>
-                </g>
-              </svg>
-            </button>
-          )}
           {permissions.editReport.includes(session.data.user.role) && (
             <button
               onClick={() => {

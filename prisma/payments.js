@@ -8,7 +8,12 @@ export const getOrgPayments = async (orgno) => {
         orgno,
       },
       include: {
-        report: true,
+        report: {
+          include: {
+            organization: true,
+            payment: true,
+          },
+        },
       },
     });
 
