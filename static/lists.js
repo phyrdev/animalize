@@ -437,30 +437,39 @@ export const testparameteruits = [
   },
 ];
 
-export const reportstatus = [
-  {
+export const reportstatus = {
+  S200: {
     label: "Ready for sample collection",
-    value: "S200",
     access: ["sample-collector", "admin", "super-admin"],
+    buttonLabel: "Collect sample",
+    target: "collect-sample",
   },
-  {
+  S201: {
     label: "Ready for diagnosis",
-    value: "S201",
     access: ["pathologist", "admin", "super-admin"],
+    buttonLabel: "Feed results",
   },
-  {
+  S202: {
     label: "Ready for review",
-    value: "S202",
     access: ["pathologist", "admin", "super-admin"],
+    buttonLabel: "Review",
   },
-  {
+
+  S203: {
     label: "Ready for delivery",
-    value: "S203",
     access: ["receptionist", "admin", "super-admin"],
+    buttonLabel: "Deliver report",
   },
-  {
+
+  S204: {
     label: "Needs retesting",
-    value: "S204",
     access: ["pathologist", "admin", "super-admin", "receptionist"],
+    buttonLabel: "Feed results",
   },
-];
+
+  S205: {
+    label: "Delivered successfully",
+    access: ["admin", "super-admin", "receptionist"],
+    buttonLabel: "Deliver report",
+  },
+};

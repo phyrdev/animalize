@@ -13,4 +13,5 @@ export const permissions = {
     "sample-collector",
   ],
   managePayments: ["admin", "super-admin"],
+  collectSamples: ["sample-collector", "admin"],
 };

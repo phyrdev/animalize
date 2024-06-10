@@ -76,6 +76,7 @@ export const getOrgReports = async (orgno) => {
       },
       include: {
         payment: true,
+        organization: true,
       },
     });
 

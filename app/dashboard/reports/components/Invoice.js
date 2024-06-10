@@ -6,7 +6,7 @@ import React, { useRef } from "react";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
-function Invoice({ report }) {
+function Invoice({ report, closeCallback = () => {}, minimized = false }) {
   const router = useRouter();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -41,20 +41,26 @@ function Invoice({ report }) {
               <span className="text-lg font-medium ml-3">Report created</span>
               <Button
                 onClick={() => {
-                  router.push("/dashboard/reports");
+                  if (minimized) {
+                    closeCallback();
+                  } else {
+                    router.push("/dashboard/reports");
+                  }
                 }}
                 className="rounded ml-auto bg-neutral-100"
               >
                 <span>Close </span>
               </Button>
-              <Button
-                onClick={() => {
-                  router.push("/dashboard/reports/create");
-                }}
-                className="ml-3 rounded bg-neutral-200"
-              >
-                Create another report
-              </Button>
+              {minimized == false && (
+                <Button
+                  onClick={() => {
+                    router.push("/dashboard/reports/create");
+                  }}
+                  className="ml-3 rounded bg-neutral-200"
+                >
+                  Create another report
+                </Button>
+              )}
             </div>
             <div className="inline-flex gap-2 mt-10">
               <svg

@@ -15,6 +15,7 @@ import { getOrgReports } from "@/prisma/report";
 import PermissionDenied from "../components/PermissionDenied";
 import RRow from "./components/RRow";
 import RCard from "./components/RCard";
+import { reportstatus } from "@/static/lists";
 function Reports() {
   const router = useRouter();
   const session = useSession();
@@ -195,14 +196,21 @@ function Reports() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleReports.map((report, index) => (
-                      <RRow
-                        key={index}
-                        report={report}
-                        index={index}
-                        flagCallback={getOrganizationReports}
-                      />
-                    ))}
+                    {visibleReports.map((report, index) => {
+                      let statusOption = reportstatus[report.status];
+                      if (
+                        statusOption.access.includes(session.data.user.role)
+                      ) {
+                        return (
+                          <RRow
+                            key={index}
+                            report={report}
+                            index={index}
+                            flagCallback={getOrganizationReports}
+                          />
+                        );
+                      }
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -214,14 +222,17 @@ function Reports() {
 
                 <ul className="mt-5 space-y-3">
                   {visibleReports.map((report, index) => {
-                    return (
-                      <RCard
-                        key={index}
-                        report={report}
-                        index={index}
-                        flagCallback={getOrganizationReports}
-                      />
-                    );
+                    let statusOption = reportstatus[report.status];
+                    if (statusOption.access.includes(session.data.user.role)) {
+                      return (
+                        <RCard
+                          key={index}
+                          report={report}
+                          index={index}
+                          flagCallback={getOrganizationReports}
+                        />
+                      );
+                    }
                   })}
                 </ul>
               </div>
