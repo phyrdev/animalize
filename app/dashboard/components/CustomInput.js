@@ -7,6 +7,7 @@ function CustomInput({
   endContent = null,
   value = "",
   onChange = () => {},
+  readOnly = false,
 }) {
   return (
     <div className="h-12 border-b md:border md:rounded overflow-hidden flex items-center relative">
@@ -17,6 +18,7 @@ function CustomInput({
       <input
         type={type}
         value={value}
+        readOnly={readOnly}
         onWheel={(e) => {
           e.target.blur();
         }}
