@@ -83,7 +83,7 @@ model Issue {
 
 model Report {
   id                       String        @id @default(auto()) @map("_id") @db.ObjectId
-  reportno                 String        @unique   
+  reportno                 String        @unique
   accPin                   String?
   additionalNotes          String?
   contentDeclaration       Boolean       @default(false)
@@ -118,13 +118,13 @@ model Report {
 
 model Vial {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  vialId       String       @unique
+  vialno       String       @unique
   organization Organization @relation(fields: [orgno], references: [orgno])
   orgno        String
-  report       Report       @relation(fields: [reportid], references: [id])
+  report       Report       @relation(fields: [reportno], references: [reportno])
   generatedBy  Employee     @relation(fields: [empno], references: [empno])
   empno        String
-  reportid     String       @db.ObjectId
+  reportno     String
   createdAt    DateTime     @default(now())
 }
 
@@ -142,18 +142,18 @@ model Observation {
 }
 
 model Payment {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  currency     String
-  subtotal  Float
-  paymentStatus       String
-  paidAmount   Float
-  paymentMode         String
-  createdBy    Employee     @relation(fields: [empno], references: [empno])
-  empno        String
-  organization Organization @relation(fields: [orgno], references: [orgno])
-  orgno        String
-  createdAt    DateTime     @default(now())
-  report      Report       @relation(fields: [reportid], references: [id])  
-    reportid    String       @db.ObjectId @unique
-    flagged    Boolean      @default(false)
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  currency      String
+  subtotal      Float
+  paymentStatus String
+  paidAmount    Float
+  paymentMode   String
+  createdBy     Employee     @relation(fields: [empno], references: [empno])
+  empno         String
+  organization  Organization @relation(fields: [orgno], references: [orgno])
+  orgno         String
+  createdAt     DateTime     @default(now())
+  report        Report       @relation(fields: [reportid], references: [id])
+  reportid      String       @unique @db.ObjectId
+  flagged       Boolean      @default(false)
 }
