@@ -228,8 +228,16 @@ function CollectSample({ params }) {
                     <div className="border rounded-md p-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-neutral-500 tracking-wide">
-                          ORG{session.data.user.orgno}
+                          ORG-{session.data.user.orgno}
                         </span>
+                        <span className="text-sm text-neutral-500 tracking-wide">
+                          EP-{session.data.user.empno}
+                        </span>
+                      </div>
+                      <div className="mt-3">
+                        <h2 className="text-xl tracking-[3px]">875H8901</h2>
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
                         <span className="text-sm text-neutral-500">
                           {new Date().toLocaleDateString("en-US", {
                             year: "numeric",
@@ -237,13 +245,8 @@ function CollectSample({ params }) {
                             day: "numeric",
                           })}
                         </span>
-                      </div>
-                      <div className="mt-3">
-                        <h2 className="text-xl tracking-[3px]">875H8901</h2>
-                      </div>
-                      <div className="mt-2 flex justify-end items-center gap-2">
                         <Button
-                          className="rounded-md bg-neutral-100"
+                          className="rounded-md bg-neutral-100 ml-auto"
                           isIconOnly
                         >
                           <svg
