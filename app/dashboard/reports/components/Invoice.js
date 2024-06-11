@@ -225,7 +225,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
               </span>
             </div>
 
-            <div className="mt-10 flex items-center space-x-7">
+            <div className="mt-10 flex items-center flex-wrap gap-7">
               <div className="text-neutral-600 text-sm flex w-fit">
                 <span className="font-medium text-neutral-700">
                   Payment mode:
@@ -242,6 +242,17 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                   {capitalizeFirstLetter(report.payment.paymentStatus)}
                 </span>
               </div>
+              {report.payment.paymentStatus === "pending" && (
+                <div className="text-neutral-600 text-sm flex">
+                  <span className="font-medium text-neutral-700">
+                    Paid amount:
+                  </span>
+                  <span className="ml-2">
+                    {getCurrencySymbol(report.payment.currency)}{" "}
+                    {report.payment.paidAmount}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="mt-16">
