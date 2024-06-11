@@ -22,6 +22,7 @@ function CreatePerson() {
     phone: "",
     zipcode: "",
     orgno: "",
+    designation: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,12 @@ function CreatePerson() {
       toast.error("Please fill all fields.");
       return false;
     }
+
+    if (tperson.role == "pathologist" && tperson.designation == "") {
+      toast.error("Please fill qualification for pathologist.");
+      return false;
+    }
+
     setLoading(true);
     let { success, message } = await createEmployee(tperson);
     if (success) {
@@ -120,6 +127,7 @@ function CreatePerson() {
                       <span className="text-neutral-500 text-sm">#</span>
                     }
                   />
+
                   <CustomInput
                     label="email"
                     type="email"
@@ -140,13 +148,49 @@ function CreatePerson() {
                     }
                     options={employeeroles}
                   />
+                  {tperson.role == "pathologist" && (
+                    <CustomInput
+                      label="Qualific."
+                      type="text"
+                      value={tperson.designation}
+                      onChange={(e) =>
+                        setTPerson({ ...tperson, designation: e.target.value })
+                      }
+                      endContent={
+                        <span className="text-neutral-500 text-sm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={20}
+                            height={20}
+                            viewBox="0 0 48 48"
+                          >
+                            <g
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinejoin="round"
+                              strokeWidth={4}
+                            >
+                              <path d="M2 17.4L23.022 9l21.022 8.4l-21.022 8.4z"></path>
+                              <path
+                                strokeLinecap="round"
+                                d="M44.044 17.51v9.223m-32.488-4.908v12.442S16.366 39 23.022 39c6.657 0 11.467-4.733 11.467-4.733V21.825"
+                              ></path>
+                            </g>
+                          </svg>
+                        </span>
+                      }
+                      placeholder={"B.V.Sc & A.H"}
+                    />
+                  )}
                 </div>
 
                 <p className="mt-5 text-sm leading-7 text-neutral-500">
                   <span className="text-neutral-900">Note:</span> Employee will
                   receive an email containing their employee no. & temporary
                   password to login to the account. It is recommended to change
-                  the password after first login.
+                  the password after first login. <br /> <br />
+                  Do not use Dr. / Mr. / Mrs. / Ms. in the name field. If the
+                  role is pathologist, Dr. will be prefixed automatically.
                 </p>
               </div>
             </details>

@@ -57,7 +57,7 @@ function Review({ params }) {
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      if (permissions.collectSamples.includes(session.data.user.role)) {
+      if (permissions.reviewResults.includes(session.data.user.role)) {
         getReport();
         console.log(session.data.user);
       }
@@ -65,7 +65,7 @@ function Review({ params }) {
   }, [session.status]);
 
   if (session.status == "authenticated") {
-    if (permissions.collectSamples.includes(session.data.user.role) == false) {
+    if (permissions.reviewResults.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       if (report) {
@@ -396,7 +396,7 @@ function Review({ params }) {
                   </div>
                 )}
 
-                {true && (
+                {addSigntureOpen && (
                   <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
                     <div className="w-full md:w-[500px] bg-white md:rounded-md p-5 pb-10 md:pb-5">
                       <div className="flex items-center">

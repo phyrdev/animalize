@@ -44,7 +44,7 @@ function Reports() {
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      if (permissions.createReport.includes(session.data.user.role)) {
+      if (permissions.viewReports.includes(session.data.user.role)) {
         if (reports.length == 0) {
           getOrganizationReports();
         }
@@ -85,7 +85,7 @@ function Reports() {
   }, [searchVialQuery]);
 
   if (session.status == "authenticated") {
-    if (permissions.createReport.includes(session.data.user.role) == false) {
+    if (permissions.viewReports.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       return (

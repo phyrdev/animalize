@@ -220,6 +220,7 @@ export const createEmployee = async (data) => {
         phone: data.phone,
         zipcode: data.zipcode,
         orgno: data.orgno,
+        designation: data.designation,
       },
       include: {
         organization: true,

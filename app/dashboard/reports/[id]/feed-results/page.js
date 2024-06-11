@@ -47,14 +47,14 @@ function FeedResults({ params }) {
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      if (permissions.collectSamples.includes(session.data.user.role)) {
+      if (permissions.feedResults.includes(session.data.user.role)) {
         getReport();
       }
     }
   }, [session.status]);
 
   if (session.status == "authenticated") {
-    if (permissions.collectSamples.includes(session.data.user.role) == false) {
+    if (permissions.feedResults.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       if (report) {
@@ -70,7 +70,7 @@ function FeedResults({ params }) {
                 Feed results
               </span>
 
-              {permissions.collectSamples.includes(session.data.user.role) && (
+              {permissions.feedResults.includes(session.data.user.role) && (
                 <Button
                   onClick={() => setIsConsentOpen(true)}
                   className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"

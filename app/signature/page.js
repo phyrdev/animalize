@@ -11,11 +11,11 @@ function Page() {
           ref={ref}
           penColor="black"
           dotSize={1}
-          velocityFilterWeight={1}
+          throttle={1}
           minWidth={1}
-          maxWidth={2}
+          maxWidth={1}
           backgroundColor="white"
-          canvasProps={{ width: 500, height: 200, className: "sigCanvas" }}
+          canvasProps={{ width: 300, height: 100, className: "sigCanvas" }}
         />
       </div>
 
