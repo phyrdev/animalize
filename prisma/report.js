@@ -77,6 +77,7 @@ export const getOrgReports = async (orgno) => {
       include: {
         payment: true,
         organization: true,
+        vials: true,
       },
     });
 
@@ -228,6 +229,31 @@ export const markSampleCollected = async (reportno) => {
     return {
       success: true,
       message: "Sample collected successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const feedResults = async (reportno, tests) => {
+  try {
+    let report = await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S202",
+        tests,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Results fed successfully",
     };
   } catch (error) {
     console.log(error);

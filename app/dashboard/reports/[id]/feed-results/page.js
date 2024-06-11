@@ -4,7 +4,7 @@
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { getReportById } from "@/prisma/report";
+import { feedResults, getReportById } from "@/prisma/report";
 import { testparameteruits } from "@/static/lists";
 import { permissions } from "@/static/permissions";
 import {
@@ -14,9 +14,12 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 function FeedResults({ params }) {
+  const router = useRouter();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
@@ -429,7 +432,22 @@ function FeedResults({ params }) {
                     >
                       Cancel
                     </Button>
-                    <Button className="ml-2 rounded-md bg-neutral-800 text-white">
+                    <Button
+                      onClick={async () => {
+                        toast.loading("Saving changes...");
+                        let { success, data, message } = await feedResults(
+                          report.reportno,
+                          report.tests
+                        );
+                        toast.dismiss();
+                        if (success) {
+                          toast.success("Changes saved successfully");
+                          router.push("/dashboard/reports");
+                          router.refresh();
+                        }
+                      }}
+                      className="ml-2 rounded-md bg-neutral-800 text-white"
+                    >
                       Save changes
                     </Button>
                   </div>

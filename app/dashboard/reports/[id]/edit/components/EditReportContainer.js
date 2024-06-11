@@ -359,12 +359,27 @@ function EditReportContainer({ report }) {
                 />
               </div>
 
-              {/* {pFile.paymentStatus == "pending" && (
-                <span className="text-sm mt-6 inline-block">
-                  Due amount : {getCurrencySymbol(session.data.user.currency)}
-                  {parseFloat(pFile.subtotal) - parseFloat(pFile.paidAmount)}
-                </span>
-              )} */}
+              <div className="mt-8 text-sm">
+                {pFile.payment.paymentStatus == "paid" ? (
+                  <>
+                    Discount: &nbsp;
+                    {getCurrencySymbol(session.data.user.currency)}{" "}
+                    {pFile.payment.paidAmount
+                      ? pFile.payment.subtotal - pFile.payment.paidAmount
+                      : pFile.payment.subtotal}
+                  </>
+                ) : pFile.payment.paymentStatus == "pending" ? (
+                  <>
+                    Due amount: &nbsp;
+                    {getCurrencySymbol(session.data.user.currency)}{" "}
+                    {pFile.payment.paidAmount
+                      ? pFile.payment.subtotal - pFile.payment.paidAmount
+                      : pFile.payment.subtotal}
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </details>
         </div>

@@ -23,7 +23,9 @@ function Reports() {
   const [visibleReports, setVisibleReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchVialOpen, setSearchVialOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchVialQuery, setSearchVialQuery] = useState("");
 
   const getOrganizationReports = async () => {
     let { success, data, message } = await getOrgReports(
@@ -64,6 +66,24 @@ function Reports() {
     }
   }, [searchQuery]);
 
+  useEffect(() => {
+    if (searchVialQuery == "") {
+      setVisibleReports(reports);
+    } else {
+      let filteredReports = reports.filter((report) => {
+        let vials = report.vials;
+        let vialFound = false;
+        vials.forEach((vial) => {
+          if (vial.vialno.includes(searchVialQuery)) {
+            vialFound = true;
+          }
+        });
+        return vialFound;
+      });
+      setVisibleReports(filteredReports);
+    }
+  }, [searchVialQuery]);
+
   if (session.status == "authenticated") {
     if (permissions.createReport.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
@@ -76,8 +96,11 @@ function Reports() {
               <BreadcrumbItem>Reports</BreadcrumbItem>
             </Breadcrumbs>
             <span className="text-xl font-semibold md:hidden">Reports</span>
+
             <Button
               onClick={() => {
+                setSearchVialOpen(false);
+                setSearchVialQuery("");
                 setSearchOpen(!searchOpen);
                 setVisibleReports(reports);
                 setSearchQuery("");
@@ -98,6 +121,32 @@ function Reports() {
                   strokeLinejoin="round"
                   strokeWidth={1.55}
                   d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                ></path>
+              </svg>
+            </Button>
+            <Button
+              onClick={() => {
+                setSearchOpen(false);
+                setSearchQuery("");
+                setSearchVialOpen(!searchVialOpen);
+                setVisibleReports(reports);
+                setSearchVialQuery("");
+              }}
+              isIconOnly
+              className="ml-2 rounded-md bg-neutral-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={20}
+                height={20}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth={1.5}
+                  d="m6.8 11.783l1.275.143a2.205 2.205 0 0 1 1.944 1.952a2.209 2.209 0 0 0 1.32 1.787l1.661.69m0 0l7.239-7.271l-5.376-5.399l-10.75 10.798a3.83 3.83 0 0 0 0 5.399a3.789 3.789 0 0 0 5.375 0zm8-6.506L14.182 3"
                 ></path>
               </svg>
             </Button>
@@ -140,7 +189,7 @@ function Reports() {
                   <input
                     type="text"
                     id="search-input"
-                    placeholder="Search for a report..."
+                    placeholder="Search for a report number..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="bg-transparent text-sm outline-none h-full w-full ml-3"
@@ -151,6 +200,56 @@ function Reports() {
                       setSearchOpen(false);
                       setVisibleReports(reports);
                       setSearchQuery("");
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={20}
+                      height={20}
+                      viewBox="0 0 36 36"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
+                        className="clr-i-outline clr-i-outline-path-1"
+                      ></path>
+                      <path fill="none" d="M0 0h36v36H0z"></path>
+                    </svg>
+                  </button>
+                </div>
+              )}
+              {searchVialOpen && (
+                <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={20}
+                    height={20}
+                    className="shrink-0"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.55}
+                      d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                    ></path>
+                  </svg>
+                  <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search for a vial number..."
+                    value={searchVialQuery}
+                    onChange={(e) => setSearchVialQuery(e.target.value)}
+                    className="bg-transparent text-sm outline-none h-full w-full ml-3"
+                    name=""
+                  />
+                  <button
+                    onClick={() => {
+                      setSearchVialOpen(false);
+                      setVisibleReports(reports);
+                      setSearchVialQuery("");
                     }}
                   >
                     <svg
