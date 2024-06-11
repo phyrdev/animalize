@@ -37,6 +37,8 @@ export const authOptions = {
             email: data.email,
             phone: data.phone,
             role: data.role,
+            signature: data.signature,
+            designation: data.designation,
             empno: data.empno,
             orgno: data.orgno,
             currency: data.organization.currency,

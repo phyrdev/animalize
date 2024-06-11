@@ -15,16 +15,18 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 function Review({ params }) {
   const router = useRouter();
+  const uploadSignatureRef = useRef(null);
   const session = useSession();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invalidState, setInvalidState] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
+  const [addSigntureOpen, setAddSigntureOpen] = useState(false);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -57,6 +59,7 @@ function Review({ params }) {
     if (session.status == "authenticated") {
       if (permissions.collectSamples.includes(session.data.user.role)) {
         getReport();
+        console.log(session.data.user);
       }
     }
   }, [session.status]);
@@ -387,6 +390,81 @@ function Review({ params }) {
                           className="ml-2 rounded-md bg-neutral-800 text-white"
                         >
                           Save changes
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {true && (
+                  <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
+                    <div className="w-full md:w-[500px] bg-white md:rounded-md p-5 pb-10 md:pb-5">
+                      <div className="flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={28}
+                          height={28}
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M22 12.634c-4 3.512-4.572-2.013-6.65-1.617c-2.35.447-3.85 5.428-2.35 5.428s-.5-5.945-2.5-3.89s-2.64 4.74-4.265 2.748C-1.5 5.813 5-1.15 8.163 3.457C10.165 6.373 6.5 16.977 2 22m7-1h10"
+                            color="currentColor"
+                          ></path>
+                        </svg>
+                        <span className="text-lg font-medium ml-3">
+                          Signature
+                        </span>
+                      </div>
+
+                      <div className="mt-8">
+                        <h1 className="text-xl font-semibold">
+                          You have not added your signature.
+                        </h1>
+                        <p className="text-sm text-neutral-600 mt-2">
+                          Accepted formats .png, .jpg, .jpeg, files
+                        </p>
+
+                        <Button
+                          onClick={() => {
+                            uploadSignatureRef.current.click();
+                          }}
+                          className="rounded mt-5"
+                        >
+                          <input
+                            ref={uploadSignatureRef}
+                            type="file"
+                            hidden
+                            name=""
+                            id=""
+                          />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={20}
+                            height={20}
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="currentColor"
+                              fillRule="evenodd"
+                              d="M7.598 4.487c.267-1.31 1.433-2.237 2.768-2.237h3.268c1.335 0 2.5.927 2.768 2.237a.656.656 0 0 0 .62.524h.033c1.403.062 2.481.234 3.381.825c.567.372 1.055.85 1.435 1.409c.473.694.681 1.492.781 2.456c.098.943.098 2.124.098 3.62v.085c0 1.496 0 2.678-.098 3.62c-.1.964-.308 1.762-.781 2.457a5.155 5.155 0 0 1-1.435 1.409c-.703.461-1.51.665-2.488.762c-.958.096-2.159.096-3.685.096H9.737c-1.526 0-2.727 0-3.685-.096c-.978-.097-1.785-.3-2.488-.762a5.155 5.155 0 0 1-1.435-1.41c-.473-.694-.681-1.492-.781-2.456c-.098-.942-.098-2.124-.098-3.62v-.085c0-1.496 0-2.677.098-3.62c.1-.964.308-1.762.781-2.456a5.155 5.155 0 0 1 1.435-1.41c.9-.59 1.978-.762 3.381-.823l.017-.001h.016a.656.656 0 0 0 .62-.524m2.768-.737c-.64 0-1.177.443-1.298 1.036c-.195.96-1.047 1.716-2.072 1.725c-1.348.06-2.07.225-2.61.579a3.665 3.665 0 0 0-1.017.999c-.276.405-.442.924-.53 1.767c-.088.856-.089 1.96-.089 3.508s0 2.651.09 3.507c.087.843.253 1.362.53 1.768c.268.394.613.734 1.017.999c.417.273.951.438 1.814.524c.874.087 2 .088 3.577.088h4.444c1.576 0 2.702 0 3.577-.088c.863-.086 1.397-.25 1.814-.524c.404-.265.75-.605 1.018-1c.276-.405.442-.924.53-1.767c.088-.856.089-1.96.089-3.507c0-1.548 0-2.652-.09-3.508c-.087-.843-.253-1.362-.53-1.767a3.655 3.655 0 0 0-1.017-1c-.538-.353-1.26-.518-2.61-.578c-1.024-.01-1.876-.764-2.071-1.725a1.314 1.314 0 0 0-1.298-1.036zm1.634 7a2.25 2.25 0 1 0 0 4.5a2.25 2.25 0 0 0 0-4.5M8.25 13a3.75 3.75 0 1 1 7.5 0a3.75 3.75 0 0 1-7.5 0m9-3a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                          <span>Add signature</span>
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center justify-end mt-12">
+                        <Button
+                          onClick={async () => {}}
+                          className="ml-2 rounded-md bg-neutral-800 text-white"
+                        >
+                          Save signature
                         </Button>
                       </div>
                     </div>
