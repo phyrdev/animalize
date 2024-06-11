@@ -26,6 +26,19 @@ function Page() {
       >
         Clear
       </button>
+      <button
+        onClick={() => {
+          const img = ref.current.getTrimmedCanvas().toDataURL("image/png");
+          // convert to file & append to form
+          const file = new File([img], "signature.png", {
+            type: "image/png",
+          });
+          const formData = new FormData();
+          formData.append("signature", file);
+        }}
+      >
+        Convert to Image
+      </button>
     </div>
   );
 }
