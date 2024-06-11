@@ -23,6 +23,7 @@ function FeedResults({ params }) {
   const [invalidState, setInvalidState] = useState(false);
   const session = useSession();
   const [values, setValues] = useState({});
+  const labels = ["Parameter", "Observed value", "Unit", "Low", "High"];
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -89,55 +90,57 @@ function FeedResults({ params }) {
                     </div>
                   </summary>
                   <div className="pt-5 md:pl-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-3xl">
-                      <CustomInput
-                        label="Report no"
-                        value={capitalizeFirstLetter(report.reportno)}
-                        readOnly
-                      />
-                      <CustomInput
-                        label="Species"
-                        value={capitalizeFirstLetter(report.petSpecies)}
-                        readOnly
-                      />
-                      <CustomInput
-                        label="Breed"
-                        value={capitalizeFirstLetter(report.petBreed)}
-                        readOnly
-                      />
-                      <CustomInput
-                        label="Sex"
-                        value={capitalizeFirstLetter(report.petSex)}
-                        readOnly
-                      />
+                    <div className="max-w-3xl">
+                      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+                        <CustomInput
+                          label="Report no"
+                          value={capitalizeFirstLetter(report.reportno)}
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Species"
+                          value={capitalizeFirstLetter(report.petSpecies)}
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Breed"
+                          value={capitalizeFirstLetter(report.petBreed)}
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Sex"
+                          value={capitalizeFirstLetter(report.petSex)}
+                          readOnly
+                        />
 
-                      <CustomInput
-                        label="D.O.B"
-                        type="date"
-                        value={
-                          new Date(report.petDob).toISOString().split("T")[0]
-                        }
-                        readOnly
-                      />
-                      <CustomInput
-                        label="Weight"
-                        value={report.petWeight}
-                        endContent={
-                          <span className="text-neutral-500 text-sm">Kg</span>
-                        }
-                        readOnly
-                      />
-                    </div>
+                        <CustomInput
+                          label="D.O.B"
+                          type="date"
+                          value={
+                            new Date(report.petDob).toISOString().split("T")[0]
+                          }
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Weight"
+                          value={report.petWeight}
+                          endContent={
+                            <span className="text-neutral-500 text-sm">Kg</span>
+                          }
+                          readOnly
+                        />
+                      </div>
 
-                    <div className="pb-6 h-14 flex items-center justify-end">
-                      <Button onClick={() => {}} className="rounded">
-                        Proceed
-                      </Button>
+                      <div className="pb-6 h-14 flex items-center justify-end mt-8">
+                        <Button onClick={() => {}} className="rounded">
+                          Proceed
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </details>
 
-                <div className="mt-10">
+                <div className="mt-10 max-w-3xl">
                   <div className="space-y-10">
                     {report.tests.map((test, i) => {
                       return (
@@ -147,11 +150,11 @@ function FeedResults({ params }) {
                               {test.name}
                             </div>
                           </summary>
-                          <div className="overflow-x-auto w-full">
+                          <div className="md:pl-5 pt-5">
                             {
                               // desktop view
                             }
-                            <div className="grid grid-cols-1 gap-7 mt-5 md:pl-5 md:gap-3 min-w-[896px]">
+                            {/* <div className="grid grid-cols-1 gap-7 mt-5 md:pl-5 md:gap-3 min-w-[896px]">
                               {test.parameters.map((param, j) => {
                                 return (
                                   <div
@@ -205,11 +208,128 @@ function FeedResults({ params }) {
                                   </div>
                                 );
                               })}
-                            </div>
-
+                            </div> */}
                             {
                               // mobile view
                             }
+
+                            <p className="text-sm text-neutral-700 leading-7 md:leading-7">
+                              Fill up the observed values for each parameter. If
+                              a parameter is not applicable, leave it blank.
+                            </p>
+
+                            <div className="mt-8 hidden md:block">
+                              <div className="grid grid-cols-4 border divide-x">
+                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Parameter</span>
+                                </div>
+                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Observed value</span>
+                                </div>
+                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Unit value</span>
+                                </div>
+                                <div className="font-medium text-neutral-700 grid grid-cols-2 divide-x">
+                                  <div className="h-10 px-3 flex items-center">
+                                    <span>Low</span>
+                                  </div>
+                                  <div className="h-10 px-3 flex items-center">
+                                    <span>High</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="border border-t-0 divide-y">
+                                {test.parameters.map((param, j) => {
+                                  return (
+                                    <div
+                                      key={j}
+                                      className="grid grid-cols-4 divide-x"
+                                    >
+                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                        <span className="text-base">
+                                          {param.name}
+                                        </span>
+                                      </div>
+                                      <div className="text-neutral-700 h-12 flex items-center">
+                                        <input
+                                          type="text"
+                                          className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
+                                          name=""
+                                          id=""
+                                        />
+                                      </div>
+                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                        <span className="text-base">
+                                          {param.unit}
+                                        </span>
+                                      </div>
+                                      <div className="text-neutral-700 grid grid-cols-2 divide-x">
+                                        <div className="h-12 px-3 flex items-center">
+                                          <span className="text-base">
+                                            {param.low}
+                                          </span>
+                                        </div>
+                                        <div className="h-12 px-3 flex items-center">
+                                          <span className="text-base">
+                                            {param.high}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div className="mt-8 max-w-sm md:hidden">
+                              <div className="grid grid-cols-4 border divide-x text-sm">
+                                <div className="font-medium col-span-2 text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Parameter</span>
+                                </div>
+                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Value</span>
+                                </div>
+                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                  <span>Unit</span>
+                                </div>
+                              </div>
+                              <div className="border border-t-0 divide-y">
+                                {test.parameters.map((param, j) => {
+                                  return (
+                                    <div
+                                      key={j}
+                                      className="grid grid-cols-4 divide-x"
+                                    >
+                                      <div className="text-neutral-700 col-span-2 h-14 px-3 flex items-center">
+                                        <div className="text-sm flex flex-wrap gap-1">
+                                          <span>{param.name}</span>&nbsp;
+                                          <div className="text-xs text-neutral-500 mt-1">
+                                            {param.low} - {param.high}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="text-neutral-700 h-14 flex items-center">
+                                        <input
+                                          type="text"
+                                          className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
+                                          name=""
+                                          id=""
+                                        />
+                                      </div>
+                                      <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
+                                        <span>{param.unit}</span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div className="pb-6 h-14 flex items-center justify-end mt-8">
+                              <Button onClick={() => {}} className="rounded">
+                                Proceed
+                              </Button>
+                            </div>
                           </div>
                         </details>
                       );
