@@ -52,6 +52,7 @@ model Employee {
   observations Observation[]
   vials        Vial[]
   payments     Payment[]
+  signature    String?
   createdAt    DateTime      @default(now())
 }
 
@@ -157,3 +158,4 @@ model Payment {
   reportid      String       @unique @db.ObjectId
   flagged       Boolean      @default(false)
 }
+

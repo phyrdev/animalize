@@ -454,6 +454,7 @@ export const reportstatus = {
     label: "Ready for review",
     access: ["pathologist", "admin", "super-admin"],
     buttonLabel: "Review",
+    target: "review-results",
   },
 
   S203: {
