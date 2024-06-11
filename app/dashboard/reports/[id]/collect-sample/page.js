@@ -279,8 +279,7 @@ function CollectSample({ params }) {
                                 {session.data.user.orgno}
                               </span>
                               <span className="text-sm text-neutral-500 tracking-wide">
-                                EP-
-                                {session.data.user.empno}
+                                RP-{report.reportno}
                               </span>
                             </div>
                             <div className="mt-3">

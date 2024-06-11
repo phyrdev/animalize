@@ -168,8 +168,7 @@ function FeedResults({ params }) {
                                   {session.data.user.orgno}
                                 </span>
                                 <span className="text-sm text-neutral-500 tracking-wide">
-                                  EP-
-                                  {session.data.user.empno}
+                                  RP-{report.reportno}
                                 </span>
                               </div>
                               <div className="mt-3">
@@ -177,10 +176,7 @@ function FeedResults({ params }) {
                                   {vial.vialno}
                                 </h2>
                               </div>
-                              <div className="mt-3 flex items-center justify-between gap-2">
-                                <span className="text-sm text-neutral-500">
-                                  RP-{vial.reportno}
-                                </span>
+                              <div className="mt-3 flex items-center justify-end gap-2">
                                 <span className="text-sm text-neutral-500">
                                   {new Date(vial.createdAt).toLocaleDateString(
                                     "en-US",
