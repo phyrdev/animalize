@@ -69,7 +69,7 @@ function FeedResults({ params }) {
 
               {permissions.collectSamples.includes(session.data.user.role) && (
                 <Button
-                  onClick={() => console.log(report)}
+                  onClick={() => setIsConsentOpen(true)}
                   className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
                 >
                   Save changes
