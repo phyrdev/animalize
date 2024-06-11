@@ -83,7 +83,7 @@ function FeedResults({ params }) {
               </div>
             ) : (
               <div className="p-5 md:px-10">
-                <details id="auto-fill-dd">
+                <details id="patient-details">
                   <summary>
                     <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                       Patient details
@@ -132,7 +132,15 @@ function FeedResults({ params }) {
                       </div>
 
                       <div className="pb-6 h-14 flex items-center justify-end mt-8">
-                        <Button onClick={() => {}} className="rounded">
+                        <Button
+                          onClick={() => {
+                            document.getElementById(
+                              "patient-details"
+                            ).open = false;
+                            document.getElementById("auto-fill-t1").open = true;
+                          }}
+                          className="rounded"
+                        >
                           Proceed
                         </Button>
                       </div>
@@ -144,75 +152,13 @@ function FeedResults({ params }) {
                   <div className="space-y-10">
                     {report.tests.map((test, i) => {
                       return (
-                        <details key={i}>
+                        <details key={i} id={`auto-fill-t${i + 1}`}>
                           <summary>
                             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                               {test.name}
                             </div>
                           </summary>
                           <div className="md:pl-5 pt-5">
-                            {
-                              // desktop view
-                            }
-                            {/* <div className="grid grid-cols-1 gap-7 mt-5 md:pl-5 md:gap-3 min-w-[896px]">
-                              {test.parameters.map((param, j) => {
-                                return (
-                                  <div
-                                    key={j}
-                                    className="grid grid-cols-5 gap-3"
-                                  >
-                                    <div className="w-full border h-12 rounded overflow-hidden px-3 flex items-center">
-                                      {param.name}
-                                    </div>
-                                    {param.unit == "boolean" ? (
-                                      <div className="w-full border rounded overflow-hidden px-3">
-                                        <select
-                                          name=""
-                                          id=""
-                                          className="h-full w-full outline-none cursor-pointer"
-                                        >
-                                          <option value="true">True</option>
-                                          <option value="false">False</option>
-                                        </select>
-                                      </div>
-                                    ) : (
-                                      <input
-                                        type="text"
-                                        placeholder="Observed value"
-                                        className="border py-2 px-3 rounded h-12"
-                                        value={param.value || ""}
-                                        onChange={(e) => {
-                                          setReport((prev) => {
-                                            let newReport = { ...prev };
-                                            newReport.tests[i].parameters[
-                                              j
-                                            ].value = e.target.value;
-                                            return newReport;
-                                          });
-                                        }}
-                                        name=""
-                                        id=""
-                                      />
-                                    )}
-                                    <div className="w-full border rounded overflow-hidden px-3 flex items-center">
-                                      {param.unit}
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-1">
-                                      <div className="w-full h-12 border rounded overflow-hidden px-3 flex items-center">
-                                        {param.low}
-                                      </div>
-                                      <div className="w-full h-12 border rounded overflow-hidden px-3 flex items-center">
-                                        {param.high}
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div> */}
-                            {
-                              // mobile view
-                            }
-
                             <p className="text-sm text-neutral-700 leading-7 md:leading-7">
                               Fill up the observed values for each parameter. If
                               a parameter is not applicable, leave it blank.
@@ -253,6 +199,19 @@ function FeedResults({ params }) {
                                       <div className="text-neutral-700 h-12 flex items-center">
                                         <input
                                           type="text"
+                                          value={
+                                            report.tests[i].parameters[j]
+                                              .value || ""
+                                          }
+                                          onChange={(e) => {
+                                            setReport((prev) => {
+                                              let newReport = { ...prev };
+                                              newReport.tests[i].parameters[
+                                                j
+                                              ].value = e.target.value;
+                                              return newReport;
+                                            });
+                                          }}
                                           className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
                                           name=""
                                           id=""
@@ -311,6 +270,19 @@ function FeedResults({ params }) {
                                       <div className="text-neutral-700 h-14 flex items-center">
                                         <input
                                           type="text"
+                                          value={
+                                            report.tests[i].parameters[j]
+                                              .value || ""
+                                          }
+                                          onChange={(e) => {
+                                            setReport((prev) => {
+                                              let newReport = { ...prev };
+                                              newReport.tests[i].parameters[
+                                                j
+                                              ].value = e.target.value;
+                                              return newReport;
+                                            });
+                                          }}
                                           className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
                                           name=""
                                           id=""
@@ -325,11 +297,23 @@ function FeedResults({ params }) {
                               </div>
                             </div>
 
-                            <div className="pb-6 h-14 flex items-center justify-end mt-8">
-                              <Button onClick={() => {}} className="rounded">
-                                Proceed
-                              </Button>
-                            </div>
+                            {i != report.tests.length - 1 && (
+                              <div className="pb-6 h-14 flex items-center justify-end mt-8">
+                                <Button
+                                  onClick={() => {
+                                    document.getElementById(
+                                      `auto-fill-t${i + 1}`
+                                    ).open = false;
+                                    document.getElementById(
+                                      `auto-fill-t${i + 2}`
+                                    ).open = true;
+                                  }}
+                                  className="rounded"
+                                >
+                                  Proceed
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </details>
                       );
