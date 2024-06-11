@@ -3,7 +3,7 @@
 
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { getReportById } from "@/prisma/report";
+import { getReportById, markSampleCollected } from "@/prisma/report";
 import { createVial, deleteVial, getVialsByReport } from "@/prisma/vial";
 import { permissions } from "@/static/permissions";
 import {
@@ -16,11 +16,12 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function CollectSample({ params }) {
+  const router = useRouter();
   const [vials, setVials] = useState([]);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -413,7 +414,23 @@ function CollectSample({ params }) {
                     >
                       Cancel
                     </Button>
-                    <Button className="ml-2 rounded-md bg-neutral-800 text-white">
+                    <Button
+                      onClick={async () => {
+                        toast.loading("Saving changes...");
+                        let { success, message } = await markSampleCollected(
+                          report.reportno
+                        );
+                        toast.remove();
+                        if (success) {
+                          toast.success(message);
+                          router.push("/dashboard/reports");
+                          router.refresh();
+                        } else {
+                          toast.error(message);
+                        }
+                      }}
+                      className="ml-2 rounded-md bg-neutral-800 text-white"
+                    >
                       Save changes
                     </Button>
                   </div>

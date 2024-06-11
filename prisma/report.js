@@ -160,6 +160,8 @@ export const getReportById = async (id) => {
       },
       include: {
         payment: true,
+        organization: true,
+        vials: true,
       },
     });
 
@@ -196,6 +198,36 @@ export const updateReport = async (id, reportSpecifics, billingSpecifics) => {
     return {
       success: true,
       message: "Report updated successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const markSampleCollected = async (reportno) => {
+  try {
+    let report = await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S201",
+      },
+    });
+
+    await sendMail(
+      report.parentEmail,
+      "Sample collected",
+      `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress.`
+    );
+
+    return {
+      success: true,
+      message: "Sample collected successfully",
     };
   } catch (error) {
     console.log(error);

@@ -147,12 +147,65 @@ function FeedResults({ params }) {
                     </div>
                   </div>
                 </details>
+                <details id="vial-details" className="mt-10">
+                  <summary>
+                    <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                      Vial details
+                    </div>
+                  </summary>
+                  <div className="pt-5 md:pl-5">
+                    <div className="max-w-3xl">
+                      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+                        {report.vials.map((vial, index) => {
+                          return (
+                            <div key={index} className="border rounded-md p-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-neutral-500 tracking-wide">
+                                  ORG-
+                                  {session.data.user.orgno}
+                                </span>
+                                <span className="text-sm text-neutral-500 tracking-wide">
+                                  EP-
+                                  {session.data.user.empno}
+                                </span>
+                              </div>
+                              <div className="mt-3">
+                                <h2 className="text-xl tracking-[3px]">
+                                  {vial.vialno}
+                                </h2>
+                              </div>
+                              <div className="mt-3 flex items-center justify-between gap-2">
+                                <span className="text-sm text-neutral-500">
+                                  RP-{vial.reportno}
+                                </span>
+                                <span className="text-sm text-neutral-500">
+                                  {new Date(vial.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    }
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </details>
 
                 <div className="mt-10 max-w-3xl">
                   <div className="space-y-10">
                     {report.tests.map((test, i) => {
                       return (
-                        <details key={i} id={`auto-fill-t${i + 1}`}>
+                        <details
+                          key={i}
+                          id={`auto-fill-t${i + 1}`}
+                          open={i == 0}
+                        >
                           <summary>
                             <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                               {test.name}
