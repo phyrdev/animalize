@@ -26,7 +26,7 @@ function Result({ report, closeCallBack = () => {} }) {
   };
 
   return (
-    <div className="fixed inset-0 h-full w-full bg-black/50 flex justify-center pt-10 pb-10 z-20 overflow-y-auto">
+    <div className="fixed inset-0 h-full w-full bg-black/50 flex md:justify-center pt-10 pb-10 z-20 overflow-y-auto">
       <div className="w-fit bg-white pb-10 h-fit">
         <div className="flex items-center p-5">
           <Button onClick={handlePrint} className="rounded bg-neutral-100">
@@ -102,7 +102,14 @@ function Result({ report, closeCallBack = () => {} }) {
                         </span>
                       </p>
                       <p>
-                        Age: <span className="text-black">2 yrs</span>
+                        D.O.B:{" "}
+                        <span className="text-black">
+                          {new Date(report.petDob).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
                       </p>
                     </div>
                     <div className="space-y-3 text-sm text-neutral-600">
@@ -214,7 +221,24 @@ function Result({ report, closeCallBack = () => {} }) {
                     </p>
                   </div>
                   <div className="mt-10">
-                    <div>Dr. {report.reviewedBy.name}</div>
+                    <div className="flex items-center">
+                      <span>Dr. {report.reviewedBy.name}</span>
+                      <span className="text-neutral-600 ml-3">
+                        ({report.reviewedBy?.designation})
+                      </span>
+                    </div>
+                    <p className="mt-2 text-neutral-600 text-sm">
+                      Dated on:
+                      <span className="text-black ml-2">
+                        {new Date(
+                          report.reviewedBy.createdAt
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </p>
                     <p className="text-sm text-neutral-600 mt-2">Pathologist</p>
                   </div>
                   <footer></footer>

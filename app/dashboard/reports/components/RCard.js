@@ -14,11 +14,13 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Invoice from "./Invoice";
+import Result from "./Result";
 
 function RCard({ report, index, flagCallback }) {
   const session = useSession();
   const router = useRouter();
   const [showInvoice, setShowInvoice] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   return (
     <li className="bg-neutral-100 p-4 relative">
@@ -122,6 +124,9 @@ function RCard({ report, index, flagCallback }) {
                   }
 
                   break;
+                case "final-report":
+                  setShowReport(true);
+                  break;
                 default:
                   break;
               }
@@ -149,6 +154,13 @@ function RCard({ report, index, flagCallback }) {
         <Invoice
           report={report}
           closeCallback={() => setShowInvoice(false)}
+          minimized
+        />
+      )}
+      {showReport && (
+        <Result
+          report={report}
+          closeCallBack={() => setShowReport(false)}
           minimized
         />
       )}
