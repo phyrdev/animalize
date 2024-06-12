@@ -134,7 +134,14 @@ function RRow({ report, index, flagCallback }) {
               }}
               aria-label="Static Actions"
             >
-              <DropdownItem key="show-invoice">View invoice</DropdownItem>
+              {report.status == "S203" && (
+                <DropdownItem key="final-report">
+                  View final report
+                </DropdownItem>
+              )}
+              {permissions.viewInvoice.includes(session.data.user.role) && (
+                <DropdownItem key="show-invoice">View invoice</DropdownItem>
+              )}
               <DropdownItem key="mark-open">Create an issue</DropdownItem>
               <DropdownItem
                 key="flag-report"

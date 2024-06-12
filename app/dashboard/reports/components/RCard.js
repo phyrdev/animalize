@@ -11,12 +11,15 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
+import Invoice from "./Invoice";
 
 function RCard({ report, index, flagCallback }) {
   const session = useSession();
   const router = useRouter();
+  const [showInvoice, setShowInvoice] = useState(false);
+
   return (
     <li className="bg-neutral-100 p-4 relative">
       {report.flagged && (
@@ -98,27 +101,8 @@ function RCard({ report, index, flagCallback }) {
           <DropdownMenu
             onAction={async (key) => {
               switch (key) {
-                case "mark-open":
-                  toast.loading("Marking issue as open...");
-                  let mOpenReq = await markOpen(issue.id);
-                  toast.dismiss();
-                  if (mOpenReq.success) {
-                    toast.success("Issue marked as open");
-                    deleteCallback();
-                  } else {
-                    toast.error(mOpenReq.message);
-                  }
-                  break;
-                case "mark-closed":
-                  toast.loading("Marking issue as closed...");
-                  let mClosedReq = await markClosed(issue.id);
-                  toast.dismiss();
-                  if (mClosedReq.success) {
-                    toast.success("Issue marked as closed");
-                    deleteCallback();
-                  } else {
-                    toast.error(mClosedReq.message);
-                  }
+                case "show-invoice":
+                  setShowInvoice(true);
                   break;
                 case "flag-report":
                   toast.loading(
@@ -144,7 +128,12 @@ function RCard({ report, index, flagCallback }) {
             }}
             aria-label="Static Actions"
           >
-            <DropdownItem key="mark-open">View invoice</DropdownItem>
+            {report.status == "S203" && (
+              <DropdownItem key="final-report">View final report</DropdownItem>
+            )}
+            {permissions.viewInvoice.includes(session.data.user.role) && (
+              <DropdownItem key="show-invoice">View invoice</DropdownItem>
+            )}
             <DropdownItem key="mark-open">Create an issue</DropdownItem>
             <DropdownItem
               key="flag-report"
@@ -156,6 +145,13 @@ function RCard({ report, index, flagCallback }) {
           </DropdownMenu>
         </Dropdown>
       </div>
+      {showInvoice && (
+        <Invoice
+          report={report}
+          closeCallback={() => setShowInvoice(false)}
+          minimized
+        />
+      )}
     </li>
   );
 }

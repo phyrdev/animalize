@@ -20,4 +20,5 @@ export const permissions = {
   feedResults: ["admin", "super-admin"],
   reviewResults: ["pathologist", "admin", "super-admin"],
   takeAction: ["admin", "super-admin", "receptionist"],
+  viewInvoice: ["admin", "super-admin", "receptionist"],
 };

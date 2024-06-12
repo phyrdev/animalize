@@ -14,31 +14,33 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
     documentTitle: `Invoice-${report.reportno}`,
   });
   return (
-    <div className="fixed inset-0 h-full w-full bg-black/50 flex items-center justify-center z-20 py-20">
-      <div className="max-w-4xl bg-white h-[600px] overflow-y-auto rounded">
+    <div className="fixed inset-0 h-full w-full bg-black/50 flex items-end md:items-center justify-center z-20 md:py-20">
+      <div className="max-w-4xl bg-white h-[600px] overflow-y-auto md:rounded">
         <div>
-          <div className="px-10 mt-10">
-            <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
-                viewBox="0 0 48 48"
-              >
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth={4}
+          <div className="px-5 md:px-10 mt-5 md:mt-10">
+            <div className="flex items-center flex-wrap gap-3">
+              <div className="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={24}
+                  height={24}
+                  viewBox="0 0 48 48"
                 >
-                  <path d="M41 14L24 4L7 14v20l17 10l17-10z"></path>
-                  <path
-                    strokeLinecap="round"
-                    d="M24 22v8m8-12v12m-16-4v4"
-                  ></path>
-                </g>
-              </svg>
-              <span className="text-lg font-medium ml-3">Report created</span>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinejoin="round"
+                    strokeWidth={4}
+                  >
+                    <path d="M41 14L24 4L7 14v20l17 10l17-10z"></path>
+                    <path
+                      strokeLinecap="round"
+                      d="M24 22v8m8-12v12m-16-4v4"
+                    ></path>
+                  </g>
+                </svg>
+                <span className="text-lg font-medium ml-3">Report created</span>
+              </div>
               <Button
                 onClick={() => {
                   if (minimized) {
@@ -62,11 +64,12 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                 </Button>
               )}
             </div>
-            <div className="inline-flex gap-2 mt-10">
+            <div className="inline-flex items-start gap-2 mt-5 md:mt-10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
+                className="shrink-0 hidden md:block"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -79,13 +82,13 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                   color="currentColor"
                 />
               </svg>
-              <p className="text-sm text-neutral-600">
+              <p className="text-sm text-neutral-600 leading-7">
                 A copy of the invoice has been sent to the pet parent&apos;s
                 email address.
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-start mt-7 px-10">
+          <div className="flex flex-wrap gap-3 items-center justify-start mt-7 px-5 md:px-10">
             <Button isIconOnly className="rounded bg-neutral-100">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -115,10 +118,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                 ></path>
               </svg>
             </Button>
-            <Button
-              onClick={handlePrint}
-              className="rounded ml-3 bg-neutral-100"
-            >
+            <Button onClick={handlePrint} className="rounded bg-neutral-100">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={20}
@@ -138,128 +138,134 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
               </svg>
               <span>Print receipt</span>
             </Button>
-            <Button className="ml-3 rounded bg-neutral-800 text-white">
+            <Button className="rounded bg-neutral-800 text-white">
               Resend in email
             </Button>
           </div>
           <div className="w-full h-[1px] bg-neutral-200 mt-16"></div>
-          <div ref={componentRef} className="p-10 leading-8 relative w-[896px]">
-            <img src="/explogo.svg" className="w-32" alt="" />
-            <div className="text-neutral-600 text-sm flex mt-6">
-              <span className="font-medium text-neutral-700">Report no:</span>
-              <span className="ml-2">{report.reportno}</span>
-            </div>
+          <div className="w-full overflow-x-auto">
+            <div
+              ref={componentRef}
+              className="p-10 leading-8 relative w-[896px]"
+            >
+              <img src="/explogo.svg" className="w-32" alt="" />
+              <div className="text-neutral-600 text-sm flex mt-6">
+                <span className="font-medium text-neutral-700">Report no:</span>
+                <span className="ml-2">{report.reportno}</span>
+              </div>
 
-            <div className="h-16 w-16 absolute top-10 right-10">
-              <QRCode
-                size={256}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={report.reportno}
-                viewBox={`0 0 256 256`}
-              />
-            </div>
+              <div className="h-16 w-16 absolute top-10 right-10">
+                <QRCode
+                  size={256}
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  value={report.reportno}
+                  viewBox={`0 0 256 256`}
+                />
+              </div>
 
-            <div className="mt-10">
-              <h1 className="text-4xl font-light tracking-[2px] text-neutral-800">
-                INVOICE
-              </h1>
+              <div className="mt-10">
+                <h1 className="text-4xl font-light tracking-[2px] text-neutral-800">
+                  INVOICE
+                </h1>
 
-              <div className="grid grid-cols-2 mt-8">
-                <div>
-                  <h2 className="text-base font-medium text-neutral-700">
-                    Billed to
-                  </h2>
-                  <p className="mt-4 text-sm">
-                    {report.parentFirstName} {report.parentLastName}
-                  </p>
-                  <p className="text-sm mt-2">{report.parentPhone}</p>
-                  <p className="text-sm mt-2">{report.parentEmail}</p>
-                </div>
-                <div>
-                  <h2 className="text-base font-medium text-neutral-700">
-                    Billed from
-                  </h2>
-                  <p className="mt-4 text-sm">{report.organization.name}</p>
-                  <p className="text-sm mt-2">{report.organization.phone}</p>
-                  <p className="text-sm mt-2">{report.organization.email}</p>
+                <div className="grid grid-cols-2 mt-8">
+                  <div>
+                    <h2 className="text-base font-medium text-neutral-700">
+                      Billed to
+                    </h2>
+                    <p className="mt-4 text-sm">
+                      {report.parentFirstName} {report.parentLastName}
+                    </p>
+                    <p className="text-sm mt-2">{report.parentPhone}</p>
+                    <p className="text-sm mt-2">{report.parentEmail}</p>
+                  </div>
+                  <div>
+                    <h2 className="text-base font-medium text-neutral-700">
+                      Billed from
+                    </h2>
+                    <p className="mt-4 text-sm">{report.organization.name}</p>
+                    <p className="text-sm mt-2">{report.organization.phone}</p>
+                    <p className="text-sm mt-2">{report.organization.email}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="whitespace-nowrap overflow-auto shrink-0 mt-10">
-              <table className="w-full text-left">
-                <thead className="bg-neutral-100 border-y">
-                  <tr>
-                    <th className="font-medium px-5 py-4 text-sm first:pl-10">
-                      S.no
-                    </th>
-                    <th className="font-medium px-5 py-4 text-sm">Item</th>
-                    <th className="font-medium px-5 py-4 text-sm">Qty</th>
-                    <th className="font-medium px-5 py-4 text-sm">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {report.tests.map((test, index) => (
-                    <tr key={index}>
-                      <td className="font-normal px-5 py-3 text-sm first:pl-10">
-                        1
-                      </td>
-                      <td className="font-normal px-5 py-3 text-sm">
-                        {test.name}
-                      </td>
-                      <td className="font-normal px-5 py-3 text-sm">1</td>
-                      <td className="font-normal px-5 py-3 text-sm">
-                        {getCurrencySymbol(report.payment.currency)} {test.cost}
-                      </td>
+              <div className="whitespace-nowrap overflow-auto shrink-0 mt-10">
+                <table className="w-full text-left">
+                  <thead className="bg-neutral-100 border-y">
+                    <tr>
+                      <th className="font-medium px-5 py-4 text-sm first:pl-10">
+                        S.no
+                      </th>
+                      <th className="font-medium px-5 py-4 text-sm">Item</th>
+                      <th className="font-medium px-5 py-4 text-sm">Qty</th>
+                      <th className="font-medium px-5 py-4 text-sm">Price</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {report.tests.map((test, index) => (
+                      <tr key={index}>
+                        <td className="font-normal px-5 py-3 text-sm first:pl-10">
+                          1
+                        </td>
+                        <td className="font-normal px-5 py-3 text-sm">
+                          {test.name}
+                        </td>
+                        <td className="font-normal px-5 py-3 text-sm">1</td>
+                        <td className="font-normal px-5 py-3 text-sm">
+                          {getCurrencySymbol(report.payment.currency)}{" "}
+                          {test.cost}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-            <div className="border-t mt-5 pt-5 flex items-center justify-between pl-10 pr-24">
-              <span className="text-lg font-semibold">Subtotal</span>
-              <span className="text-lg">
-                {getCurrencySymbol(report.payment.currency)}{" "}
-                {report.payment.subtotal}
-              </span>
-            </div>
-
-            <div className="mt-10 flex items-center flex-wrap gap-7">
-              <div className="text-neutral-600 text-sm flex w-fit">
-                <span className="font-medium text-neutral-700">
-                  Payment mode:
-                </span>
-                <span className="ml-2">
-                  {capitalizeFirstLetter(report.payment.paymentMode)}
+              <div className="border-t mt-5 pt-5 flex items-center justify-between pl-10 pr-24">
+                <span className="text-lg font-semibold">Subtotal</span>
+                <span className="text-lg">
+                  {getCurrencySymbol(report.payment.currency)}{" "}
+                  {report.payment.subtotal}
                 </span>
               </div>
-              <div className="text-neutral-600 text-sm flex">
-                <span className="font-medium text-neutral-700">
-                  Payment status:
-                </span>
-                <span className="ml-2">
-                  {capitalizeFirstLetter(report.payment.paymentStatus)}
-                </span>
-              </div>
-              {report.payment.paymentStatus === "pending" && (
-                <div className="text-neutral-600 text-sm flex">
+
+              <div className="mt-10 flex items-center flex-wrap gap-7">
+                <div className="text-neutral-600 text-sm flex w-fit">
                   <span className="font-medium text-neutral-700">
-                    Paid amount:
+                    Payment mode:
                   </span>
                   <span className="ml-2">
-                    {getCurrencySymbol(report.payment.currency)}{" "}
-                    {report.payment.paidAmount}
+                    {capitalizeFirstLetter(report.payment.paymentMode)}
                   </span>
                 </div>
-              )}
-            </div>
+                <div className="text-neutral-600 text-sm flex">
+                  <span className="font-medium text-neutral-700">
+                    Payment status:
+                  </span>
+                  <span className="ml-2">
+                    {capitalizeFirstLetter(report.payment.paymentStatus)}
+                  </span>
+                </div>
+                {report.payment.paymentStatus === "pending" && (
+                  <div className="text-neutral-600 text-sm flex">
+                    <span className="font-medium text-neutral-700">
+                      Paid amount:
+                    </span>
+                    <span className="ml-2">
+                      {getCurrencySymbol(report.payment.currency)}{" "}
+                      {report.payment.paidAmount}
+                    </span>
+                  </div>
+                )}
+              </div>
 
-            <div className="mt-16">
-              <h1 className="text-lg">Thank You</h1>
-              <p className="text-sm text-neutral-600 mt-2">
-                We are commited to care
-              </p>
+              <div className="mt-16">
+                <h1 className="text-lg">Thank You</h1>
+                <p className="text-sm text-neutral-600 mt-2">
+                  We are commited to care
+                </p>
+              </div>
             </div>
           </div>
         </div>
