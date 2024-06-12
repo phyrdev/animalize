@@ -17,8 +17,10 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Invoice from "./Invoice";
+import Result from "./Result";
 
 function RRow({ report, index, flagCallback }) {
+  const [showReport, setShowReport] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
   const session = useSession();
   const router = useRouter();
@@ -110,6 +112,9 @@ function RRow({ report, index, flagCallback }) {
                   case "show-invoice":
                     setShowInvoice(true);
                     break;
+                  case "final-report":
+                    setShowReport(true);
+                    break;
                   case "flag-report":
                     toast.loading(
                       report.flagged
@@ -160,6 +165,14 @@ function RRow({ report, index, flagCallback }) {
           report={report}
           closeCallback={() => setShowInvoice(false)}
           minimized={true}
+        />
+      )}
+
+      {showReport && (
+        <Result
+          report={report}
+          closeCallBack={() => setShowReport(false)}
+          minimized
         />
       )}
     </>

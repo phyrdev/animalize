@@ -5,3 +5,14 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+@media print {
+  footer {
+    page-break-after: always;
+  }
+}
+
+@page {
+  size: auto;
+  margin-bottom: 20mm;
+}

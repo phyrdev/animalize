@@ -16,6 +16,7 @@ import PermissionDenied from "../components/PermissionDenied";
 import RRow from "./components/RRow";
 import RCard from "./components/RCard";
 import { reportstatus } from "@/static/lists";
+import Result from "./components/Result";
 function Reports() {
   const router = useRouter();
   const session = useSession();
