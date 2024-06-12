@@ -187,6 +187,39 @@ export const getReportById = async (id) => {
   }
 };
 
+export const getReportByReptNo = async (reportno) => {
+  try {
+    const report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+      include: {
+        payment: true,
+        organization: true,
+        vials: true,
+      },
+    });
+    if (report) {
+      return {
+        success: true,
+        message: "Report fetched successfully",
+        data: report,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Report not found",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const updateReport = async (id, reportSpecifics, billingSpecifics) => {
   try {
     await prisma.report.update({
