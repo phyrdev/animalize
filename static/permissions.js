@@ -18,5 +18,5 @@ export const permissions = {
   managePayments: ["admin", "super-admin"],
   collectSamples: ["sample-collector", "admin", "super-admin"],
   feedResults: ["pathologist", "admin", "super-admin"],
-  reviewResults: ["pathologist", "admin", "super-admin"],
+  reviewResults: ["pathologist"],
 };

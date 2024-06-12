@@ -79,18 +79,22 @@ function Review({ params }) {
               </Breadcrumbs>
               <span className="text-xl font-semibold md:hidden">Review</span>
 
-              <Button
-                onClick={() => setIsConsentOpen(true)}
-                className="ml-auto w-fit md:px-6 h-10 rounded-md"
-              >
-                Apply for retest
-              </Button>
-              <Button
-                onClick={() => setApproveOpen(true)}
-                className="ml-2 w-fit md:px-6 md:ml-2 h-10 rounded-md bg-neutral-800 text-white"
-              >
-                Approve results
-              </Button>
+              {permissions.reviewResults.includes(session.data.user.role) && (
+                <>
+                  <Button
+                    onClick={() => setIsConsentOpen(true)}
+                    className="ml-auto w-fit md:px-6 h-10 rounded-md"
+                  >
+                    Apply for retest
+                  </Button>
+                  <Button
+                    onClick={() => setApproveOpen(true)}
+                    className="ml-2 w-fit md:px-6 md:ml-2 h-10 rounded-md bg-neutral-800 text-white"
+                  >
+                    Approve results
+                  </Button>
+                </>
+              )}
             </div>
 
             {loading == true ? (
