@@ -269,3 +269,165 @@ export const feedResults = async (reportno, tests) => {
     };
   }
 };
+
+export const saveReview = async (reportno, pathno, tests) => {
+  try {
+    let report = await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S203",
+        pathno,
+        tests,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Review saved successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const failReport = async (reportno, failStatement) => {
+  try {
+    let report = await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S204",
+        failStatement,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report applied for retest successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const revertSampleCollection = async (reportno) => {
+  try {
+    let report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+    });
+
+    report.tests.map((test) => {
+      test.parameters.map((param) => {
+        param.value = "";
+      });
+      test.observation = "";
+    });
+
+    await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S200",
+        tests: report.tests,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Sample collection reverted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const revertFeedResults = async (reportno) => {
+  try {
+    let report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+    });
+
+    report.tests.map((test) => {
+      test.parameters.map((param) => {
+        param.value = "";
+      });
+      test.observation = "";
+    });
+
+    await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S201",
+        tests: report.tests,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Results reverted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const revertPathologyReview = async (reportno) => {
+  try {
+    let report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+    });
+
+    report.tests.map((test) => {
+      test.observation = "";
+    });
+
+    await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S202",
+        tests: report.tests,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Review reverted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

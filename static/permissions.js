@@ -19,4 +19,5 @@ export const permissions = {
   collectSamples: ["sample-collector", "admin", "super-admin"],
   feedResults: ["admin", "super-admin"],
   reviewResults: ["pathologist", "admin", "super-admin"],
+  takeAction: ["admin", "super-admin", "receptionist"],
 };

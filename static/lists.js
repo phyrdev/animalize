@@ -461,12 +461,14 @@ export const reportstatus = {
     label: "Ready for delivery",
     access: ["receptionist", "admin", "super-admin"],
     buttonLabel: "Deliver report",
+    target: "deliver-report",
   },
 
   S204: {
     label: "Needs retesting",
-    access: ["pathologist", "admin", "super-admin", "receptionist"],
-    buttonLabel: "Feed results",
+    access: ["admin", "super-admin", "receptionist"],
+    buttonLabel: "Take action",
+    target: "take-action",
   },
 
   S205: {

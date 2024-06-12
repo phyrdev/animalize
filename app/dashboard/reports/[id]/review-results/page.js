@@ -4,7 +4,12 @@
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { feedResults, getReportById } from "@/prisma/report";
+import {
+  failReport,
+  feedResults,
+  getReportById,
+  saveReview,
+} from "@/prisma/report";
 import { testparameteruits } from "@/static/lists";
 import { permissions } from "@/static/permissions";
 import {
@@ -26,7 +31,9 @@ function Review({ params }) {
   const [loading, setLoading] = useState(true);
   const [invalidState, setInvalidState] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
+  const [retestOpen, setRetestOpen] = useState(false);
   const [addSigntureOpen, setAddSigntureOpen] = useState(false);
+  const [failStatement, setFailStatement] = useState("");
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -53,6 +60,65 @@ function Review({ params }) {
     } else {
       return "inherit";
     }
+  };
+
+  const approveReport = async () => {
+    if (performChecks()) {
+      toast.loading("Approving report...");
+      let { success, message } = await saveReview(
+        report.reportno,
+        session.data.user.empno,
+        report.tests
+      );
+      toast.remove();
+      if (success) {
+        toast.success("Report approved successfully.");
+        router.push("/dashboard/reports");
+      } else {
+        toast.error(message);
+      }
+    }
+  };
+
+  const failReportImmediately = async () => {
+    if (failStatement.length == 0) {
+      toast.error("Please add a message.");
+      return false;
+    }
+    let failMessage = `${failStatement} -- Dr.${session.data.user.name}(${
+      session.data.user.empno
+    }) on ${new Date().toDateString()}`;
+
+    toast.loading("Applying for retest...");
+    let { success, message } = await failReport(report.reportno, failMessage);
+    toast.remove();
+    if (success) {
+      toast.success("Report applied for retest successfully.");
+      router.push("/dashboard/reports");
+    } else {
+      toast.error(message);
+    }
+  };
+
+  const performChecks = () => {
+    let valid = true;
+    let message = "";
+    report.tests.forEach((test) => {
+      if (test.observation) {
+        if (test.observation.length == 0) {
+          valid = false;
+          message = "Please fill all observations.";
+          return false;
+        }
+      } else {
+        valid = false;
+        message = "Please fill all observations.";
+        return false;
+      }
+    });
+
+    valid == false && toast.error(message);
+    return valid;
   };
 
   useEffect(() => {
@@ -82,7 +148,7 @@ function Review({ params }) {
               {permissions.reviewResults.includes(session.data.user.role) && (
                 <>
                   <Button
-                    onClick={() => setIsConsentOpen(true)}
+                    onClick={() => setRetestOpen(true)}
                     className="ml-auto w-fit md:px-6 h-10 rounded-md"
                   >
                     Apply for retest
@@ -376,9 +442,9 @@ function Review({ params }) {
                         <h1 className="text-xl font-semibold">
                           Are you sure you want to approve the results?
                         </h1>
-                        <p className="mt-2 leading-7 text-neutral-600 text-sm md:text-base md:leading-7">
-                          You wont be able to access this page once you save the
-                          changes
+                        <p className="mt-3 leading-7 text-neutral-600 text-sm md:text-base md:leading-7">
+                          This report will be marked as approved and the will be
+                          ready for download.
                         </p>
                       </div>
 
@@ -390,7 +456,93 @@ function Review({ params }) {
                           Cancel
                         </Button>
                         <Button
-                          onClick={async () => {}}
+                          onClick={async () => approveReport()}
+                          className="ml-2 rounded-md bg-neutral-800 text-white"
+                        >
+                          Save changes
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {retestOpen && (
+                  <div className="fixed inset-0 h-full w-full bg-black/50 z-20 flex items-end md:items-center justify-center">
+                    <div className="w-full md:w-[500px] bg-white md:rounded-md p-5 pb-10 md:pb-5">
+                      <div className="flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={28}
+                          height={28}
+                          viewBox="0 0 32 32"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M23 30a7 7 0 1 1 7-7a7.01 7.01 0 0 1-7 7m0-12a5 5 0 1 0 5 5a5.006 5.006 0 0 0-5-5"
+                          ></path>
+                          <path
+                            fill="currentColor"
+                            d="m26 24.586l-2-2V20h-2v3.414L24.586 26zM8 16h6v2H8zm0-6h12v2H8z"
+                          ></path>
+                          <path
+                            fill="currentColor"
+                            d="M26 4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v13a10.98 10.98 0 0 0 5.824 9.707L13 29.467V27.2l-4.234-2.258A8.99 8.99 0 0 1 4 17V4h20v9h2Z"
+                          ></path>
+                        </svg>
+                        <span className="text-lg font-medium ml-3">Retest</span>
+                        <button
+                          onClick={() => setRetestOpen(false)}
+                          className="ml-auto"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={28}
+                            height={28}
+                            viewBox="0 0 36 36"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
+                              className="clr-i-outline clr-i-outline-path-1"
+                            ></path>
+                            <path fill="none" d="M0 0h36v36H0z"></path>
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div className="mt-8">
+                        <h1 className="text-xl font-semibold">
+                          Are you sure you want to apply for retest?
+                        </h1>
+                        <p className="mt-3 leading-7 text-neutral-600 text-sm md:text-base md:leading-7">
+                          This report will sent back for retesting at the point
+                          of care.
+                        </p>
+
+                        <div className="mt-8">
+                          <span className="text-sm text-neutral-600">
+                            Add a message
+                          </span>
+                          <textarea
+                            name=""
+                            id=""
+                            className="w-full border rounded p-4 mt-2"
+                            placeholder="Please write your message"
+                            value={failStatement}
+                            onChange={(e) => setFailStatement(e.target.value)}
+                          ></textarea>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end mt-12">
+                        <Button
+                          onClick={() => setRetestOpen(false)}
+                          className="rounded-md"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={async () => failReportImmediately()}
                           className="ml-2 rounded-md bg-neutral-800 text-white"
                         >
                           Save changes

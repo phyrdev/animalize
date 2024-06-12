@@ -1,16 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { feedResults, getReportById } from "@/prisma/report";
-import { testparameteruits } from "@/static/lists";
+import { capitalizeFirstLetter } from "@/helper/refactor";
+import {
+  getReportById,
+  revertFeedResults,
+  revertPathologyReview,
+  revertSampleCollection,
+} from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Radio,
+  RadioGroup,
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
@@ -18,18 +23,19 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-function FeedResults({ params }) {
+function TakeAction({ params }) {
   const router = useRouter();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
+  const [status, setStatus] = useState("S200");
   const session = useSession();
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
     if (success) {
-      if (data.status == "S201") {
+      if (data.status == "S204") {
         setReport(data);
         setLoading(false);
       } else {
@@ -43,6 +49,59 @@ function FeedResults({ params }) {
     }
   };
 
+  const takeAction = async () => {
+    switch (status) {
+      case "S200":
+        toast.loading("Savig changes...");
+        let revertSampleColReq = await revertSampleCollection(report.reportno);
+        toast.dismiss();
+        if (revertSampleColReq.success) {
+          toast.success("Changes saved successfully");
+          router.push("/dashboard/reports");
+          router.refresh();
+        } else {
+          toast.error(revertSampleColReq.message);
+        }
+        break;
+      case "S201":
+        toast.loading("Savig changes...");
+        let revertFeedResultReq = await revertFeedResults(report.reportno);
+        toast.dismiss();
+        if (revertFeedResultReq.success) {
+          toast.success("Changes saved successfully");
+          router.push("/dashboard/reports");
+          router.refresh();
+        } else {
+          toast.error(revertFeedResultReq.message);
+        }
+        break;
+      case "S202":
+        toast.loading("Savig changes...");
+        let revertPathReviewReq = await revertPathologyReview(report.reportno);
+        toast.dismiss();
+        if (revertPathReviewReq.success) {
+          toast.success("Changes saved successfully");
+          router.push("/dashboard/reports");
+          router.refresh();
+        } else {
+          toast.error(revertPathReviewReq.message);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const getParamColor = (param) => {
+    if (parseFloat(param.value) > parseFloat(param.high)) {
+      return "red";
+    } else if (parseFloat(param.value) < parseFloat(param.low)) {
+      return "blue";
+    } else {
+      return "inherit";
+    }
+  };
+
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.feedResults.includes(session.data.user.role)) {
@@ -52,7 +111,7 @@ function FeedResults({ params }) {
   }, [session.status]);
 
   if (session.status == "authenticated") {
-    if (permissions.feedResults.includes(session.data.user.role) == false) {
+    if (permissions.takeAction.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
       if (report) {
@@ -62,15 +121,17 @@ function FeedResults({ params }) {
               <Breadcrumbs className="hidden md:block">
                 <BreadcrumbItem>Dashboard</BreadcrumbItem>
                 <BreadcrumbItem>Reports</BreadcrumbItem>
-                <BreadcrumbItem>Feed results</BreadcrumbItem>
+                <BreadcrumbItem>Take action</BreadcrumbItem>
               </Breadcrumbs>
               <span className="text-xl font-semibold md:hidden">
                 Feed results
               </span>
 
-              {permissions.feedResults.includes(session.data.user.role) && (
+              {permissions.takeAction.includes(session.data.user.role) && (
                 <Button
-                  onClick={() => setIsConsentOpen(true)}
+                  onClick={() => {
+                    takeAction();
+                  }}
                   className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
                 >
                   Save changes
@@ -193,183 +254,199 @@ function FeedResults({ params }) {
                     </div>
                   </div>
                 </details>
-
-                <div className="mt-10 max-w-3xl">
-                  <div className="space-y-10">
-                    {report.tests.map((test, i) => {
-                      return (
-                        <details
-                          key={i}
-                          id={`auto-fill-t${i + 1}`}
-                          open={i == 0}
-                        >
-                          <summary>
-                            <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
-                              {test.name}
-                            </div>
-                          </summary>
-                          <div className="md:pl-5 pt-5">
-                            <p className="text-sm text-neutral-700 leading-7 md:leading-7">
-                              Fill up the observed values for each parameter. If
-                              a parameter is not applicable, leave it blank.
-                            </p>
-
-                            <div className="mt-8 hidden md:block">
-                              <div className="grid grid-cols-4 border divide-x">
-                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Parameter</span>
-                                </div>
-                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Observed value</span>
-                                </div>
-                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Unit value</span>
-                                </div>
-                                <div className="font-medium text-neutral-700 grid grid-cols-2 divide-x">
-                                  <div className="h-10 px-3 flex items-center">
-                                    <span>Low</span>
-                                  </div>
-                                  <div className="h-10 px-3 flex items-center">
-                                    <span>High</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="border border-t-0 divide-y">
-                                {test.parameters.map((param, j) => {
-                                  return (
-                                    <div
-                                      key={j}
-                                      className="grid grid-cols-4 divide-x"
-                                    >
-                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
-                                        <span className="text-base">
-                                          {param.name}
-                                        </span>
-                                      </div>
-                                      <div className="text-neutral-700 h-12 flex items-center">
-                                        <input
-                                          type="text"
-                                          value={
-                                            report.tests[i].parameters[j]
-                                              .value || ""
-                                          }
-                                          onChange={(e) => {
-                                            setReport((prev) => {
-                                              let newReport = { ...prev };
-                                              newReport.tests[i].parameters[
-                                                j
-                                              ].value = e.target.value;
-                                              return newReport;
-                                            });
-                                          }}
-                                          className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
-                                          name=""
-                                          id=""
-                                        />
-                                      </div>
-                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
-                                        <span className="text-base">
-                                          {param.unit}
-                                        </span>
-                                      </div>
-                                      <div className="text-neutral-700 grid grid-cols-2 divide-x">
-                                        <div className="h-12 px-3 flex items-center">
-                                          <span className="text-base">
-                                            {param.low}
-                                          </span>
-                                        </div>
-                                        <div className="h-12 px-3 flex items-center">
-                                          <span className="text-base">
-                                            {param.high}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            <div className="mt-8 max-w-sm md:hidden">
-                              <div className="grid grid-cols-4 border divide-x text-sm">
-                                <div className="font-medium col-span-2 text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Parameter</span>
-                                </div>
-                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Value</span>
-                                </div>
-                                <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
-                                  <span>Unit</span>
-                                </div>
-                              </div>
-                              <div className="border border-t-0 divide-y">
-                                {test.parameters.map((param, j) => {
-                                  return (
-                                    <div
-                                      key={j}
-                                      className="grid grid-cols-4 divide-x"
-                                    >
-                                      <div className="text-neutral-700 col-span-2 h-14 px-3 flex items-center">
-                                        <div className="text-sm flex flex-wrap gap-1">
-                                          <span>{param.name}</span>&nbsp;
-                                          <div className="text-xs text-neutral-500 mt-1">
-                                            {param.low} - {param.high}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="text-neutral-700 h-14 flex items-center">
-                                        <input
-                                          type="text"
-                                          value={
-                                            report.tests[i].parameters[j]
-                                              .value || ""
-                                          }
-                                          onChange={(e) => {
-                                            setReport((prev) => {
-                                              let newReport = { ...prev };
-                                              newReport.tests[i].parameters[
-                                                j
-                                              ].value = e.target.value;
-                                              return newReport;
-                                            });
-                                          }}
-                                          className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
-                                          name=""
-                                          id=""
-                                        />
-                                      </div>
-                                      <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
-                                        <span>{param.unit}</span>
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            {i != report.tests.length - 1 && (
-                              <div className="pb-6 h-14 flex items-center justify-end mt-8">
-                                <Button
-                                  onClick={() => {
-                                    document.getElementById(
-                                      `auto-fill-t${i + 1}`
-                                    ).open = false;
-                                    document.getElementById(
-                                      `auto-fill-t${i + 2}`
-                                    ).open = true;
-                                  }}
-                                  className="rounded"
-                                >
-                                  Proceed
-                                </Button>
-                              </div>
-                            )}
+                <div className="space-y-10 mt-10 max-w-3xl">
+                  {report.tests.map((test, i) => {
+                    return (
+                      <details key={i} id={`auto-fill-t${i + 1}`} open>
+                        <summary>
+                          <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                            {test.name}
                           </div>
-                        </details>
-                      );
-                    })}
-                  </div>
+                        </summary>
+                        <div className="md:pl-5 pt-5">
+                          <p className="text-sm text-neutral-700 leading-7 md:leading-7">
+                            Fill up the observed values for each parameter. If a
+                            parameter is not applicable, leave it blank.
+                          </p>
+
+                          <div className="mt-8 hidden md:block">
+                            <div className="grid grid-cols-4 border divide-x">
+                              <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Parameter</span>
+                              </div>
+                              <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Observed value</span>
+                              </div>
+                              <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Unit value</span>
+                              </div>
+                              <div className="font-medium text-neutral-700 grid grid-cols-2 divide-x">
+                                <div className="h-10 px-3 flex items-center">
+                                  <span>Low</span>
+                                </div>
+                                <div className="h-10 px-3 flex items-center">
+                                  <span>High</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="border border-t-0 divide-y">
+                              {test.parameters.map((param, j) => {
+                                return (
+                                  <div
+                                    key={j}
+                                    className="grid grid-cols-4 divide-x"
+                                  >
+                                    <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                      <span className="text-base">
+                                        {param.name}
+                                      </span>
+                                    </div>
+                                    <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                      <span
+                                        style={{
+                                          color: getParamColor(param),
+                                        }}
+                                        className="text-base"
+                                      >
+                                        {param.value || ""}
+                                      </span>
+                                    </div>
+                                    <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                      <span className="text-base">
+                                        {param.unit}
+                                      </span>
+                                    </div>
+                                    <div className="text-neutral-700 grid grid-cols-2 divide-x">
+                                      <div className="h-12 px-3 flex items-center">
+                                        <span className="text-base">
+                                          {param.low}
+                                        </span>
+                                      </div>
+                                      <div className="h-12 px-3 flex items-center">
+                                        <span className="text-base">
+                                          {param.high}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          <div className="mt-8 max-w-sm md:hidden">
+                            <div className="grid grid-cols-4 border divide-x text-sm">
+                              <div className="font-medium col-span-2 text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Parameter</span>
+                              </div>
+                              <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Value</span>
+                              </div>
+                              <div className="font-medium text-neutral-700 h-10 px-3 flex items-center">
+                                <span>Unit</span>
+                              </div>
+                            </div>
+                            <div className="border border-t-0 divide-y">
+                              {test.parameters.map((param, j) => {
+                                return (
+                                  <div
+                                    key={j}
+                                    className="grid grid-cols-4 divide-x"
+                                  >
+                                    <div className="text-neutral-700 col-span-2 h-14 px-3 flex items-center">
+                                      <div className="text-sm flex flex-wrap gap-1">
+                                        <span>{param.name}</span>&nbsp;
+                                        <div className="text-xs text-neutral-500 mt-1">
+                                          {param.low} - {param.high}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="text-neutral-700 h-14 flex items-center">
+                                      <input
+                                        type="text"
+                                        value={
+                                          report.tests[i].parameters[j].value ||
+                                          ""
+                                        }
+                                        onChange={(e) => {
+                                          setReport((prev) => {
+                                            let newReport = { ...prev };
+                                            newReport.tests[i].parameters[
+                                              j
+                                            ].value = e.target.value;
+                                            return newReport;
+                                          });
+                                        }}
+                                        className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
+                                        name=""
+                                        id=""
+                                      />
+                                    </div>
+                                    <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
+                                      <span>{param.unit}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          <div className="mt-10">
+                            <p className="font-medium">Your observation</p>
+                            <textarea
+                              name=""
+                              id=""
+                              value={report.tests[i].observation || ""}
+                              onChange={(e) => {
+                                setReport((prev) => {
+                                  let newReport = { ...prev };
+                                  newReport.tests[i].observation =
+                                    e.target.value;
+                                  return newReport;
+                                });
+                              }}
+                              className="w-full border rounded p-4 mt-2"
+                              placeholder="Please write your observation"
+                            ></textarea>
+                          </div>
+                        </div>
+                      </details>
+                    );
+                  })}
                 </div>
+                <details id="fail-details" className="mt-10" open>
+                  <summary>
+                    <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                      Fail statement
+                    </div>
+                  </summary>
+                  <div className="pt-5 md:pl-5 max-w-3xl">
+                    <p className="text-sm text-neutral-600">
+                      Message form pathologist
+                    </p>
+                    <div className="border p-4 mt-2 rounded-md leading-7">
+                      <p>{report.failStatement}</p>
+                    </div>
+
+                    <p className="text-sm text-neutral-600 mt-10">
+                      Send report to
+                    </p>
+                    <div className="mt-3">
+                      <RadioGroup
+                        orientation="horizontal"
+                        value={status}
+                        onValueChange={(value) => setStatus(value)}
+                        classNames={{
+                          wrapper: "flex flex-wrap gap-6",
+                        }}
+                      >
+                        <Radio value="S200">Send for sample collection</Radio>
+                        <Radio value="S201">Send for feeding results</Radio>
+                        <Radio value="S202">Send for pathologist review</Radio>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                </details>
               </div>
             )}
 
@@ -466,4 +543,4 @@ function FeedResults({ params }) {
   }
 }
 
-export default FeedResults;
+export default TakeAction;
