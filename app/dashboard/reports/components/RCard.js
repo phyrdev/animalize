@@ -42,7 +42,7 @@ function RCard({ report, index, flagCallback }) {
           {capitalizeFirstLetter(report.payment.paymentStatus)}
         </span>
       </div>
-      <div className="font-normal mt-5 text-sm items-center flex">
+      <div className="font-normal mt-5 text-sm items-center flex w-full">
         <Button
           onClick={() => {
             router.push(
@@ -51,7 +51,7 @@ function RCard({ report, index, flagCallback }) {
               }`
             );
           }}
-          className="rounded-md bg-transparent border border-neutral-400 w-36"
+          className="rounded-md bg-transparent border border-neutral-400 w-36 mr-auto"
         >
           {reportstatus[report.status].buttonLabel}
         </Button>
@@ -60,7 +60,7 @@ function RCard({ report, index, flagCallback }) {
             onClick={() => {
               router.push(`/dashboard/reports/${report.id}/edit`);
             }}
-            className="ml-auto hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
+            className="hover:bg-neutral-200 h-10 w-10 rounded transition-all flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

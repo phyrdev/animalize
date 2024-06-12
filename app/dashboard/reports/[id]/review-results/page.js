@@ -151,13 +151,13 @@ function Review({ params }) {
                     onClick={() => setRetestOpen(true)}
                     className="ml-auto w-fit md:px-6 h-10 rounded-md"
                   >
-                    Apply for retest
+                    Need retest
                   </Button>
                   <Button
                     onClick={() => setApproveOpen(true)}
                     className="ml-2 w-fit md:px-6 md:ml-2 h-10 rounded-md bg-neutral-800 text-white"
                   >
-                    Approve results
+                    Approve
                   </Button>
                 </>
               )}
@@ -327,26 +327,15 @@ function Review({ params }) {
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="text-neutral-700 h-14 flex items-center">
-                                        <input
-                                          type="text"
-                                          value={
-                                            report.tests[i].parameters[j]
-                                              .value || ""
-                                          }
-                                          onChange={(e) => {
-                                            setReport((prev) => {
-                                              let newReport = { ...prev };
-                                              newReport.tests[i].parameters[
-                                                j
-                                              ].value = e.target.value;
-                                              return newReport;
-                                            });
+                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                        <span
+                                          style={{
+                                            color: getParamColor(param),
                                           }}
-                                          className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
-                                          name=""
-                                          id=""
-                                        />
+                                          className="text-base"
+                                        >
+                                          {param.value || ""}
+                                        </span>
                                       </div>
                                       <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
                                         <span>{param.unit}</span>

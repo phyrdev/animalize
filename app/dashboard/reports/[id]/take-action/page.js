@@ -123,9 +123,7 @@ function TakeAction({ params }) {
                 <BreadcrumbItem>Reports</BreadcrumbItem>
                 <BreadcrumbItem>Take action</BreadcrumbItem>
               </Breadcrumbs>
-              <span className="text-xl font-semibold md:hidden">
-                Feed results
-              </span>
+              <span className="text-xl font-semibold md:hidden">Action</span>
 
               {permissions.takeAction.includes(session.data.user.role) && (
                 <Button
@@ -257,7 +255,7 @@ function TakeAction({ params }) {
                 <div className="space-y-10 mt-10 max-w-3xl">
                   {report.tests.map((test, i) => {
                     return (
-                      <details key={i} id={`auto-fill-t${i + 1}`} open>
+                      <details key={i}>
                         <summary>
                           <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                             {test.name}
@@ -361,26 +359,15 @@ function TakeAction({ params }) {
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="text-neutral-700 h-14 flex items-center">
-                                      <input
-                                        type="text"
-                                        value={
-                                          report.tests[i].parameters[j].value ||
-                                          ""
-                                        }
-                                        onChange={(e) => {
-                                          setReport((prev) => {
-                                            let newReport = { ...prev };
-                                            newReport.tests[i].parameters[
-                                              j
-                                            ].value = e.target.value;
-                                            return newReport;
-                                          });
+                                    <div className="text-neutral-700 h-12 px-3 flex items-center">
+                                      <span
+                                        style={{
+                                          color: getParamColor(param),
                                         }}
-                                        className="w-full h-full px-3 text-base outline-none focus-within:bg-neutral-50"
-                                        name=""
-                                        id=""
-                                      />
+                                        className="text-base"
+                                      >
+                                        {param.value || ""}
+                                      </span>
                                     </div>
                                     <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
                                       <span>{param.unit}</span>
@@ -424,25 +411,38 @@ function TakeAction({ params }) {
                     <p className="text-sm text-neutral-600">
                       Message form pathologist
                     </p>
-                    <div className="border p-4 mt-2 rounded-md leading-7">
+                    <div className="border p-4 mt-3 rounded-md leading-7 text-sm md:text-base">
                       <p>{report.failStatement}</p>
                     </div>
 
-                    <p className="text-sm text-neutral-600 mt-10">
-                      Send report to
+                    <p className="text-sm text-neutral-600 mt-10 font-medium">
+                      Send report for
                     </p>
-                    <div className="mt-3">
+                    <div className="mt-4">
                       <RadioGroup
                         orientation="horizontal"
                         value={status}
                         onValueChange={(value) => setStatus(value)}
+                        className="text-sm"
                         classNames={{
-                          wrapper: "flex flex-wrap gap-6",
+                          wrapper: "flex flex-wrap gap-4 md:gap-6",
                         }}
                       >
-                        <Radio value="S200">Send for sample collection</Radio>
-                        <Radio value="S201">Send for feeding results</Radio>
-                        <Radio value="S202">Send for pathologist review</Radio>
+                        <Radio value="S200">
+                          <span className="text-base md:text-base">
+                            Send for sample collection
+                          </span>
+                        </Radio>
+                        <Radio value="S201">
+                          <span className="text-base md:text-base">
+                            Send for result feeding
+                          </span>
+                        </Radio>
+                        <Radio value="S202">
+                          <span className="text-base md:text-base">
+                            Send for pathologist review
+                          </span>
+                        </Radio>
                       </RadioGroup>
                     </div>
                   </div>
