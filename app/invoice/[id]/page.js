@@ -25,7 +25,7 @@ function Invoice({ params }) {
     })();
   }, []);
   return (
-    <div className="flex md:justify-center bg-neutral-100 min-h-screen">
+    <div className="flex md:justify-center bg-neutral-100 min-h-screen w-svw overflow-auto">
       {loading ? (
         <>
           <div className="flex h-fit mt-20 justify-center">
