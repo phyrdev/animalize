@@ -446,7 +446,7 @@ export const reportstatus = {
   },
   S201: {
     label: "Ready for diagnosis",
-    access: ["pathologist", "admin", "super-admin"],
+    access: ["admin", "super-admin"],
     buttonLabel: "Feed results",
     target: "feed-results",
   },

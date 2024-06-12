@@ -165,12 +165,18 @@ export const getReportById = async (id) => {
         vials: true,
       },
     });
-
-    return {
-      success: true,
-      message: "Report fetched successfully",
-      data: report,
-    };
+    if (report) {
+      return {
+        success: true,
+        message: "Report fetched successfully",
+        data: report,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Report not found",
+      };
+    }
   } catch (error) {
     console.log(error);
     return {
