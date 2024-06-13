@@ -23,7 +23,7 @@ export const permissions = {
   ],
   managePayments: ["admin", "super-admin"],
   collectSamples: ["sample-collector", "admin", "super-admin"],
-  feedResults: ["admin", "super-admin"],
+  feedResults: ["admin", "super-admin", "lab-technician"],
   reviewResults: ["pathologist", "admin", "super-admin"],
   takeAction: ["admin", "super-admin", "receptionist"],
   viewInvoice: ["admin", "super-admin", "receptionist"],
