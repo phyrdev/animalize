@@ -2,7 +2,13 @@ import { feedResults } from "@/prisma/report";
 
 export const permissions = {
   createReport: ["admin", "super-admin", "receptionist"],
-  viewReports: ["admin", "super-admin", "receptionist", "pathologist"],
+  viewReports: [
+    "admin",
+    "super-admin",
+    "receptionist",
+    "pathologist",
+    "lab-technician",
+  ],
   previewReport: ["admin", "super-admin", "receptionist"],
   editReport: ["admin", "super-admin"],
   manageFacilities: ["admin", "super-admin"],

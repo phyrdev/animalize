@@ -32,6 +32,7 @@ function Reports() {
     let { success, data, message } = await getOrgReports(
       session.data.user.orgno
     );
+    console.log(message, success);
     if (success) {
       setReports(data);
       setVisibleReports(data);

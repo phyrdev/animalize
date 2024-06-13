@@ -70,6 +70,7 @@ export const navmenuitems = [
       "receptionist",
       "pathologist",
       "sample-collector",
+      "lab-technician",
     ],
     icon: (
       <svg
@@ -95,6 +96,7 @@ export const navmenuitems = [
       "receptionist",
       "pathologist",
       "sample-collector",
+      "lab-technician",
     ],
     icon: (
       <svg
@@ -216,6 +218,7 @@ export const navmenuitems = [
       "receptionist",
       "pathologist",
       "sample-collector",
+      "lab-technician",
     ],
     visibleSm: true,
     icon: (
@@ -258,6 +261,7 @@ export const employeeroles = [
   //   { label: "Super Admin", value: "super-admin" },
   { label: "Admin", value: "admin" },
   { label: "Receptionist", value: "receptionist" },
+  { label: "Laboratory technician", value: "lab-technician" },
   { label: "Pathologist", value: "pathologist" },
   { label: "Sample Collector", value: "sample-collector" },
 ];
@@ -446,7 +450,7 @@ export const reportstatus = {
   },
   S201: {
     label: "Ready for diagnosis",
-    access: ["admin", "super-admin"],
+    access: ["admin", "super-admin", "lab-technician"],
     buttonLabel: "Feed results",
     target: "feed-results",
   },
