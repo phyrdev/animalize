@@ -297,6 +297,11 @@ function CreateReport() {
       document.getElementById("billing-details-dd").open = true;
       toast.error("Please enter a valid paid amount");
       return false;
+    } else if (pFile.additionalNotes.trim().length == 0) {
+      closeAllDetails();
+      document.getElementById("declaration-dd").open = true;
+      toast.error("Please enter a valid additional note");
+      return false;
     }
 
     return true;
@@ -784,6 +789,10 @@ function CreateReport() {
                     className="w-full h-24 resize-y p-3 outline-none border rounded-md mt-3"
                     placeholder="Some additional notes"
                   ></textarea>
+                  <p className="text-sm text-neutral-600 leading-6 mt-6">
+                    Any past medical history or any other information that you
+                    would like to share with the doctor can be mentioned here.
+                  </p>
                 </div>
               </div>
             </details>
