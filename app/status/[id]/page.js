@@ -3,11 +3,13 @@
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { getReportByReptNo } from "@/prisma/report";
 import { Button, Slider, Spinner } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
 function Status({ params }) {
+  const router = useRouter();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -106,7 +108,12 @@ function Status({ params }) {
 
                   <div className="mt-8 grid grid-cols-2 gap-2">
                     <div>
-                      <Button className="w-full rounded-md bg-neutral-100">
+                      <Button
+                        onClick={() => {
+                          router.push(`/invoice/${params.id}`);
+                        }}
+                        className="w-full rounded-md bg-neutral-100"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width={20}
