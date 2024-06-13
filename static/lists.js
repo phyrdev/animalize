@@ -474,6 +474,7 @@ export const reportstatus = {
   S205: {
     label: "Delivered successfully",
     access: ["admin", "super-admin", "receptionist"],
-    buttonLabel: "Deliver report",
+    buttonLabel: "Resend report",
+    target: "deliver-report",
   },
 };

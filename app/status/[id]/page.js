@@ -40,7 +40,7 @@ function Status({ params }) {
     },
 
     {
-      code: "S202",
+      code: "S205",
       name: "Report delivered successfully",
     },
   ];

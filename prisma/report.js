@@ -164,6 +164,7 @@ export const getReportById = async (id) => {
         payment: true,
         organization: true,
         vials: true,
+        reviewedBy: true,
       },
     });
     if (report) {
@@ -456,6 +457,30 @@ export const revertPathologyReview = async (reportno) => {
     return {
       success: true,
       message: "Review reverted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const markAsDelivered = async (reportno) => {
+  try {
+    let report = await prisma.report.update({
+      where: {
+        reportno,
+      },
+      data: {
+        status: "S205",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Report marked as delivered successfully",
     };
   } catch (error) {
     console.log(error);

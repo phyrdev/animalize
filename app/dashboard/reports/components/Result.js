@@ -222,7 +222,7 @@ function Result({ report, closeCallBack = () => {} }) {
                   </div>
                   <div className="mt-10">
                     <div className="flex items-center">
-                      <span>Dr. {report.reviewedBy.name}</span>
+                      <span>Dr. {report.reviewedBy?.name}</span>
                       <span className="text-neutral-600 ml-3">
                         ({report.reviewedBy?.designation})
                       </span>
@@ -231,7 +231,7 @@ function Result({ report, closeCallBack = () => {} }) {
                       Dated on:
                       <span className="text-black ml-2">
                         {new Date(
-                          report.reviewedBy.createdAt
+                          report.reviewedBy?.createdAt
                         ).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "short",
