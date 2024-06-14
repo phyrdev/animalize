@@ -205,13 +205,12 @@ export const caseCreatedTemplate = (
       </div>
 
       <div class="payment-options">
-        <span>Mode: ${paymentmode}</span>
         <span>Status: ${paymentstatus}</span>
         <span>Due: ${dueamount}</span>
       </div>
 
       <div class="action-buttons">
-        <a href={"https://animalize.io/invoice/" + ${reportno}}>
+        <a href=${"https://animalize.io/invoice/" + reportno}>
           <button>
             <span>View invoice</span>
             <img
@@ -223,7 +222,7 @@ export const caseCreatedTemplate = (
         </a>
         &nbsp; &nbsp;
 
-        <a href="">
+        <a href=${"https://animalize.io/status/" + reportno}>
           <button>
             <span>Track status</span>
             <svg

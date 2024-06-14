@@ -3,7 +3,7 @@
 import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
-import { getCurrencySymbol } from "@/helper/refactor";
+import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { caseCreatedTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
@@ -36,17 +36,21 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
         reportSpecifics.parentEmail,
         `Case created for Rept no: LE89TPRES`,
         caseCreatedTemplate(
-          new Date().toLocaleDateString(),
+          new Date(rp.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
           rp.reportno,
-          rp.parentName,
+          rp.parentFirstName,
           rp.parentEmail,
           rp.organization.name,
           rp.organization.email,
           rp.organization.phone,
           rp.tests.length,
           sbt,
-          rp.payment.paymentMode,
-          rp.payment.paymentStatus,
+          capitalizeFirstLetter(rp.payment.paymentMode),
+          capitalizeFirstLetter(rp.payment.paymentStatus),
           due
         )
       ));

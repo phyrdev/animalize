@@ -58,7 +58,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                   onClick={() => {
                     router.push("/dashboard/reports/create");
                   }}
-                  className="ml-3 rounded bg-neutral-200"
+                  className="rounded bg-neutral-200"
                 >
                   Create another report
                 </Button>
