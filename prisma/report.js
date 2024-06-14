@@ -4,8 +4,20 @@ import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
 import { getCurrencySymbol } from "@/helper/refactor";
+import { caseCreatedTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
+  reportSpecifics.parentEmail.length != 0 &&
+    (await sendMail(
+      reportSpecifics.parentEmail,
+      `Case created for Rept no: ${reportSpecifics.reportno}`,
+      caseCreatedTemplate()
+    ));
+
+  return {
+    success: false,
+    message: "Report created successfully",
+  };
   try {
     let rp = await prisma.report.create({
       data: {
@@ -20,19 +32,6 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
         organization: true,
       },
     });
-
-    reportSpecifics.parentEmail.length != 0 &&
-      (await sendMail(
-        reportSpecifics.parentEmail,
-        "Your case has been created",
-        `Your report number is ${rp.reportno}.<br/><br/>Pet name: ${
-          rp.petName
-        }.<br/>Subtotal: ${getCurrencySymbol(rp.payment.currency)} ${
-          rp.payment.subtotal
-        }<br/>Payment status: ${
-          rp.payment.paymentStatus
-        }. <br/> Payment method: ${rp.payment.paymentMode}`
-      ));
 
     return {
       success: true,
