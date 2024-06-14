@@ -193,6 +193,7 @@ export const getReportByReptNo = async (reportno) => {
         payment: true,
         organization: true,
         vials: true,
+        reviewedBy: true,
       },
     });
     if (report) {
