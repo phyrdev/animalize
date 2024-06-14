@@ -32,7 +32,7 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
     return {
       success: true,
       message: "Report created successfully",
-      data: rp,
+      data: createdReport,
     };
   } catch (error) {
     console.log(error);
