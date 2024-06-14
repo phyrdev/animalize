@@ -150,7 +150,7 @@ export const caseCreatedTemplate = () => {
   <body>
     <div class="container">
       <nav>
-        <img src="https://www.animalize.io/animalizelogo.png" alt="" />
+        <img src="https://animalize.io/animalizelogo.png" alt="" />
       </nav>
       <div class="rp-header">
         <table style="width: 100%">
