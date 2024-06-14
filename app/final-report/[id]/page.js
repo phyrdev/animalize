@@ -56,7 +56,7 @@ function FinalReport({ params }) {
       ) : (
         <>
           {report ? (
-            <div className="w-full">
+            <div className="w-full bg-neutral-100 min-h-svh">
               <div className="h-fit w-fit fixed top-0 -translate-y-full">
                 <div className="mt-5">
                   <Button className="rounded-md" onClick={handlePrint}>
