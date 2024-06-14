@@ -25,6 +25,9 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Result from "../../components/Result";
+import { sendMail } from "@/helper/mail";
+import { finalReportTemplate } from "@/templates/email";
+import Invoice from "../../components/Invoice";
 
 function DeliverReport({ params }) {
   const router = useRouter();
@@ -35,7 +38,7 @@ function DeliverReport({ params }) {
   const session = useSession();
   const [showReport, setShowReport] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
-  const [showParent, setShowParent] = useState(false);
+  const [customEmail, setCustomEmail] = useState("");
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -43,6 +46,7 @@ function DeliverReport({ params }) {
       if (data.status == "S203" || data.status == "S205") {
         setReport(data);
         setLoading(false);
+        setCustomEmail(data.parentEmail);
       } else {
         setInvalidState(true);
         setLoading(false);
@@ -118,14 +122,32 @@ function DeliverReport({ params }) {
                       <div className="grid grid-cols-2">
                         <CustomInput
                           label="Email"
+                          value={customEmail}
+                          onChange={(e) => setCustomEmail(e.target.value)}
                           placeholder={"Recepient's email"}
                         />
-                        <Button className="h-full rounded-md w-fit ml-2">
+                        <Button
+                          onClick={async () => {
+                            toast.loading("Sending email...");
+                            await sendMail(
+                              customEmail,
+                              `Report is ready for rept no: ${report.reportno}`,
+                              finalReportTemplate(report)
+                            );
+                            toast.remove();
+                            toast.success("Email sent successfully");
+                            setCustomEmail("");
+                          }}
+                          className="h-full rounded-md w-fit ml-2"
+                        >
                           Send report
                         </Button>
                       </div>
                       <div className="mt-8 flex flex-wrap gap-2">
-                        <Button className="rounded-md bg-transparent border w-fit">
+                        <Button
+                          onClick={() => setShowReport(true)}
+                          className="rounded-md bg-transparent border w-fit"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={20}
@@ -143,7 +165,10 @@ function DeliverReport({ params }) {
                           </svg>
                           <span>Print report</span>
                         </Button>
-                        <Button className="rounded-md bg-transparent border w-fit">
+                        <Button
+                          onClick={() => setShowInvoice(true)}
+                          className="rounded-md bg-transparent border w-fit"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={20}
@@ -162,7 +187,19 @@ function DeliverReport({ params }) {
                           </svg>
                           <span>Print invoice</span>
                         </Button>
-                        <Button className="rounded-md bg-transparent border w-fit">
+                        <Button
+                          onClick={async () => {
+                            toast.loading("Sending email...");
+                            await sendMail(
+                              report.parentEmail,
+                              `Report is ready for rept no: ${report.reportno}`,
+                              finalReportTemplate(report)
+                            );
+                            toast.remove();
+                            toast.success("Email sent successfully");
+                          }}
+                          className="rounded-md bg-transparent border w-fit"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={20}
@@ -178,7 +215,7 @@ function DeliverReport({ params }) {
                               d="M5 20v-1a7 7 0 0 1 7-7v0a7 7 0 0 1 7 7v1m-7-8a4 4 0 1 0 0-8a4 4 0 0 0 0 8"
                             ></path>
                           </svg>
-                          <span>Contact parent</span>
+                          <span>Send to parents email</span>
                         </Button>
                       </div>
                       <div className="flex items-center gap-3 rounded-md w-fit mt-16">
@@ -210,6 +247,21 @@ function DeliverReport({ params }) {
                   </div>
                 </details>
               </div>
+            )}
+
+            {showInvoice && (
+              <Invoice
+                report={report}
+                minimized
+                closeCallback={() => setShowInvoice(false)}
+              />
+            )}
+
+            {showReport && (
+              <Result
+                report={report}
+                closeCallBack={() => setShowReport(false)}
+              />
             )}
           </div>
         );

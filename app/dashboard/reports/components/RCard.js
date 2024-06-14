@@ -133,7 +133,7 @@ function RCard({ report, index, flagCallback }) {
             }}
             aria-label="Static Actions"
           >
-            {report.status == "S203" && (
+            {(report.status == "S203" || report.status == "S205") && (
               <DropdownItem key="final-report">View final report</DropdownItem>
             )}
             {permissions.viewInvoice.includes(session.data.user.role) && (
