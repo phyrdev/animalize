@@ -293,7 +293,17 @@ function FinalReport({ params }) {
                     Your report is ready for download. Please click the button
                     below to print / download the report. If you have any issues
                     or concerns, please contact us at{" "}
-                    {report.organization?.email}.
+                    <a
+                      className="text-blue-500"
+                      href={`mailto:${report.organization.email}`}
+                    >
+                      {report.organization.email}
+                    </a>
+                  </p>
+
+                  <p className="leading-7 text-sm text-neutral-700 mt-5">
+                    You can also get a physical copy of the report by visiting
+                    our office.
                   </p>
                   <Button
                     className="rounded-md w-fit mt-10"
