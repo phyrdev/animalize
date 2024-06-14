@@ -20,8 +20,7 @@
       .container {
         max-width: 500px;
         width: 100%;
-        min-height: 400px;
-        padding-bottom: 10px;
+        padding-bottom: 30px;
         background-color: white;
         margin: 0 auto;
         padding-top: 20px;
@@ -111,7 +110,7 @@
         padding: 0 20px;
         display: flex;
         align-items: center;
-        margin-top: 40px;
+        margin-top: 30px;
       }
 
       .action-buttons button {
@@ -159,32 +158,16 @@
 
       <div class="inst-message">
         <p>
-          Greetings from ${orgname}. This is a minimized version of the invoice
-          against your case. You can find a copy of the actual invoice by
-          clicking the button below.
+          Greetings from ${orgname}. Your report has been prepared and is ready
+          for download. Please find the details below. If you have any
+          questions, please contact us at ${orgemail}.
         </p>
-      </div>
-
-      <div class="items-header">
-        <table style="width: 100%">
-          <tr>
-            <td><span>Total items: ${itemsCount}</span></td>
-            <td style="text-align: right">
-              <h3>Subtotal: ${subtotal}</h3>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="payment-options">
-        <span>Status: ${paymentstatus}</span>
-        <span>Due: ${dueamount}</span>
       </div>
 
       <div class="action-buttons">
         <a href="">
           <button>
-            <span>View invoice</span>
+            <span>View report</span>
             <img
               src="https://static-00.iconduck.com/assets.00/invoice-icon-937x1024-wmtgcq5d.png"
               style="height: 15px"

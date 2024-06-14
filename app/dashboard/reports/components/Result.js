@@ -2,9 +2,12 @@
 
 "use client";
 
+import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter } from "@/helper/refactor";
+import { finalReportTemplate } from "@/templates/email";
 import { Button } from "@nextui-org/react";
 import React, { useRef } from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
@@ -49,7 +52,19 @@ function Result({ report, closeCallBack = () => {} }) {
             </svg>
             <span>Print result</span>
           </Button>
-          <Button className="rounded bg-neutral-800 text-white ml-2">
+          <Button
+            onClick={async () => {
+              toast.loading("Sending email...");
+              await sendMail(
+                report.parentEmail,
+                `Report is ready for rept no: ${report.reportno}`,
+                finalReportTemplate(report)
+              );
+              toast.remove();
+              toast.success("Email sent successfully");
+            }}
+            className="rounded bg-neutral-800 text-white ml-2"
+          >
             Send in email
           </Button>
           <Button

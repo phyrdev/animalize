@@ -92,7 +92,19 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
             </div>
           </div>
           <div className="flex flex-wrap gap-3 items-center justify-start mt-7 px-5 md:px-10">
-            <Button isIconOnly className="rounded bg-neutral-100">
+            <Button
+              onClick={() => {
+                let message = `Report no: ${report.reportno} has been created successfully. You can view the invoice at https://animalize.io/invoice/${report.reportno} . You can track the realtime status of the report at https://animalize.io/status/${report.reportno}`;
+                try {
+                  navigator.clipboard.writeText(message);
+                  toast.success("Copied to clipboard");
+                } catch (error) {
+                  toast.error("Failed to copy to clipboard");
+                }
+              }}
+              isIconOnly
+              className="rounded bg-neutral-100"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={20}
