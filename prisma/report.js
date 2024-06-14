@@ -4,7 +4,7 @@ import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { caseCreatedTemplate } from "@/templates/email";
+import { caseCreatedTemplate, generalUpdateTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
   try {
@@ -259,8 +259,11 @@ export const markSampleCollected = async (reportno) => {
 
     await sendMail(
       report.parentEmail,
-      "Sample collected",
-      `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress.`
+      `Sample collected for Rept no: ${report.reportno}`,
+      generalUpdateTemplate(
+        report,
+        `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. You can also track the progress at https://animalize.io/status/${reportno} <br/><br/> Regards, <br/> Team Animalize`
+      )
     );
 
     return {
