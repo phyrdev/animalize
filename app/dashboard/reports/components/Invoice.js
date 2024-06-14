@@ -56,7 +56,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
               {minimized == false && (
                 <Button
                   onClick={() => {
-                    router.push("/dashboard/reports/create");
+                    location.reload();
                   }}
                   className="rounded bg-neutral-200"
                 >
