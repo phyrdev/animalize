@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
+import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+import { minimizedInvoiceTemplate } from "@/templates/email";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
@@ -138,7 +141,19 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
               </svg>
               <span>Print receipt</span>
             </Button>
-            <Button className="rounded bg-neutral-800 text-white">
+            <Button
+              onClick={async () => {
+                toast.loading("Sending email");
+                await sendMail(
+                  report.parentEmail,
+                  `Invoice-${report.reportno}`,
+                  minimizedInvoiceTemplate(report)
+                );
+                toast.remove();
+                toast.success("Email sent successfully");
+              }}
+              className="rounded bg-neutral-800 text-white"
+            >
               Resend in email
             </Button>
           </div>
