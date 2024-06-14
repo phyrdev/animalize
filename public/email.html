@@ -24,10 +24,10 @@
         padding-bottom: 10px;
         background-color: white;
         margin: 0 auto;
+        padding-top: 20px;
       }
 
       nav {
-        padding: 15px 20px;
         width: 100%;
       }
 
@@ -37,6 +37,7 @@
         border-bottom: 1px dashed #e0e0e0;
         color: #484848;
         font-size: 14px;
+        margin-top: 20px;
       }
 
       .rp-header span:nth-child(2) {
@@ -151,52 +152,52 @@
       <div class="rp-header">
         <table style="width: 100%">
           <tr>
-            <td>12 June, 2024</td>
+            <td>${date}</td>
             <td style="text-align: center">Invoice</td>
-            <td style="text-align: right">LE89TPRES</td>
+            <td style="text-align: right">${reportno}</td>
           </tr>
         </table>
       </div>
 
       <div class="billed-to">
         <h4>Billed to:</h4>
-        <p>Priyangsu Banerjee</p>
-        <p>priyangsu26@gmail.com</p>
+        <p>${parentName}</p>
+        <p>${parentEmail}</p>
       </div>
       <div class="billed-from">
         <h4>Billed from:</h4>
-        <p>Lenus Vet Labs</p>
-        <p>lenuslabs@gmail.com</p>
-        <p>9647045453</p>
+        <p>${orgname}</p>
+        <p>${orgemail}</p>
+        <p>${orgphone}</p>
       </div>
 
       <div class="inst-message">
         <p>
-          Greetings from Lenus Vet Labs! We are pleased to inform you that your
-          case has been successfully processed and the invoice is ready for
-          download. Please find the details below:
+          Greetings from ${orgname}. We are pleased to inform you that your case
+          has been successfully processed and the invoice is ready for download.
+          Please find the details below:
         </p>
       </div>
 
       <div class="items-header">
         <table style="width: 100%">
           <tr>
-            <td><span>Total items: 3</span></td>
+            <td><span>Total items: ${itemsCount}</span></td>
             <td style="text-align: right">
-              <h3>Subtotal: ₹600</h3>
+              <h3>Subtotal: ${subtotal}</h3>
             </td>
           </tr>
         </table>
       </div>
 
       <div class="payment-options">
-        <span>Mode: Cash</span>
-        <span>Status: Paid</span>
-        <span>Due: 0</span>
+        <span>Mode: ${paymentmode}</span>
+        <span>Status: ${paymentstatus}</span>
+        <span>Due: ${dueamount}</span>
       </div>
 
       <div class="action-buttons">
-        <a href="">
+        <a href="https://animalize.io/invoice">
           <button>
             <span>View invoice</span>
             <img

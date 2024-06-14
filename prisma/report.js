@@ -7,17 +7,6 @@ import { getCurrencySymbol } from "@/helper/refactor";
 import { caseCreatedTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
-  reportSpecifics.parentEmail.length != 0 &&
-    (await sendMail(
-      reportSpecifics.parentEmail,
-      `Case created for Rept no: LE89TPRES`,
-      caseCreatedTemplate()
-    ));
-
-  return {
-    success: false,
-    message: "Report created successfully",
-  };
   try {
     let rp = await prisma.report.create({
       data: {
@@ -32,6 +21,35 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
         organization: true,
       },
     });
+
+    let sbt = (
+      getCurrencySymbol(rp.payment.currency) + rp.payment.subtotal
+    ).toString();
+
+    let due = (
+      getCurrencySymbol(rp.payment.currency) +
+      (rp.payment.subtotal - rp.payment.paidAmount)
+    ).toString();
+
+    reportSpecifics.parentEmail.length != 0 &&
+      (await sendMail(
+        reportSpecifics.parentEmail,
+        `Case created for Rept no: LE89TPRES`,
+        caseCreatedTemplate(
+          new Date().toLocaleDateString(),
+          rp.reportno,
+          rp.parentName,
+          rp.parentEmail,
+          rp.organization.name,
+          rp.organization.email,
+          rp.organization.phone,
+          rp.tests.length,
+          sbt,
+          rp.payment.paymentMode,
+          rp.payment.paymentStatus,
+          due
+        )
+      ));
 
     return {
       success: true,
