@@ -8,7 +8,7 @@ import { caseCreatedTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
   try {
-    let rp = await prisma.report.create({
+    let createdReport = await prisma.report.create({
       data: {
         reportno: await generateUniqueReportno(),
         ...reportSpecifics,
@@ -22,37 +22,11 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
       },
     });
 
-    let sbt = (
-      getCurrencySymbol(rp.payment.currency) + rp.payment.subtotal
-    ).toString();
-
-    let due = (
-      getCurrencySymbol(rp.payment.currency) +
-      (rp.payment.subtotal - rp.payment.paidAmount)
-    ).toString();
-
     reportSpecifics.parentEmail.length != 0 &&
       (await sendMail(
         reportSpecifics.parentEmail,
-        `Case created for Rept no: LE89TPRES`,
-        caseCreatedTemplate(
-          new Date(rp.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-          rp.reportno,
-          rp.parentFirstName,
-          rp.parentEmail,
-          rp.organization.name,
-          rp.organization.email,
-          rp.organization.phone,
-          rp.tests.length,
-          sbt,
-          capitalizeFirstLetter(rp.payment.paymentMode),
-          capitalizeFirstLetter(rp.payment.paymentStatus),
-          due
-        )
+        `Case created for Rept no: ${createdReport.reportno}`,
+        caseCreatedTemplate(createdReport)
       ));
 
     return {

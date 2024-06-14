@@ -1,17 +1,27 @@
-export const caseCreatedTemplate = (
-  date,
-  reportno,
-  parentName,
-  parentEmail,
-  orgname,
-  orgemail,
-  orgphone,
-  itemsCount,
-  subtotal,
-  paymentmode,
-  paymentstatus,
-  dueamount
-) => {
+import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+
+export const caseCreatedTemplate = (report) => {
+  let reportno = report.reportno;
+  let date = new Date(report.createdAt).toDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  let parentName = report.parentFirstName;
+  let parentEmail = report.parentEmail;
+  let orgname = report.organization.name;
+  let orgemail = report.organization.email;
+  let orgphone = report.organization.phone;
+  let itemsCount = report.tests.length;
+  let subtotal = (
+    getCurrencySymbol(report.payment.currency) + report.payment.subtotal
+  ).toString();
+  let paymentstatus = capitalizeFirstLetter(report.payment.paymentStatus);
+  let dueamount = (
+    getCurrencySymbol(report.payment.currency) +
+    (report.payment.subtotal - report.payment.paidAmount)
+  ).toString();
+
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
