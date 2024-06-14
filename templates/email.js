@@ -28,17 +28,8 @@ export const caseCreatedTemplate = () => {
       }
 
       nav {
-        display: flex;
+        padding: 10px 20px;
         width: 100%;
-        height: fit-content;
-        padding: 30px 30px;
-        margin-top: 0px;
-      }
-
-      nav img {
-        width: 150px;
-        background: #fff;
-        margin: 0 auto;
       }
 
       .rp-header {
@@ -150,7 +141,13 @@ export const caseCreatedTemplate = () => {
   <body>
     <div class="container">
       <nav>
-        <img src="https://animalize.io/animalizelogo.png" alt="" />
+        <center>
+          <img
+            style="width: 150px; height: auto"
+            src="https://animalize.io/animalizelogo.png"
+            alt=""
+          />
+        </center>
       </nav>
       <div class="rp-header">
         <table style="width: 100%">
