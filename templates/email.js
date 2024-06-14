@@ -28,7 +28,7 @@ export const caseCreatedTemplate = () => {
       }
 
       nav {
-        padding: 10px 20px;
+        padding: 15px 20px;
         width: 100%;
       }
 
@@ -199,7 +199,7 @@ export const caseCreatedTemplate = () => {
       <div class="action-buttons">
         <a href="">
           <button>
-            <span>View detailed invoice</span>
+            <span>View invoice</span>
             <img
               src="https://static-00.iconduck.com/assets.00/invoice-icon-937x1024-wmtgcq5d.png"
               style="height: 15px"
