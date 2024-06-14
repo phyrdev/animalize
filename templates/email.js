@@ -612,7 +612,7 @@ export const finalReportTemplate = (report) => {
         <p>
           Greetings from ${orgname}. Your report has been prepared and is ready
           for download. Please find the details below. If you have any
-          questions, please contact us at ${orgemail}.
+          questions, please contact us at ${orgemail}. You can visit our center to collect the hard copy of the report.
         </p>
       </div>
 
