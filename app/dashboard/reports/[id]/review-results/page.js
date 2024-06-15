@@ -134,40 +134,43 @@ function Review({ params }) {
     if (permissions.reviewResults.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
-      if (report) {
+      if (loading) {
         return (
-          <div>
-            <div className="px-5 md:px-10 py-5 flex items-center">
-              <Breadcrumbs className="hidden md:block">
-                <BreadcrumbItem>Dashboard</BreadcrumbItem>
-                <BreadcrumbItem>Reports</BreadcrumbItem>
-                <BreadcrumbItem>Review</BreadcrumbItem>
-              </Breadcrumbs>
-              <span className="text-xl font-semibold md:hidden">Review</span>
+          <div className="flex items-center justify-center mt-16">
+            <Spinner />
+          </div>
+        );
+      }
+      {
+        if (report) {
+          return (
+            <div>
+              <div className="px-5 md:px-10 py-5 flex items-center">
+                <Breadcrumbs className="hidden md:block">
+                  <BreadcrumbItem>Dashboard</BreadcrumbItem>
+                  <BreadcrumbItem>Reports</BreadcrumbItem>
+                  <BreadcrumbItem>Review</BreadcrumbItem>
+                </Breadcrumbs>
+                <span className="text-xl font-semibold md:hidden">Review</span>
 
-              {permissions.reviewResults.includes(session.data.user.role) && (
-                <>
-                  <Button
-                    onClick={() => setRetestOpen(true)}
-                    className="ml-auto w-fit md:px-6 h-10 rounded-md"
-                  >
-                    Need retest
-                  </Button>
-                  <Button
-                    onClick={() => setApproveOpen(true)}
-                    className="ml-2 w-fit md:px-6 md:ml-2 h-10 rounded-md bg-neutral-800 text-white"
-                  >
-                    Approve
-                  </Button>
-                </>
-              )}
-            </div>
-
-            {loading == true ? (
-              <div className="flex items-center justify-center">
-                <Spinner />
+                {permissions.reviewResults.includes(session.data.user.role) && (
+                  <>
+                    <Button
+                      onClick={() => setRetestOpen(true)}
+                      className="ml-auto w-fit md:px-6 h-10 rounded-md"
+                    >
+                      Need retest
+                    </Button>
+                    <Button
+                      onClick={() => setApproveOpen(true)}
+                      className="ml-2 w-fit md:px-6 md:ml-2 h-10 rounded-md bg-neutral-800 text-white"
+                    >
+                      Approve
+                    </Button>
+                  </>
+                )}
               </div>
-            ) : (
+
               <div className="p-5 md:px-10">
                 <details id="patient-details" open>
                   <summary>
@@ -616,19 +619,19 @@ function Review({ params }) {
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        );
-      } else {
-        if (invalidState) {
-          return (
-            <div>
-              <PermissionDenied
-                message={"Sample for this report has already been collected."}
-              />
-              <div className="px-5 md:px-10"></div>
             </div>
           );
+        } else {
+          if (invalidState) {
+            return (
+              <div>
+                <PermissionDenied
+                  message={"Sample for this report has already been collected."}
+                />
+                <div className="px-5 md:px-10"></div>
+              </div>
+            );
+          }
         }
       }
     }
