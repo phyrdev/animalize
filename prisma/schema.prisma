@@ -51,7 +51,7 @@ model Employee {
   reports         Report[]      @relation(name: "CreatedBy")
   reviewed        Report[]      @relation(name: "ReviewedBy")
   sampleCollected Report[]      @relation(name: "SampleCollectedBy")
-    resultsFed      Report[]      @relation(name: "ResultsFedBy")
+  resultsFed      Report[]      @relation(name: "ResultsFedBy")
   observations    Observation[]
   vials           Vial[]
   payments        Payment[]
@@ -126,8 +126,8 @@ model Report {
   sampleCollectedAt        DateTime?
   scno                     String?
   resultsFedBy             Employee?     @relation(name: "ResultsFedBy", fields: [rfno], references: [empno])
-    resultsFedAt             DateTime?
-    rfno                     String?
+  resultsFedAt             DateTime?
+  rfno                     String?
 }
 
 model Vial {
