@@ -221,7 +221,7 @@ export const caseCreatedTemplate = (report) => {
 
 export const minimizedInvoiceTemplate = (report) => {
   let reportno = report.reportno;
-  let date = new Date(report.createdAt).toDateString("en-US", {
+  let date = new Date().toDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -441,7 +441,7 @@ export const minimizedInvoiceTemplate = (report) => {
 
 export const finalReportTemplate = (report) => {
   let reportno = report.reportno;
-  let date = new Date(report.createdAt).toDateString("en-US", {
+  let date = new Date().toDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -636,7 +636,7 @@ export const finalReportTemplate = (report) => {
 
 export const generalUpdateTemplate = (report, message) => {
   let reportno = report.reportno;
-  let date = new Date(report.createdAt).toDateString("en-US", {
+  let date = new Date().toDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
