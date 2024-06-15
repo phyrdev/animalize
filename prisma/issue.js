@@ -1,16 +1,29 @@
 "use server";
+import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
+import { generalUpdateTemplate } from "@/templates/email";
 
-export const createIssue = async (data) => {
+export const createIssue = async (data, emails) => {
   try {
     await prisma.issue.create({
       data,
     });
 
-    return {
-      success: true,
-      message: "Issue created successfully",
-    };
+    if (emails.length > 0) {
+      try {
+        await sendMail(
+          emails,
+          "Open issue: " + data.title,
+          generalUpdateTemplate("Issue created", data.description)
+        );
+        return {
+          success: true,
+          message: "Issue created successfully",
+        };
+      } catch (error) {
+        console.log("Error sending email: ", error);
+      }
+    }
   } catch (error) {
     return {
       success: false,

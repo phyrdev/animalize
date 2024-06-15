@@ -115,6 +115,24 @@ function RRow({ report, index, flagCallback }) {
                   case "final-report":
                     setShowReport(true);
                     break;
+                  case "create-issue":
+                    let url = `/dashboard/issues/create?title=Report - ${report.reportno}&description=This is an issue with this report&priority=medium`;
+                    let emails = [];
+                    report?.organization?.email &&
+                      emails.push(report.organization.email);
+                    report.createdBy?.email &&
+                      emails.push(report.createdBy.email);
+                    report?.sampleCollectedBy?.email &&
+                      emails.push(report.sampleCollectedBy.email);
+                    report?.resultsFedBy?.email &&
+                      emails.push(report.resultsFedBy.email);
+                    report?.reviewedBy?.email &&
+                      emails.push(report.reviewedBy.email);
+
+                    let emailString = emails.join(",");
+                    url += `&emails=${emailString}`;
+                    router.push(url);
+                    break;
                   case "flag-report":
                     toast.loading(
                       report.flagged
@@ -147,7 +165,7 @@ function RRow({ report, index, flagCallback }) {
               {permissions.viewInvoice.includes(session.data.user.role) && (
                 <DropdownItem key="show-invoice">View invoice</DropdownItem>
               )}
-              <DropdownItem key="mark-open">Create an issue</DropdownItem>
+              <DropdownItem key="create-issue">Create an issue</DropdownItem>
               <DropdownItem
                 key="flag-report"
                 className="text-danger"

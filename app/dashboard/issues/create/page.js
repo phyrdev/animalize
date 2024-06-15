@@ -17,6 +17,7 @@ function CreateIssue() {
   const session = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [emails, setEmails] = useState([]);
   const [tIssue, setTIssue] = useState({
     title: "",
     description: "",
@@ -33,7 +34,7 @@ function CreateIssue() {
     }
 
     setLoading(true);
-    let { success, message } = await createIssue(tIssue);
+    let { success, message } = await createIssue(tIssue, emails);
     if (success) {
       toast.success("Issue created successfully");
       router.push("/dashboard/issues");
@@ -54,6 +55,9 @@ function CreateIssue() {
           description: params.get("description") || "",
           priority: params.get("priority") || "low",
         });
+        setEmails(
+          params.get("emails")?.split(",") || [session.data.user.orgemail]
+        );
       }
     }
   }, [session.status]);

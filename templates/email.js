@@ -634,9 +634,8 @@ export const finalReportTemplate = (report) => {
 `;
 };
 
-export const generalUpdateTemplate = (report, message) => {
-  let reportno = report.reportno;
-  let date = new Date(report.sampleCollectedAt).toDateString("en-US", {
+export const generalUpdateTemplate = (reportno, message) => {
+  let date = new Date().toDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -795,7 +794,7 @@ export const generalUpdateTemplate = (report, message) => {
           <tr>
             <td>${date}</td>
             <td style="text-align: center">Updates</td>
-            <td style="text-align: right">${reportno}</td>
+            <td style="text-align: right">${reportno || ""}</td>
           </tr>
         </table>
       </div>

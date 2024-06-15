@@ -43,6 +43,7 @@ export const authOptions = {
             orgno: data.orgno,
             currency: data.organization.currency,
             orgname: data.organization.name,
+            orgemail: data.organization.email,
             zipcode: data.organization.zipcode,
           },
         };

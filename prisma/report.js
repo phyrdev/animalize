@@ -272,7 +272,7 @@ export const markSampleCollected = async (reportno, empno) => {
       report.parentEmail,
       `Sample collected for Rept no: ${report.reportno}`,
       generalUpdateTemplate(
-        report,
+        report.reportno,
         `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. You can also track the progress at https://animalize.io/status/${reportno} <br/><br/> Regards, <br/> Team Animalize`
       )
     );
