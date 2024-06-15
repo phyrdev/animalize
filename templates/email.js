@@ -636,7 +636,7 @@ export const finalReportTemplate = (report) => {
 
 export const generalUpdateTemplate = (report, message) => {
   let reportno = report.reportno;
-  let date = new Date().toDateString("en-US", {
+  let date = new Date(report.sampleCollectedAt).toDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

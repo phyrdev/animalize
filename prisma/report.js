@@ -74,6 +74,8 @@ export const getOrgReports = async (orgno) => {
         organization: true,
         vials: true,
         reviewedBy: true,
+        sampleCollectedBy: true,
+        resultsFedBy: true,
       },
     });
 
@@ -194,6 +196,8 @@ export const getReportByReptNo = async (reportno) => {
         organization: true,
         vials: true,
         reviewedBy: true,
+        sampleCollectedBy: true,
+        resultsFedBy: true,
       },
     });
     if (report) {
@@ -246,7 +250,7 @@ export const updateReport = async (id, reportSpecifics, billingSpecifics) => {
   }
 };
 
-export const markSampleCollected = async (reportno) => {
+export const markSampleCollected = async (reportno, empno) => {
   try {
     let report = await prisma.report.update({
       where: {
@@ -254,6 +258,13 @@ export const markSampleCollected = async (reportno) => {
       },
       data: {
         status: "S201",
+        scno: empno,
+        sampleCollectedAt: new Date().toISOString(),
+      },
+      include: {
+        organization: true,
+        payment: true,
+        sampleCollectedBy: true,
       },
     });
 
@@ -279,7 +290,7 @@ export const markSampleCollected = async (reportno) => {
   }
 };
 
-export const feedResults = async (reportno, tests) => {
+export const feedResults = async (reportno, tests, empno) => {
   try {
     let report = await prisma.report.update({
       where: {
@@ -288,6 +299,8 @@ export const feedResults = async (reportno, tests) => {
       data: {
         status: "S202",
         tests,
+        rfno: empno,
+        resultsFedAt: new Date().toISOString(),
       },
     });
 
@@ -314,6 +327,7 @@ export const saveReview = async (reportno, pathno, tests) => {
         status: "S203",
         pathno,
         tests,
+        reviewedAt: new Date().toISOString(),
       },
     });
 

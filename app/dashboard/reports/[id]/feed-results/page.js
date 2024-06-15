@@ -447,13 +447,16 @@ function FeedResults({ params }) {
                           toast.loading("Saving changes...");
                           let { success, data, message } = await feedResults(
                             report.reportno,
-                            report.tests
+                            report.tests,
+                            session.data.user.empno
                           );
                           toast.dismiss();
                           if (success) {
                             toast.success("Changes saved successfully");
                             router.push("/dashboard/reports");
                             router.refresh();
+                          } else {
+                            toast.error(message);
                           }
                         }}
                         className="ml-2 rounded-md bg-neutral-800 text-white"

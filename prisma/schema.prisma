@@ -36,26 +36,28 @@ model Organization {
 }
 
 model Employee {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String
-  password     String
-  phone        String
-  empno        String        @unique
-  address      String?
-  zipcode      String?
-  role         String
-  organization Organization  @relation(fields: [orgno], references: [orgno])
-  orgno        String
-  issues       Issue[]
-  reports      Report[]      @relation(name: "CreatedBy")
-  reviewed     Report[]      @relation(name: "ReviewedBy")
-  observations Observation[]
-  vials        Vial[]
-  payments     Payment[]
-  signature    String?
-  designation  String?
-  createdAt    DateTime      @default(now())
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String
+  password        String
+  phone           String
+  empno           String        @unique
+  address         String?
+  zipcode         String?
+  role            String
+  organization    Organization  @relation(fields: [orgno], references: [orgno])
+  orgno           String
+  issues          Issue[]
+  reports         Report[]      @relation(name: "CreatedBy")
+  reviewed        Report[]      @relation(name: "ReviewedBy")
+  sampleCollected Report[]      @relation(name: "SampleCollectedBy")
+    resultsFed      Report[]      @relation(name: "ResultsFedBy")
+  observations    Observation[]
+  vials           Vial[]
+  payments        Payment[]
+  signature       String?
+  designation     String?
+  createdAt       DateTime      @default(now())
 }
 
 model Facility {
@@ -118,7 +120,14 @@ model Report {
   createdBy                Employee      @relation(name: "CreatedBy", fields: [empno], references: [empno])
   empno                    String
   reviewedBy               Employee?     @relation(name: "ReviewedBy", fields: [pathno], references: [empno])
+  reviewedAt               DateTime?
   pathno                   String?
+  sampleCollectedBy        Employee?     @relation(name: "SampleCollectedBy", fields: [scno], references: [empno])
+  sampleCollectedAt        DateTime?
+  scno                     String?
+  resultsFedBy             Employee?     @relation(name: "ResultsFedBy", fields: [rfno], references: [empno])
+    resultsFedAt             DateTime?
+    rfno                     String?
 }
 
 model Vial {

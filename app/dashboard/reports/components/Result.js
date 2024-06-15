@@ -12,7 +12,6 @@ import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
 function Result({ report, closeCallBack = () => {} }) {
-  console.log(report);
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -55,13 +54,19 @@ function Result({ report, closeCallBack = () => {} }) {
           <Button
             onClick={async () => {
               toast.loading("Sending email...");
-              await sendMail(
-                report.parentEmail,
-                `Report is ready for rept no: ${report.reportno}`,
-                finalReportTemplate(report)
-              );
-              toast.remove();
-              toast.success("Email sent successfully");
+              try {
+                await sendMail(
+                  report.parentEmail,
+                  `Report is ready for rept no: ${report.reportno}`,
+                  finalReportTemplate(report)
+                );
+                toast.remove();
+                toast.success("Email sent successfully");
+              } catch (error) {
+                console.log(error);
+                toast.remove();
+                toast.error("Failed to send email");
+              }
             }}
             className="rounded bg-neutral-800 text-white ml-2"
           >
@@ -235,26 +240,42 @@ function Result({ report, closeCallBack = () => {} }) {
                       {test.observation}
                     </p>
                   </div>
-                  <div className="mt-10">
-                    <div className="flex items-center">
-                      <span>Dr. {report.reviewedBy?.name}</span>
-                      <span className="text-neutral-600 ml-3">
-                        ({report.reviewedBy?.designation})
-                      </span>
+                  <div className="mt-10 flex flex-wrap gap-24">
+                    <div>
+                      <div className="flex items-center">
+                        <span>Dr. {report.reviewedBy?.name}</span>
+                        <span className="text-neutral-600 ml-3">
+                          (
+                          {report.reviewedBy?.designation ||
+                            report.reviewedBy?.role}
+                          )
+                        </span>
+                      </div>
+                      <p className="mt-2 text-neutral-600 text-sm">
+                        Reviewed on:
+                        <span className="text-black ml-2">
+                          {new Date(report.reviewedAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </span>
+                      </p>
+                      <p className="text-sm text-neutral-600 mt-2">
+                        Pathologist
+                      </p>
                     </div>
-                    <p className="mt-2 text-neutral-600 text-sm">
-                      Dated on:
-                      <span className="text-black ml-2">
-                        {new Date(
-                          report.reviewedBy?.createdAt
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </p>
-                    <p className="text-sm text-neutral-600 mt-2">Pathologist</p>
+                    <div>
+                      <div className="flex items-center">
+                        <span>{report.resultsFedBy?.name}</span>
+                      </div>
+                      <p className="text-sm text-neutral-600 mt-2">
+                        Lab technician
+                      </p>
+                    </div>
                   </div>
                   <footer></footer>
                 </div>
