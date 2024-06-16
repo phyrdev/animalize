@@ -72,34 +72,36 @@ function DeliverReport({ params }) {
     if (permissions.takeAction.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
-      if (report) {
+      if (loading) {
         return (
-          <div>
-            <div className="px-5 md:px-10 py-5 flex items-center">
-              <Breadcrumbs className="hidden md:block">
-                <BreadcrumbItem>Dashboard</BreadcrumbItem>
-                <BreadcrumbItem>Reports</BreadcrumbItem>
-                <BreadcrumbItem>Deliver report</BreadcrumbItem>
-              </Breadcrumbs>
-              <span className="text-xl font-semibold md:hidden">Deliver</span>
+          <div className="flex items-center justify-center mt-16">
+            <Spinner />
+          </div>
+        );
+      } else {
+        if (report) {
+          return (
+            <div>
+              <div className="px-5 md:px-10 py-5 flex items-center">
+                <Breadcrumbs className="hidden md:block">
+                  <BreadcrumbItem>Dashboard</BreadcrumbItem>
+                  <BreadcrumbItem>Reports</BreadcrumbItem>
+                  <BreadcrumbItem>Deliver report</BreadcrumbItem>
+                </Breadcrumbs>
+                <span className="text-xl font-semibold md:hidden">Deliver</span>
 
-              {permissions.takeAction.includes(session.data.user.role) && (
-                <Button
-                  onClick={() => {
-                    handleSave();
-                  }}
-                  className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
-                >
-                  Save changes
-                </Button>
-              )}
-            </div>
-
-            {loading == true ? (
-              <div className="flex items-center justify-center">
-                <Spinner />
+                {permissions.takeAction.includes(session.data.user.role) && (
+                  <Button
+                    onClick={() => {
+                      handleSave();
+                    }}
+                    className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
+                  >
+                    Save changes
+                  </Button>
+                )}
               </div>
-            ) : (
+
               <div className="p-5 md:px-10">
                 <details id="delivery-channels" open>
                   <summary>
@@ -244,34 +246,34 @@ function DeliverReport({ params }) {
                   </div>
                 </details>
               </div>
-            )}
 
-            {showInvoice && (
-              <Invoice
-                report={report}
-                minimized
-                closeCallback={() => setShowInvoice(false)}
-              />
-            )}
+              {showInvoice && (
+                <Invoice
+                  report={report}
+                  minimized
+                  closeCallback={() => setShowInvoice(false)}
+                />
+              )}
 
-            {showReport && (
-              <Result
-                report={report}
-                closeCallBack={() => setShowReport(false)}
-              />
-            )}
-          </div>
-        );
-      } else {
-        if (invalidState) {
-          return (
-            <div>
-              <PermissionDenied
-                message={"Sample for this report has already been collected."}
-              />
-              <div className="px-5 md:px-10"></div>
+              {showReport && (
+                <Result
+                  report={report}
+                  closeCallBack={() => setShowReport(false)}
+                />
+              )}
             </div>
           );
+        } else {
+          if (invalidState) {
+            return (
+              <div>
+                <PermissionDenied
+                  message={"Sample for this report has already been collected."}
+                />
+                <div className="px-5 md:px-10"></div>
+              </div>
+            );
+          }
         }
       }
     }
