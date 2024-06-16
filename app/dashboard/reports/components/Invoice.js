@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { minimizedInvoiceTemplate } from "@/templates/email";
+import {
+  caseCreatedTemplate,
+  minimizedInvoiceTemplate,
+} from "@/templates/email";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
@@ -159,7 +162,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                 await sendMail(
                   report.parentEmail,
                   `Invoice for ${report.reportno}`,
-                  minimizedInvoiceTemplate(report)
+                  caseCreatedTemplate(report)
                 );
                 toast.remove();
                 toast.success("Email sent successfully");

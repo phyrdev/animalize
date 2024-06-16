@@ -224,11 +224,6 @@ export const caseCreatedTemplate = (report) => {
         <a href=${"https://animalize.io/invoice/" + reportno}>
           <button>
             <span>View invoice</span>
-            <img
-              src="https://static-00.iconduck.com/assets.00/invoice-icon-937x1024-wmtgcq5d.png"
-              style="height: 15px"
-              alt=""
-            />
           </button>
         </a>
         &nbsp; &nbsp;
@@ -236,11 +231,6 @@ export const caseCreatedTemplate = (report) => {
         <a href=${"https://animalize.io/status/" + reportno}>
           <button>
             <span>Track status</span>
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/109/109617.png"
-              style="height: 15px"
-              alt=""
-            />
           </button>
         </a>
       </div>
@@ -454,11 +444,6 @@ export const minimizedInvoiceTemplate = (report) => {
          <a href=${"https://animalize.io/invoice/" + reportno}>
           <button>
             <span>View invoice</span>
-            <img
-              src="https://static-00.iconduck.com/assets.00/invoice-icon-937x1024-wmtgcq5d.png"
-              style="height: 15px"
-              alt=""
-            />
           </button>
         </a>
       </div>
@@ -650,11 +635,6 @@ export const finalReportTemplate = (report) => {
          <a href=${"https://animalize.io/final-report/" + reportno}>
           <button>
             <span>View report</span>
-            <img
-              src="https://static-00.iconduck.com/assets.00/invoice-icon-937x1024-wmtgcq5d.png"
-              style="height: 15px"
-              alt=""
-            />
           </button>
         </a>
       </div>
