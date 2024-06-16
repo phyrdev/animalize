@@ -19,8 +19,6 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 function SignUp() {
-  const router = useRouter();
-
   const [organization, setOrganization] = useState({
     name: "",
     email: "",

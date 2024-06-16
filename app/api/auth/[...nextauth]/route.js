@@ -8,7 +8,7 @@ export const authOptions = {
       name: "credentials",
       credentials: {},
       async authorize(credentials) {
-        let { success, message, data } = await validateCredentials(
+        let { success, data } = await validateCredentials(
           credentials.empno,
           credentials.password
         );
@@ -25,7 +25,7 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async session({ session, user, token }) {
+    async session({ session }) {
       if (!session) return;
       let { success, data } = await getEmployeeData(session.user.email);
       if (success) {

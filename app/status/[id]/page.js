@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
@@ -42,7 +43,6 @@ function Status({ params }) {
   useEffect(() => {
     (async () => {
       let { success, data, message } = await getReportByReptNo(params.id);
-      console.log(success);
       if (success) {
         setReport(data);
         setLoading(false);
@@ -57,9 +57,11 @@ function Status({ params }) {
       } else {
         setLoading(false);
         setMessage(message);
+        // TODO: add online logging here
       }
     })();
   }, []);
+
   return (
     <div className="flex md:justify-center bg-neutral-100 min-h-screen w-svw overflow-auto">
       {loading ? (
@@ -127,6 +129,7 @@ function Status({ params }) {
                         <span>View invoice</span>
                       </Button>
                     </div>
+
                     {(report.status == "S205" || report.status == "S203") && (
                       <div className="">
                         <Button

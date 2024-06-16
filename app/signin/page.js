@@ -30,10 +30,12 @@ function SignIn() {
     let validateReq = await validateCredentials(empno, password);
     if (validateReq.success) {
       toast.success(validateReq.message);
+      toast.success("Redirecting to dashboard...");
       await signIn("credentials", {
         empno,
         password,
       });
+      toast.remove();
     } else {
       toast.error(validateReq.message);
     }

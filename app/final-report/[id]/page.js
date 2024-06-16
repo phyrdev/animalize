@@ -1,16 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+import { capitalizeFirstLetter } from "@/helper/refactor";
+import React, { useEffect, useRef, useState } from "react";
 import { getReportByReptNo } from "@/prisma/report";
 import { Button, Spinner } from "@nextui-org/react";
-import React, { useEffect, useRef, useState } from "react";
-import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
+import QRCode from "react-qr-code";
 
 function FinalReport({ params }) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const componentRef = useRef();
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: `Invoice-${report?.reportno}`,
@@ -19,7 +22,6 @@ function FinalReport({ params }) {
   useEffect(() => {
     (async () => {
       let { success, data, message } = await getReportByReptNo(params.id);
-      console.log(success);
       if (success) {
         if (data.status != "S203" && data.status != "S205") {
           setMessage("Report is not ready for final report");
@@ -30,6 +32,7 @@ function FinalReport({ params }) {
           setLoading(false);
         }
       } else {
+        //TODO: add online logging here
         setLoading(false);
         setMessage(message);
       }
@@ -45,6 +48,7 @@ function FinalReport({ params }) {
       return "inherit";
     }
   };
+
   return (
     <div>
       {loading ? (
@@ -289,7 +293,6 @@ function FinalReport({ params }) {
               </div>
               <div className="w-full bg-white max-w-lg mx-auto pt-7 pb-5">
                 <img src="/explogo.svg" className="w-36 mx-auto" alt="" />
-
                 <div className="flex items-center justify-between border-y border-dashed py-2 px-5 mt-7 text-sm">
                   <span>
                     {new Date(report.createdAt).toDateString("en-US", {
