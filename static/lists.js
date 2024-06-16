@@ -378,6 +378,10 @@ export const testparameteruits = [
     value: "mg/dL",
   },
   {
+    label: "mg/L",
+    value: "mg/L",
+  },
+  {
     label: "g/dL",
     value: "g/dL",
   },
