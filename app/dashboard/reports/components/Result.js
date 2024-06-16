@@ -63,7 +63,6 @@ function Result({ report, closeCallBack = () => {} }) {
                 toast.remove();
                 toast.success("Email sent successfully");
               } catch (error) {
-                console.log(error);
                 toast.remove();
                 toast.error("Failed to send email");
               }
