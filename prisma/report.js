@@ -69,6 +69,9 @@ export const getOrgReports = async (orgno) => {
       where: {
         orgno,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         payment: true,
         organization: true,
