@@ -2,23 +2,13 @@
 "use client";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
-import { capitalizeFirstLetter } from "@/helper/refactor";
-import {
-  getReportById,
-  markAsDelivered,
-  revertFeedResults,
-  revertPathologyReview,
-  revertSampleCollection,
-} from "@/prisma/report";
+import { getReportById, markAsDelivered } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
-  Radio,
-  RadioGroup,
   Spinner,
-  Switch,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
