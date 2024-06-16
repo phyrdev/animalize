@@ -4,6 +4,7 @@ import randomstring from "randomstring";
 import prisma from "./prisma";
 import bcrypt from "bcrypt";
 import { sendMail } from "@/helper/mail";
+import { generalUpdateTemplate } from "@/templates/email";
 
 export const generateSuperAdmin = async (orgno) => {
   try {
@@ -228,12 +229,13 @@ export const createEmployee = async (data) => {
     });
 
     if (employee) {
-      let message = `Greetings from ${employee.organization.name}. Your credentials:<br/><br/>Employee number: ${empno}<br/>Password: ${password}<br/><br/>Please use these credentials to login. We advise you to change your password after first login. <br><br> Regards, <br> Animalize HQ`;
+      let message = `Greetings from ${employee.organization.name}. Your credentials:<br/><br/>Employee number: ${empno}<br/>Password: ${password}<br/><br/>Please use these credentials to login. We advise you to change your password after first login.
+        <br><br> <a href="https://animalize.io/signin?empno=${empno}&password=${password}">Click here to login</a><br><br> Regards, <br> Animalize HQ`;
 
       await sendMail(
         data.email,
         `Welcome to ${employee.organization.name}!`,
-        message
+        generalUpdateTemplate("Onboarding", message)
       );
 
       return {

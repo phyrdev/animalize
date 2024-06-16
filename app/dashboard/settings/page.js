@@ -109,14 +109,21 @@ function Settings() {
                   If you are a pathologist / lab technician, you are required to
                   save your digital signature brefore you can sign off reports.
                 </p>
-                <p className="text-sm font-medium mt-8">Current signature:</p>
-                <div className="border p-4 flex items-center justify-center max-w-[400px] w-full mt-2">
-                  <img
-                    src={session.data.user.signature}
-                    className="max-w-[400px] w-full"
-                    alt=""
-                  />
-                </div>
+
+                {session.data.user.signature && (
+                  <div>
+                    <p className="text-sm font-medium mt-8">
+                      Current signature:
+                    </p>
+                    <div className="border p-4 flex items-center justify-center max-w-[400px] w-full mt-2">
+                      <img
+                        src={session.data.user.signature}
+                        className="max-w-[400px] w-full"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                )}
                 <p className="text-sm font-medium mt-8">
                   Please use a stylus or your finger / mouse to sign in the box
                   below.

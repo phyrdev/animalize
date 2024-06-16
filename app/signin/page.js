@@ -3,10 +3,12 @@ import Navbar from "@/components/Navbar";
 import { validateCredentials } from "@/prisma/employee";
 import { Button, Input } from "@nextui-org/react";
 import { signIn, useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function SignIn() {
+  const params = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
   const [empno, setEmpno] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +32,7 @@ function SignIn() {
     let validateReq = await validateCredentials(empno, password);
     if (validateReq.success) {
       toast.success(validateReq.message);
-      toast.success("Redirecting to dashboard...");
+      toast.loading("Redirecting to dashboard...");
       await signIn("credentials", {
         empno,
         password,
@@ -42,11 +44,16 @@ function SignIn() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    setEmpno(params.get("empno") || "");
+    setPassword(params.get("password") || "");
+  }, [params]);
+
   return (
     <div className="min-h-svh pb-32">
       <Navbar />
 
-      <div className="mt-7 md:mt-10 px-4">
+      <div className="mt-7 md:mt-10 px-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width={38}
