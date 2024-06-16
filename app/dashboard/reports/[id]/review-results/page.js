@@ -221,6 +221,12 @@ function Review({ params }) {
                           readOnly
                         />
                       </div>
+                      <p className="mt-5 text-sm font-medium text-neutral-700">
+                        Additional notes
+                      </p>
+                      <div className="p-4 border rounded-md mt-2">
+                        {report.additionalNotes}
+                      </div>
                     </div>
                   </div>
                 </details>
