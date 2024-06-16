@@ -2,9 +2,8 @@
 import nodemailer from "nodemailer";
 
 export async function sendMail(to = "", subject = "", html = "", text = "") {
-  console.log("Sending mail", to, subject, html, text);
   const transporter = nodemailer.createTransport({
-    host: "smtp.zoho.in",
+    host: "smtp.gmail.com",
     secure: true,
     port: 465,
     auth: {
