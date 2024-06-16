@@ -623,7 +623,7 @@ export const finalReportTemplate = (report) => {
         <center>
           <img
             style="width: 150px; height: auto"
-            src="https://animalize.io/animalizelogo.png"
+            src="https://res.cloudinary.com/doj9qpbek/image/upload/v1718552212/animalize/animalizelogo_p7noc9.png"
             alt=""
           />
         </center>
@@ -814,7 +814,7 @@ export const generalUpdateTemplate = (reportno, message) => {
         <center>
           <img
             style="width: 150px; height: auto"
-            src="https://animalize.io/animalizelogo.png"
+            src="https://res.cloudinary.com/doj9qpbek/image/upload/v1718552212/animalize/animalizelogo_p7noc9.png"
             alt=""
           />
         </center>
