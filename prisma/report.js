@@ -24,7 +24,7 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
     reportSpecifics.parentEmail.length != 0 &&
       (await sendMail(
         reportSpecifics.parentEmail,
-        `Inv-${report.reportno}`,
+        `Inv-${createdReport.reportno}`,
         caseCreatedTemplate(createdReport)
       ));
 
