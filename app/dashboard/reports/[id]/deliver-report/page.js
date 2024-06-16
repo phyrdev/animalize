@@ -199,7 +199,10 @@ function DeliverReport({ params }) {
                               toast.remove();
                               toast.success("Email sent successfully");
                             } catch (error) {
-                              toast.error("Failed to send email");
+                              toast.error(
+                                "Failed to send email",
+                                error.message
+                              );
                             }
                           }}
                           className="rounded-md bg-transparent border w-fit"
