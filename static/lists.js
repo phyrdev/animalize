@@ -436,6 +436,22 @@ export const testparameteruits = [
     value: "gm/dL",
   },
   {
+    label: "mm/hr",
+    value: "mm/hr",
+  },
+  {
+    label: "ng/ml",
+    value: "ng/ml",
+  },
+  {
+    label: "µIU/ml",
+    value: "µIU/ml",
+  },
+  {
+    label: "µg/dl",
+    value: "µg/dl",
+  },
+  {
     label: "boolean",
     value: "boolean",
   },
