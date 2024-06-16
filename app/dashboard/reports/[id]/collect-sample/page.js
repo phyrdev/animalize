@@ -422,7 +422,8 @@ function CollectSample({ params }) {
                         onClick={async () => {
                           toast.loading("Saving changes...");
                           let { success, message } = await markSampleCollected(
-                            report.reportno
+                            report.reportno,
+                            session.data.user.empno
                           );
                           toast.remove();
                           if (success) {
