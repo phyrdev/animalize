@@ -68,6 +68,37 @@ export const caseCreatedTemplate = (report) => {
         margin: 0 auto;
       }
 
+
+      .billed-to {
+        margin-top: 20px;
+        padding: 0 20px;
+      }
+
+      .billed-to h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .billed-to p {
+        margin-top: 6px;
+        font-size: 14px;
+      }
+
+      .billed-from {
+        margin-top: 30px;
+        padding: 0 20px;
+      }
+
+      .billed-from h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .billed-from p {
+        margin-top: 6px;
+        font-size: 14px;
+      }
+
       .items-header {
         display: flex;
         padding: 10px 20px;
@@ -215,8 +246,7 @@ export const caseCreatedTemplate = (report) => {
       </div>
     </div>
   </body>
-</html>
-`;
+</html>`;
 };
 
 export const minimizedInvoiceTemplate = (report) => {
