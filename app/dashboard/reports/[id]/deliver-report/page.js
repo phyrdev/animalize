@@ -2,23 +2,13 @@
 "use client";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
-import { capitalizeFirstLetter } from "@/helper/refactor";
-import {
-  getReportById,
-  markAsDelivered,
-  revertFeedResults,
-  revertPathologyReview,
-  revertSampleCollection,
-} from "@/prisma/report";
+import { getReportById, markAsDelivered } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
-  Radio,
-  RadioGroup,
   Spinner,
-  Switch,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -82,34 +72,36 @@ function DeliverReport({ params }) {
     if (permissions.takeAction.includes(session.data.user.role) == false) {
       return <PermissionDenied />;
     } else {
-      if (report) {
+      if (loading) {
         return (
-          <div>
-            <div className="px-5 md:px-10 py-5 flex items-center">
-              <Breadcrumbs className="hidden md:block">
-                <BreadcrumbItem>Dashboard</BreadcrumbItem>
-                <BreadcrumbItem>Reports</BreadcrumbItem>
-                <BreadcrumbItem>Deliver report</BreadcrumbItem>
-              </Breadcrumbs>
-              <span className="text-xl font-semibold md:hidden">Deliver</span>
+          <div className="flex items-center justify-center mt-16">
+            <Spinner />
+          </div>
+        );
+      } else {
+        if (report) {
+          return (
+            <div>
+              <div className="px-5 md:px-10 py-5 flex items-center">
+                <Breadcrumbs className="hidden md:block">
+                  <BreadcrumbItem>Dashboard</BreadcrumbItem>
+                  <BreadcrumbItem>Reports</BreadcrumbItem>
+                  <BreadcrumbItem>Deliver report</BreadcrumbItem>
+                </Breadcrumbs>
+                <span className="text-xl font-semibold md:hidden">Deliver</span>
 
-              {permissions.takeAction.includes(session.data.user.role) && (
-                <Button
-                  onClick={() => {
-                    handleSave();
-                  }}
-                  className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
-                >
-                  Save changes
-                </Button>
-              )}
-            </div>
-
-            {loading == true ? (
-              <div className="flex items-center justify-center">
-                <Spinner />
+                {permissions.takeAction.includes(session.data.user.role) && (
+                  <Button
+                    onClick={() => {
+                      handleSave();
+                    }}
+                    className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
+                  >
+                    Save changes
+                  </Button>
+                )}
               </div>
-            ) : (
+
               <div className="p-5 md:px-10">
                 <details id="delivery-channels" open>
                   <summary>
@@ -190,13 +182,20 @@ function DeliverReport({ params }) {
                         <Button
                           onClick={async () => {
                             toast.loading("Sending email...");
-                            await sendMail(
-                              report.parentEmail,
-                              `Report is ready for rept no: ${report.reportno}`,
-                              finalReportTemplate(report)
-                            );
-                            toast.remove();
-                            toast.success("Email sent successfully");
+                            try {
+                              await sendMail(
+                                report.parentEmail,
+                                `Report is ready for rept no: ${report.reportno}`,
+                                finalReportTemplate(report)
+                              );
+                              toast.remove();
+                              toast.success("Email sent successfully");
+                            } catch (error) {
+                              toast.error(
+                                "Failed to send email",
+                                error.message
+                              );
+                            }
                           }}
                           className="rounded-md bg-transparent border w-fit"
                         >
@@ -247,34 +246,34 @@ function DeliverReport({ params }) {
                   </div>
                 </details>
               </div>
-            )}
 
-            {showInvoice && (
-              <Invoice
-                report={report}
-                minimized
-                closeCallback={() => setShowInvoice(false)}
-              />
-            )}
+              {showInvoice && (
+                <Invoice
+                  report={report}
+                  minimized
+                  closeCallback={() => setShowInvoice(false)}
+                />
+              )}
 
-            {showReport && (
-              <Result
-                report={report}
-                closeCallBack={() => setShowReport(false)}
-              />
-            )}
-          </div>
-        );
-      } else {
-        if (invalidState) {
-          return (
-            <div>
-              <PermissionDenied
-                message={"Sample for this report has already been collected."}
-              />
-              <div className="px-5 md:px-10"></div>
+              {showReport && (
+                <Result
+                  report={report}
+                  closeCallBack={() => setShowReport(false)}
+                />
+              )}
             </div>
           );
+        } else {
+          if (invalidState) {
+            return (
+              <div>
+                <PermissionDenied
+                  message={"Sample for this report has already been collected."}
+                />
+                <div className="px-5 md:px-10"></div>
+              </div>
+            );
+          }
         }
       }
     }

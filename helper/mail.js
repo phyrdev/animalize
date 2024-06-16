@@ -2,6 +2,7 @@
 import nodemailer from "nodemailer";
 
 export async function sendMail(to = "", subject = "", html = "", text = "") {
+  console.log("Sending mail", to, subject, html, text);
   const transporter = nodemailer.createTransport({
     host: "smtp.zoho.in",
     secure: true,
@@ -20,6 +21,7 @@ export async function sendMail(to = "", subject = "", html = "", text = "") {
       text,
       html,
     });
+    console.log("Mail sent");
     return {
       success: true,
       message: "Success",
