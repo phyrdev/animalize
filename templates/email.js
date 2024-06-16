@@ -155,7 +155,7 @@ export const caseCreatedTemplate = (report) => {
       }
 
       .action-buttons button span {
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
       a {
@@ -387,7 +387,7 @@ export const minimizedInvoiceTemplate = (report) => {
       }
 
       .action-buttons button span {
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
       a {
@@ -594,7 +594,7 @@ export const finalReportTemplate = (report) => {
       }
 
       .action-buttons button span {
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
       a {
@@ -780,7 +780,7 @@ export const generalUpdateTemplate = (reportno, message) => {
       }
 
       .action-buttons button span {
-        margin-right: 10px;
+        margin-right: 0px;
       }
 
       a {
