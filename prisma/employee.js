@@ -357,3 +357,34 @@ export const updateEmployee = async (empno, data) => {
     };
   }
 };
+
+export const updateSignature = async (empno, signature) => {
+  try {
+    let employee = await prisma.employee.update({
+      where: {
+        empno,
+      },
+      data: {
+        signature,
+      },
+    });
+
+    if (employee) {
+      return {
+        success: true,
+        message: "Signature updated successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Error updating signature.",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

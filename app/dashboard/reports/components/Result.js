@@ -241,6 +241,11 @@ function Result({ report, closeCallBack = () => {} }) {
                   </div>
                   <div className="mt-10 flex flex-wrap gap-24">
                     <div>
+                      <img
+                        className="w-[200px]"
+                        src={report.reviewedBy?.signature || ""}
+                        alt=""
+                      />
                       <div className="flex items-center">
                         <span>Dr. {report.reviewedBy?.name}</span>
                         <span className="text-neutral-600 ml-3">
@@ -268,6 +273,11 @@ function Result({ report, closeCallBack = () => {} }) {
                       </p>
                     </div>
                     <div>
+                      <img
+                        className="w-[200px]"
+                        src={report.resultsFedBy?.signature || ""}
+                        alt=""
+                      />
                       <div className="flex items-center">
                         <span>{report.resultsFedBy?.name}</span>
                       </div>

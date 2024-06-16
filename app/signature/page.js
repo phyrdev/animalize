@@ -1,4 +1,5 @@
 "use client";
+import { uploadImage } from "@/helper/image";
 import React, { useRef } from "react";
 import ReactSignatureCanvas from "react-signature-canvas";
 
@@ -27,14 +28,14 @@ function Page() {
         Clear
       </button>
       <button
-        onClick={() => {
+        onClick={async () => {
           const img = ref.current.getTrimmedCanvas().toDataURL("image/png");
           // convert to file & append to form
           const file = new File([img], "signature.png", {
             type: "image/png",
           });
-          const formData = new FormData();
-          formData.append("signature", file);
+          let data = await uploadImage(file);
+          console.log(data);
         }}
       >
         Convert to Image
