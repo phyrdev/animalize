@@ -233,7 +233,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                     {report.tests.map((test, index) => (
                       <tr key={index}>
                         <td className="font-normal px-5 py-3 text-sm first:pl-10">
-                          1
+                          {index + 1}
                         </td>
                         <td className="font-normal px-5 py-3 text-sm">
                           {test.name}
