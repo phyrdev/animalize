@@ -7,8 +7,8 @@ export async function sendMail(to = "", subject = "", html = "", text = "") {
     secure: true,
     port: 465,
     auth: {
-      user: process.env.ZOHO_MAIL,
-      pass: process.env.ZOHO_PASS,
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
     },
   });
 
