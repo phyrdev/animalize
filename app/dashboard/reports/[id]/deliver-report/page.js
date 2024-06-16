@@ -190,13 +190,17 @@ function DeliverReport({ params }) {
                         <Button
                           onClick={async () => {
                             toast.loading("Sending email...");
-                            await sendMail(
-                              report.parentEmail,
-                              `Report is ready for rept no: ${report.reportno}`,
-                              finalReportTemplate(report)
-                            );
-                            toast.remove();
-                            toast.success("Email sent successfully");
+                            try {
+                              await sendMail(
+                                report.parentEmail,
+                                `Report is ready for rept no: ${report.reportno}`,
+                                finalReportTemplate(report)
+                              );
+                              toast.remove();
+                              toast.success("Email sent successfully");
+                            } catch (error) {
+                              toast.error("Failed to send email");
+                            }
                           }}
                           className="rounded-md bg-transparent border w-fit"
                         >
