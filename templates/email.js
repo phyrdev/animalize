@@ -184,18 +184,6 @@ export const caseCreatedTemplate = (report) => {
         </table>
       </div>
 
-      <div class="billed-to">
-        <h4>Billed to:</h4>
-        <p>${parentName}</p>
-        <p>${parentEmail}</p>
-      </div>
-      <div class="billed-from">
-        <h4>Billed from:</h4>
-        <p>${orgname}</p>
-        <p>${orgemail}</p>
-        <p>${orgphone}</p>
-      </div>
-
       <div class="inst-message">
         <p>
           Greetings from ${orgname}. We are pleased to inform you that your case
@@ -213,11 +201,6 @@ export const caseCreatedTemplate = (report) => {
             </td>
           </tr>
         </table>
-      </div>
-
-      <div class="payment-options">
-        <span>Status: ${paymentstatus}</span>
-        <span>Due: ${dueamount}</span>
       </div>
 
       <div class="action-buttons">

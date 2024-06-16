@@ -250,6 +250,11 @@ function FinalReport({ params }) {
                           </div>
                           <div className="mt-10 flex flex-wrap gap-24">
                             <div>
+                              <img
+                                className="w-[200px] h-[80px]"
+                                src={report.reviewedBy?.signature || ""}
+                                alt=""
+                              />
                               <div className="flex items-center">
                                 <span>Dr. {report.reviewedBy?.name}</span>
                                 <span className="text-neutral-600 ml-3">
@@ -276,6 +281,11 @@ function FinalReport({ params }) {
                               </p>
                             </div>
                             <div>
+                              <img
+                                className="w-[200px] h-[80px]"
+                                src={report.resultsFedBy?.signature || ""}
+                                alt=""
+                              />
                               <div className="flex items-center">
                                 <span>{report.resultsFedBy?.name}</span>
                               </div>

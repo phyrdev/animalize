@@ -113,6 +113,7 @@ function RRow({ report, index, flagCallback }) {
                     setShowInvoice(true);
                     break;
                   case "final-report":
+                    console.log(report);
                     setShowReport(true);
                     break;
                   case "create-issue":

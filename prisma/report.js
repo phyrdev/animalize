@@ -24,7 +24,7 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
     reportSpecifics.parentEmail.length != 0 &&
       (await sendMail(
         reportSpecifics.parentEmail,
-        `Invoice-${createdReport.reportno}`,
+        `We have started preparing your report-${createdReport.reportno}`,
         caseCreatedTemplate(createdReport)
       ));
 
@@ -164,6 +164,8 @@ export const getReportById = async (id) => {
         organization: true,
         vials: true,
         reviewedBy: true,
+        sampleCollectedBy: true,
+        resultsFedBy: true,
       },
     });
     if (report) {
