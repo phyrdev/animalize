@@ -50,7 +50,9 @@ function SignIn() {
     if (empno && password) {
       setEmpno(empno);
       setPassword(password);
-      handleSignIn();
+      setTimeout(() => {
+        handleSignIn();
+      }, 1000);
     }
   }, []);
 
