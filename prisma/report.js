@@ -3,7 +3,6 @@
 import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { caseCreatedTemplate, generalUpdateTemplate } from "@/templates/email";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
