@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 export async function sendMail(to = "", subject = "", html = "", text = "") {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    secure: true,
-    port: 465,
+    secure: false,
+    port: 587,
     auth: {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
@@ -20,7 +20,6 @@ export async function sendMail(to = "", subject = "", html = "", text = "") {
       text,
       html,
     });
-    console.log("Mail sent");
     return {
       success: true,
       message: "Success",

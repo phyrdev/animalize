@@ -158,7 +158,7 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
                 toast.loading("Sending email");
                 await sendMail(
                   report.parentEmail,
-                  `Invoice-${report.reportno}`,
+                  `Inv-${report.reportno}`,
                   minimizedInvoiceTemplate(report)
                 );
                 toast.remove();
