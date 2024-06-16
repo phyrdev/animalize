@@ -128,8 +128,8 @@ function EditReportContainer({ report }) {
       <div>
         <div className="px-5 md:px-10 py-5 flex items-center">
           <Breadcrumbs className="hidden md:block">
-            <BreadcrumbItem>Dashboard</BreadcrumbItem>
-            <BreadcrumbItem>Report</BreadcrumbItem>
+            <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
+            <BreadcrumbItem href="/dashboard/reports">Reports</BreadcrumbItem>
             <BreadcrumbItem>Edit</BreadcrumbItem>
           </Breadcrumbs>
           <span className="text-xl font-semibold md:hidden">Create report</span>

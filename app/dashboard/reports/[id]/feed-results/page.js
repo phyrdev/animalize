@@ -67,8 +67,10 @@ function FeedResults({ params }) {
             <div>
               <div className="px-5 md:px-10 py-5 flex items-center">
                 <Breadcrumbs className="hidden md:block">
-                  <BreadcrumbItem>Dashboard</BreadcrumbItem>
-                  <BreadcrumbItem>Reports</BreadcrumbItem>
+                  <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
+                  <BreadcrumbItem href="/dashboard/reports">
+                    Reports
+                  </BreadcrumbItem>
                   <BreadcrumbItem>Feed results</BreadcrumbItem>
                 </Breadcrumbs>
                 <span className="text-xl font-semibold md:hidden">

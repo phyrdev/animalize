@@ -7,7 +7,6 @@ import {
   Button,
   Spinner,
 } from "@nextui-org/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { permissions } from "@/static/permissions";
@@ -16,7 +15,6 @@ import PermissionDenied from "../components/PermissionDenied";
 import RRow from "./components/RRow";
 import RCard from "./components/RCard";
 import { reportstatus } from "@/static/lists";
-import Result from "./components/Result";
 function Reports() {
   const router = useRouter();
   const session = useSession();
@@ -94,8 +92,8 @@ function Reports() {
         <div>
           <div className="px-5 md:px-10 py-5 flex items-center">
             <Breadcrumbs className="hidden md:block">
-              <BreadcrumbItem>Dashboard</BreadcrumbItem>
-              <BreadcrumbItem>Reports</BreadcrumbItem>
+              <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
+              <BreadcrumbItem href="/dashboard/reports">Reports</BreadcrumbItem>
             </Breadcrumbs>
             <span className="text-xl font-semibold md:hidden">Reports</span>
 

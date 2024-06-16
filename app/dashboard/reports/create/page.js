@@ -31,14 +31,12 @@ import { useSession } from "next-auth/react";
 import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
 import { getFacilities } from "@/prisma/facility";
-import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+import { getCurrencySymbol } from "@/helper/refactor";
 import { createReport } from "@/prisma/report";
-import { useRouter } from "next/navigation";
 import Invoice from "../components/Invoice";
 
 function CreateReport() {
   const session = useSession();
-  const router = useRouter();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [isAutoFillOn, setIsAutoFillOn] = React.useState(false);
   const [selectTestsOpen, setSelectTestsOpen] = React.useState(false);
@@ -46,6 +44,11 @@ function CreateReport() {
   const [facilities, setFacilities] = React.useState([]);
   const [visibleFacilities, setVisibleFacilities] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+
+  const [tempPets, setTempPets] = React.useState([]);
+  const [tempPetIndex, setTempPetIndex] = React.useState(null);
+  const [createdReport, setCreatedReport] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const [pFile, setPFile] = React.useState({
     empno: "",
@@ -75,11 +78,6 @@ function CreateReport() {
     additionalNotes: "",
   });
 
-  const [tempPets, setTempPets] = React.useState([]);
-  const [tempPetIndex, setTempPetIndex] = React.useState(null);
-  const [createdReport, setCreatedReport] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
     document.getElementById("pet-details-dd").open = false;
@@ -88,7 +86,7 @@ function CreateReport() {
     document.getElementById("billing-details-dd").open = false;
   };
 
-  const searchPets = async (e) => {
+  const searchPets = async () => {
     if (pFile.accPin.trim().length == 0) {
       return toast.error("Please enter a valid account pin");
     }
@@ -315,8 +313,8 @@ function CreateReport() {
         <div>
           <div className="px-5 md:px-10 py-5 flex items-center">
             <Breadcrumbs className="hidden md:block">
-              <BreadcrumbItem>Dashboard</BreadcrumbItem>
-              <BreadcrumbItem>Reports</BreadcrumbItem>
+              <BreadcrumbItem href="/dashboard">Dashboard</BreadcrumbItem>
+              <BreadcrumbItem href="/dashboard/reports">Reports</BreadcrumbItem>
               <BreadcrumbItem>Create</BreadcrumbItem>
             </Breadcrumbs>
             <span className="text-xl font-semibold md:hidden">
@@ -337,6 +335,7 @@ function CreateReport() {
             </Button>
 
             <Button
+              isDisabled={loading}
               onClick={() => handleSave()}
               className="ml-3 w-fit md:px-6 md:ml-5 h-10 rounded-md bg-neutral-800 text-white"
             >
