@@ -45,20 +45,6 @@ function FinalReport({ params }) {
           setReport(data);
           setLoading(false);
           // check if opened in webview
-
-          var userAgent = window.navigator.userAgent.toLowerCase(),
-            safari = /safari/.test(userAgent),
-            ios = /iphone|ipod|ipad/.test(userAgent);
-
-          if (ios) {
-            if (safari) {
-              toast("Safari");
-            } else if (!safari) {
-              toast("Not Safari");
-            }
-          } else {
-            toast("Not iOS");
-          }
         }
       } else {
         //TODO: add online logging here
@@ -362,7 +348,12 @@ function FinalReport({ params }) {
                   </p>
 
                   <div className="flex items-center mt-10">
-                    <Button className="rounded-md w-fit" onClick={handlePrint}>
+                    <Button
+                      className="rounded-md w-fit"
+                      onClick={() => {
+                        window.print();
+                      }}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
