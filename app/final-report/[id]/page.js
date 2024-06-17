@@ -52,10 +52,11 @@ function FinalReport({ params }) {
             toast.error("Please open in browser to print the report");
           } else if (window.navigator.userAgent.includes("Gmail")) {
             toast.error("Please open in browser to print the report");
+          } else {
+            setTimeout(() => {
+              handlePrint();
+            }, 1000);
           }
-          setTimeout(() => {
-            handlePrint();
-          }, 1000);
         }
       } else {
         //TODO: add online logging here
