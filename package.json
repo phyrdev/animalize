@@ -15,7 +15,6 @@
     "@sparticuz/chromium": "^123.0.1",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
-    "chrome-aws-lambda": "^10.1.0",
     "framer-motion": "^11.2.6",
     "html-to-pdf-js": "^0.9.3",
     "html2pdf.js": "^0.10.1",
