@@ -46,6 +46,8 @@ function FinalReport({ params }) {
           setLoading(false);
           // check if opened in webview
 
+          alert(window.navigator.userAgent);
+
           if (window.ReactNativeWebView) {
             toast.error("Please open in browser to print the report");
           } else if (window.navigator.userAgent.includes("Instagram")) {
