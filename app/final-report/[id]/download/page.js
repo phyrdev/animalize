@@ -52,6 +52,11 @@ function FinalReport({ params }) {
     })();
   }, []);
 
+  useEffect(() => {
+    if (report) {
+    }
+  }, [report]);
+
   const getParamColor = (param) => {
     if (parseFloat(param.value) > parseFloat(param.high)) {
       return "red";
