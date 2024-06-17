@@ -348,12 +348,7 @@ function FinalReport({ params }) {
                   </p>
 
                   <div className="flex items-center mt-10">
-                    <Button
-                      className="rounded-md w-fit"
-                      onClick={() => {
-                        window.print();
-                      }}
-                    >
+                    <Button className="rounded-md w-fit" onClick={handlePrint}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -375,11 +370,6 @@ function FinalReport({ params }) {
                       <span>Print report</span>
                     </Button>
                   </div>
-
-                  <p className="text-sm mt-5 leading-6">
-                    Please make sure that your browser supports printing & is
-                    not opened in webview mode.
-                  </p>
                 </div>
               </div>
             </div>
