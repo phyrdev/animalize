@@ -348,14 +348,7 @@ function FinalReport({ params }) {
                   </p>
 
                   <div className="flex items-center mt-10">
-                    <Button
-                      className="rounded-md w-fit"
-                      onClick={() => {
-                        toast.error("Error printing report");
-                        let currentUrl = window.location.href;
-                        window.open(currentUrl, "_blank");
-                      }}
-                    >
+                    <Button className="rounded-md w-fit" onClick={handlePrint}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
