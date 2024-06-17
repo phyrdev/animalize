@@ -351,13 +351,9 @@ function FinalReport({ params }) {
                     <Button
                       className="rounded-md w-fit"
                       onClick={() => {
-                        try {
-                          handlePrint();
-                        } catch (error) {
-                          toast.error("Error printing report");
-                          let currentUrl = window.location.href;
-                          window.open(currentUrl, "_blank");
-                        }
+                        toast.error("Error printing report");
+                        let currentUrl = window.location.href;
+                        window.open(currentUrl, "_blank");
                       }}
                     >
                       <svg
