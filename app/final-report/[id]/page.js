@@ -44,6 +44,15 @@ function FinalReport({ params }) {
         } else {
           setReport(data);
           setLoading(false);
+          // check if opened in webview
+
+          if (window.ReactNativeWebView) {
+            toast.error("Please open in browser to print the report");
+          } else if (window.navigator.userAgent.includes("Instagram")) {
+            toast.error("Please open in browser to print the report");
+          } else if (window.navigator.userAgent.includes("Gmail")) {
+            toast.error("Please open in browser to print the report");
+          }
           setTimeout(() => {
             handlePrint();
           }, 1000);
