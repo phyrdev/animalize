@@ -46,18 +46,18 @@ function FinalReport({ params }) {
           setLoading(false);
           // check if opened in webview
 
-          alert(window.navigator.userAgent);
+          var userAgent = window.navigator.userAgent.toLowerCase(),
+            safari = /safari/.test(userAgent),
+            ios = /iphone|ipod|ipad/.test(userAgent);
 
-          if (window.ReactNativeWebView) {
-            toast.error("Please open in browser to print the report");
-          } else if (window.navigator.userAgent.includes("Instagram")) {
-            toast.error("Please open in browser to print the report");
-          } else if (window.navigator.userAgent.includes("Gmail")) {
-            toast.error("Please open in browser to print the report");
+          if (ios) {
+            if (safari) {
+              toast("Safari");
+            } else if (!safari) {
+              toast("Not Safari");
+            }
           } else {
-            setTimeout(() => {
-              handlePrint();
-            }, 1000);
+            toast("Not iOS");
           }
         }
       } else {
