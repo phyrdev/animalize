@@ -19,7 +19,6 @@ function FinalReport({ params }) {
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onPrintError: (error) => toast.error(error.message),
     documentTitle: `Invoice-${report?.reportno}`,
   });
 
@@ -44,6 +43,7 @@ function FinalReport({ params }) {
         } else {
           setReport(data);
           setLoading(false);
+
           // check if opened in webview
         }
       } else {
@@ -348,7 +348,18 @@ function FinalReport({ params }) {
                   </p>
 
                   <div className="flex items-center mt-10">
-                    <Button className="rounded-md w-fit" onClick={handlePrint}>
+                    <Button
+                      className="rounded-md w-fit"
+                      onClick={() => {
+                        try {
+                          handlePrint();
+                        } catch (error) {
+                          toast.error("Error printing report");
+                          let currentUrl = window.location.href;
+                          window.open(currentUrl, "_blank");
+                        }
+                      }}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
