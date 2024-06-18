@@ -309,7 +309,8 @@ function FinalReport({ params }) {
                               </p>
                             </div>
                           </div>
-                          <footer></footer>
+
+                          {i !== report.tests.length - 1 && <footer></footer>}
                         </div>
                       );
                     })}
