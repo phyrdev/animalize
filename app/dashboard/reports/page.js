@@ -15,6 +15,9 @@ import PermissionDenied from "../components/PermissionDenied";
 import RRow from "./components/RRow";
 import RCard from "./components/RCard";
 import { reportstatus } from "@/static/lists";
+
+export const maxDuration = 30;
+
 function Reports() {
   const router = useRouter();
   const session = useSession();

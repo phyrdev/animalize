@@ -27,29 +27,6 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
       },
     });
 
-    // if (reportSpecifics.parentEmail) {
-    //   let attachments = [];
-    //   let invoicePdf = await axios.get(
-    //     `https://pdf.phyr.global/animalize/invoice?id=${createdReport.reportno}`
-    //   );
-    //   invoicePdf = invoicePdf.data;
-
-    //   if (invoicePdf.success) {
-    //     attachments.push({
-    //       filename: `Invoice-${createdReport.reportno}.pdf`,
-    //       href: invoicePdf.data.url,
-    //     });
-    //   }
-
-    //   await sendMail(
-    //     reportSpecifics.parentEmail,
-    //     `We have started preparing your case ${createdReport.reportno}`,
-    //     caseCreatedTemplate(createdReport),
-    //     null,
-    //     attachments
-    //   );
-    // }
-
     return {
       success: true,
       message: "Report created successfully",
