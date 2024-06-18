@@ -11,6 +11,7 @@ import { issuepriorities, issuestatus } from "@/static/lists";
 import { createIssue } from "@/prisma/issue";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
+export const maxDuration = 30;
 
 function CreateIssue() {
   const params = useSearchParams();
