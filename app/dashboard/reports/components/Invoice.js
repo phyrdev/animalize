@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import { sendInvoice } from "@/prisma/report";
+import { sendInitialInvoice, sendInvoice } from "@/prisma/report";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
@@ -10,7 +10,12 @@ import { useReactToPrint } from "react-to-print";
 
 export const maxDuration = 30; // Applies to the actions
 
-function Invoice({ report, closeCallback = () => {}, minimized = false }) {
+function Invoice({
+  report,
+  closeCallback = () => {},
+  minimized = false,
+  firstInvoice = false,
+}) {
   const router = useRouter();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -156,12 +161,15 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
             </Button>
             <Button
               onClick={async () => {
-                let resendReq = sendInvoice(report.reportno);
-                toast("Email will be sent shortly");
+                toast.loading("Sending email");
+                firstInvoice
+                  ? sendInitialInvoice(report.reportno)
+                  : sendInvoice(report.reportno);
+                toast.success("Email sent successfully");
               }}
               className="rounded bg-neutral-800 text-white"
             >
-              Resend in email
+              {firstInvoice ? "Send invoice" : "Resend invoice"}
             </Button>
           </div>
           <div className="w-full h-[1px] bg-neutral-200 mt-16"></div>

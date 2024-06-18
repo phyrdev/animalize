@@ -1093,7 +1093,11 @@ function CreateReport() {
             )}
           </>
 
-          <>{createdReport && <Invoice report={createdReport} />}</>
+          <>
+            {createdReport && (
+              <Invoice report={createdReport} firstInvoice={true} />
+            )}
+          </>
         </div>
       );
     }
