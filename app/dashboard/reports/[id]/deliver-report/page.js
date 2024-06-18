@@ -19,6 +19,8 @@ import { sendMail } from "@/helper/mail";
 import { finalReportTemplate } from "@/templates/email";
 import Invoice from "../../components/Invoice";
 
+export const maxDuration = 30; // Applies to the actions
+
 function DeliverReport({ params }) {
   const router = useRouter();
   const [report, setReport] = useState(null);

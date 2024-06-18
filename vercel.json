@@ -2,10 +2,6 @@
   "functions": {
     "app/api/**/*": {
       "maxDuration": 30
-    },
-
-    "prisma/**/*": {
-      "maxDuration": 30
     }
   }
 }

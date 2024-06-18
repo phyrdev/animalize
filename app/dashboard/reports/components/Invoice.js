@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
+export const maxDuration = 30; // Applies to the actions
+
 function Invoice({ report, closeCallback = () => {}, minimized = false }) {
   const router = useRouter();
   const componentRef = useRef();
