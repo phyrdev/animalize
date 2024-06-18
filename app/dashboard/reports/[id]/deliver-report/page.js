@@ -2,7 +2,7 @@
 "use client";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
-import { getReportById, markAsDelivered } from "@/prisma/report";
+import { getReportById, markAsDelivered, sendReport } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import {
   BreadcrumbItem,
@@ -57,6 +57,17 @@ function DeliverReport({ params }) {
       router.push("/dashboard/reports");
     } else {
       toast.error(message);
+    }
+  };
+
+  const sendReportToEmail = async (email = null) => {
+    toast.loading("Sending email...");
+    let reportSendReq = await sendReport(report.reportno, email);
+    toast.remove();
+    if (reportSendReq.success) {
+      toast.success("Email sent successfully");
+    } else {
+      toast.error("Failed to send email");
     }
   };
 
@@ -122,15 +133,7 @@ function DeliverReport({ params }) {
                         />
                         <Button
                           onClick={async () => {
-                            toast.loading("Sending email...");
-                            await sendMail(
-                              customEmail,
-                              `Report is ready for rept no: ${report.reportno}`,
-                              finalReportTemplate(report)
-                            );
-                            toast.remove();
-                            toast.success("Email sent successfully");
-                            setCustomEmail("");
+                            sendReportToEmail(customEmail);
                           }}
                           className="h-full rounded-md w-fit ml-2"
                         >
@@ -182,23 +185,7 @@ function DeliverReport({ params }) {
                           <span>Print invoice</span>
                         </Button>
                         <Button
-                          onClick={async () => {
-                            toast.loading("Sending email...");
-                            try {
-                              await sendMail(
-                                report.parentEmail,
-                                `Report is ready for rept no: ${report.reportno}`,
-                                finalReportTemplate(report)
-                              );
-                              toast.remove();
-                              toast.success("Email sent successfully");
-                            } catch (error) {
-                              toast.error(
-                                "Failed to send email",
-                                error.message
-                              );
-                            }
-                          }}
+                          onClick={async () => sendReportToEmail()}
                           className="rounded-md bg-transparent border w-fit"
                         >
                           <svg

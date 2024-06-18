@@ -1,10 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
-import {
-  caseCreatedTemplate,
-  minimizedInvoiceTemplate,
-} from "@/templates/email";
+import { sendInvoice } from "@/prisma/report";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
@@ -159,13 +155,11 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
             <Button
               onClick={async () => {
                 toast.loading("Sending email");
-                await sendMail(
-                  report.parentEmail,
-                  `Invoice for ${report.reportno}`,
-                  caseCreatedTemplate(report)
-                );
+                let resendReq = await sendInvoice(report.reportno);
                 toast.remove();
-                toast.success("Email sent successfully");
+                if (resendReq.success) {
+                  toast.success("Email sent successfully");
+                }
               }}
               className="rounded bg-neutral-800 text-white"
             >

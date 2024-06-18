@@ -419,8 +419,7 @@ export const minimizedInvoiceTemplate = (report) => {
       <div class="inst-message">
         <p>
           Greetings from ${orgname}. This is a minimized version of the invoice
-          against your case. You can find a copy of the actual invoice by
-          clicking the button below.
+          against your case. You can find a copy of the actual invoice in the attachment below.
         </p>
       </div>
 
@@ -438,14 +437,6 @@ export const minimizedInvoiceTemplate = (report) => {
       <div class="payment-options">
         <span>Status: ${paymentstatus}</span>
         <span>Due: ${dueamount}</span>
-      </div>
-
-      <div class="action-buttons">
-         <a href=${"https://animalize.io/invoice/" + reportno}>
-          <button>
-            <span>View invoice</span>
-          </button>
-        </a>
       </div>
     </div>
   </body>

@@ -3,7 +3,12 @@
 import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
-import { caseCreatedTemplate, generalUpdateTemplate } from "@/templates/email";
+import {
+  caseCreatedTemplate,
+  finalReportTemplate,
+  generalUpdateTemplate,
+  minimizedInvoiceTemplate,
+} from "@/templates/email";
 import axios from "axios";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
@@ -24,17 +29,17 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
 
     if (reportSpecifics.parentEmail) {
       let attachments = [];
-      //   let pdf = await axios.get(
-      //     `https://pdf.phyr.global/animalize/report?id=${createdReport.reportno}`
-      //   );
-      //   pdf = pdf.data;
+      let invoicePdf = await axios.get(
+        `https://pdf.phyr.global/animalize/invoice?id=${createdReport.reportno}`
+      );
+      invoicePdf = invoicePdf.data;
 
-      //   if (pdf.status == "success") {
-      //     attachments.push({
-      //       filename: `${createdReport.reportno}.pdf`,
-      //       href: pdf.url,
-      //     });
-      //   }
+      if (invoicePdf.success) {
+        attachments.push({
+          filename: `Invoice-${createdReport.reportno}.pdf`,
+          href: invoicePdf.data.url,
+        });
+      }
 
       await sendMail(
         reportSpecifics.parentEmail,
@@ -515,6 +520,102 @@ export const markAsDelivered = async (reportno) => {
     return {
       success: true,
       message: "Report marked as delivered successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const sendInvoice = async (reportno) => {
+  try {
+    let report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+      include: {
+        payment: true,
+        organization: true,
+        vials: true,
+        reviewedBy: true,
+        sampleCollectedBy: true,
+        resultsFedBy: true,
+      },
+    });
+    let attachments = [];
+    let invoicePdf = await axios.get(
+      `https://pdf.phyr.global/animalize/invoice?id=${report.reportno}`
+    );
+    invoicePdf = invoicePdf.data;
+
+    if (invoicePdf.success) {
+      attachments.push({
+        filename: `Invoice-${report.reportno}.pdf`,
+        href: invoicePdf.data.url,
+      });
+    }
+
+    await sendMail(
+      report.parentEmail,
+      `Invoice for ${report.reportno}`,
+      minimizedInvoiceTemplate(report),
+      null,
+      attachments
+    );
+
+    return {
+      success: true,
+      message: "Invoice sent successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const sendReport = async (reportno, email = null) => {
+  try {
+    let report = await prisma.report.findUnique({
+      where: {
+        reportno,
+      },
+      include: {
+        payment: true,
+        organization: true,
+        vials: true,
+        reviewedBy: true,
+        sampleCollectedBy: true,
+        resultsFedBy: true,
+      },
+    });
+    let attachments = [];
+    let reportPdf = await axios.get(
+      `https://pdf.phyr.global/animalize/report?id=${report.reportno}`
+    );
+    reportPdf = reportPdf.data;
+    if (reportPdf.success) {
+      attachments.push({
+        filename: `Report-${report.reportno}.pdf`,
+        href: reportPdf.data.url,
+      });
+    }
+    await sendMail(
+      email || report.parentEmail,
+      `Report is ready for rept no: ${report.reportno}`,
+      finalReportTemplate(report),
+      null,
+      attachments
+    );
+
+    return {
+      success: true,
+      message: "Report sent successfully",
     };
   } catch (error) {
     console.log(error);
