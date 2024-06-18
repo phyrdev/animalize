@@ -154,12 +154,8 @@ function Invoice({ report, closeCallback = () => {}, minimized = false }) {
             </Button>
             <Button
               onClick={async () => {
-                toast.loading("Sending email");
-                let resendReq = await sendInvoice(report.reportno);
-                toast.remove();
-                if (resendReq.success) {
-                  toast.success("Email sent successfully");
-                }
+                let resendReq = sendInvoice(report.reportno);
+                toast("Email will be sent shortly");
               }}
               className="rounded bg-neutral-800 text-white"
             >
