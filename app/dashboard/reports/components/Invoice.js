@@ -163,8 +163,9 @@ function Invoice({
               onClick={async () => {
                 toast.loading("Sending email");
                 firstInvoice
-                  ? sendInitialInvoice(report.reportno)
-                  : sendInvoice(report.reportno);
+                  ? await sendInitialInvoice(report.reportno)
+                  : await sendInvoice(report.reportno);
+                toast.dismiss();
                 toast.success("Email sent successfully");
               }}
               className="rounded bg-neutral-800 text-white"

@@ -656,7 +656,7 @@ export const sendInitialInvoice = async (reportno) => {
     }
 
     await sendMail(
-      reportSpecifics.parentEmail,
+      report.parentEmail,
       `We have started preparing your case ${report.reportno}`,
       caseCreatedTemplate(report),
       null,
