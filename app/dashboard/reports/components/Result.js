@@ -4,6 +4,7 @@
 
 import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter } from "@/helper/refactor";
+import { sendReport } from "@/prisma/report";
 import { finalReportTemplate } from "@/templates/email";
 import { Button } from "@nextui-org/react";
 import React, { useRef } from "react";
@@ -55,11 +56,7 @@ function Result({ report, closeCallBack = () => {} }) {
             onClick={async () => {
               toast.loading("Sending email...");
               try {
-                await sendMail(
-                  report.parentEmail,
-                  `Report is ready for rept no: ${report.reportno}`,
-                  finalReportTemplate(report)
-                );
+                await sendReport(report.reportno);
                 toast.remove();
                 toast.success("Email sent successfully");
               } catch (error) {

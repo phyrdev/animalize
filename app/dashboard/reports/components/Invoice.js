@@ -162,9 +162,7 @@ function Invoice({
             <Button
               onClick={async () => {
                 toast.loading("Sending email");
-                firstInvoice
-                  ? await sendInitialInvoice(report.reportno)
-                  : await sendInvoice(report.reportno);
+                await sendInvoice(report.reportno);
                 toast.dismiss();
                 toast.success("Email sent successfully");
               }}

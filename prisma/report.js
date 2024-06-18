@@ -507,55 +507,6 @@ export const markAsDelivered = async (reportno) => {
   }
 };
 
-export const sendInvoice = async (reportno) => {
-  try {
-    let report = await prisma.report.findUnique({
-      where: {
-        reportno,
-      },
-      include: {
-        payment: true,
-        organization: true,
-        vials: true,
-        reviewedBy: true,
-        sampleCollectedBy: true,
-        resultsFedBy: true,
-      },
-    });
-    let attachments = [];
-    let invoicePdf = await axios.get(
-      `https://pdf.phyr.global/animalize/invoice?id=${report.reportno}`
-    );
-    invoicePdf = invoicePdf.data;
-
-    if (invoicePdf.success) {
-      attachments.push({
-        filename: `Invoice-${report.reportno}.pdf`,
-        href: invoicePdf.data.url,
-      });
-    }
-
-    await sendMail(
-      report.parentEmail,
-      `Invoice for ${report.reportno}`,
-      minimizedInvoiceTemplate(report),
-      null,
-      attachments
-    );
-
-    return {
-      success: true,
-      message: "Invoice sent successfully",
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
-};
-
 export const sendReport = async (reportno, email = null) => {
   try {
     let report = await prisma.report.findUnique({
@@ -603,7 +554,7 @@ export const sendReport = async (reportno, email = null) => {
   }
 };
 
-export const sendInitialInvoice = async (reportno) => {
+export const sendInvoice = async (reportno) => {
   try {
     let report = await prisma.report.findUnique({
       where: {
@@ -634,7 +585,7 @@ export const sendInitialInvoice = async (reportno) => {
 
     await sendMail(
       report.parentEmail,
-      `We have started preparing your case ${report.reportno}`,
+      `Invoice for report no: ${report.reportno}`,
       caseCreatedTemplate(report),
       null,
       attachments
