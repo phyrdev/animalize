@@ -1,7 +1,13 @@
 "use server";
 import nodemailer from "nodemailer";
 
-export async function sendMail(to = "", subject = "", html = "", text = "") {
+export async function sendMail(
+  to = "",
+  subject = "",
+  html = "",
+  text = "",
+  attachments = []
+) {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     secure: true,
@@ -19,6 +25,7 @@ export async function sendMail(to = "", subject = "", html = "", text = "") {
       subject,
       text,
       html,
+      attachments,
     });
     return {
       success: true,

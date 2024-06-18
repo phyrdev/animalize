@@ -4,6 +4,7 @@ import { sendMail } from "@/helper/mail";
 import prisma from "./prisma";
 import randomstring from "randomstring";
 import { caseCreatedTemplate, generalUpdateTemplate } from "@/templates/email";
+import axios from "axios";
 
 export const createReport = async (reportSpecifics, billingSpecifics) => {
   try {
@@ -21,12 +22,28 @@ export const createReport = async (reportSpecifics, billingSpecifics) => {
       },
     });
 
-    reportSpecifics.parentEmail.length != 0 &&
-      (await sendMail(
+    if (reportSpecifics.parentEmail) {
+      let attachments = [];
+      //   let pdf = await axios.get(
+      //     `https://pdf.phyr.global/animalize/report?id=${createdReport.reportno}`
+      //   );
+      //   pdf = pdf.data;
+
+      //   if (pdf.status == "success") {
+      //     attachments.push({
+      //       filename: `${createdReport.reportno}.pdf`,
+      //       href: pdf.url,
+      //     });
+      //   }
+
+      await sendMail(
         reportSpecifics.parentEmail,
         `We have started preparing your case ${createdReport.reportno}`,
-        caseCreatedTemplate(createdReport)
-      ));
+        caseCreatedTemplate(createdReport),
+        null,
+        attachments
+      );
+    }
 
     return {
       success: true,
