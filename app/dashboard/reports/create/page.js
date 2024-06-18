@@ -35,6 +35,8 @@ import { getCurrencySymbol } from "@/helper/refactor";
 import { createReport } from "@/prisma/report";
 import Invoice from "../components/Invoice";
 
+export const maxDuration = 30;
+
 function CreateReport() {
   const session = useSession();
   const [isRegistered, setIsRegistered] = React.useState(false);
