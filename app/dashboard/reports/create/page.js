@@ -32,7 +32,7 @@ import { permissions } from "@/static/permissions";
 import PermissionDenied from "../../components/PermissionDenied";
 import { getFacilities } from "@/prisma/facility";
 import { getCurrencySymbol } from "@/helper/refactor";
-import { createReport } from "@/prisma/report";
+import { createReport, sendInvoice } from "@/prisma/report";
 import Invoice from "../components/Invoice";
 
 export const maxDuration = 30;
@@ -205,6 +205,10 @@ function CreateReport() {
       toast.dismiss();
 
       if (createReportReq.success) {
+        toast.loading("Sending invoice...");
+        await sendInvoice(createReportReq.data.reportno);
+        toast.remove();
+        toast.success("Report created successfully");
         setCreatedReport(createReportReq.data);
       } else {
         toast.error(createReportReq.message);
