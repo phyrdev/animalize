@@ -276,7 +276,7 @@ export const markSampleCollected = async (reportno, empno) => {
       `Sample collected for Rept no: ${report.reportno}`,
       generalUpdateTemplate(
         report.reportno,
-        `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. You can also track the progress at https://animalize.io/status/${reportno} <br/><br/> Regards, <br/> Team Animalize`
+        `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. To know the progress of your report, <a href=https://animalize.io/status/${reportno}>Click here</a>. You can also track the progress at  <br/><br/> Regards, <br/> Team Animalize`
       )
     );
 
@@ -381,9 +381,9 @@ export const revertSampleCollection = async (reportno) => {
     });
 
     report.tests.map((test) => {
-      test.parameters.map((param) => {
-        param.value = "";
-      });
+      //   test.parameters.map((param) => {
+      //     param.value = "";
+      //   });
       test.observation = "";
     });
 
@@ -419,9 +419,9 @@ export const revertFeedResults = async (reportno) => {
     });
 
     report.tests.map((test) => {
-      test.parameters.map((param) => {
-        param.value = "";
-      });
+      //   test.parameters.map((param) => {
+      //     param.value = "";
+      //   });
       test.observation = "";
     });
 

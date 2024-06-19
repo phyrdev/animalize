@@ -48,7 +48,9 @@ function CollectSample({ params }) {
   };
 
   const getReportVials = async (reportno) => {
+    toast.loading("Fetching vials...");
     let { success, data, message } = await getVialsByReport(reportno);
+    toast.remove();
     if (success) {
       setVials(data);
     } else {
@@ -57,11 +59,13 @@ function CollectSample({ params }) {
   };
 
   const createVialForCase = async () => {
+    toast.loading("Creating vial...");
     let { success, message, data } = await createVial(
       session.data.user.orgno,
       session.data.user.empno,
       report.reportno
     );
+    toast.remove();
     if (success) {
       toast.success(message);
       setVials([...vials, data]);
