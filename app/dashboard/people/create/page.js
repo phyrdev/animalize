@@ -2,7 +2,7 @@
 "use client";
 import { permissions } from "@/static/permissions";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../../components/PermissionDenied";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import CustomInput from "../../components/CustomInput";
@@ -11,6 +11,7 @@ import { employeeroles } from "@/static/lists";
 import toast from "react-hot-toast";
 import { createEmployee } from "@/prisma/employee";
 import { useRouter } from "next/navigation";
+import GlobalState from "@/context/GlobalState";
 
 function CreatePerson() {
   const router = useRouter();
@@ -26,6 +27,7 @@ function CreatePerson() {
   });
 
   const [loading, setLoading] = useState(false);
+  const { refreshOrgEmployees } = useContext(GlobalState);
 
   const handleSave = async () => {
     if (
@@ -46,6 +48,7 @@ function CreatePerson() {
     setLoading(true);
     let { success, message } = await createEmployee(tperson);
     if (success) {
+      refreshOrgEmployees();
       toast.success("Employee created successfully");
       router.push("/dashboard/people");
     } else {
