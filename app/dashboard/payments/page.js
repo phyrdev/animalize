@@ -9,36 +9,36 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Progress,
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../components/PermissionDenied";
 import { getOrgPayments } from "@/prisma/payments";
 import { capitalizeFirstLetter } from "@/helper/refactor";
 import PRow from "./components/PRow";
 import PCard from "./components/PCard";
+import GlobalState from "@/context/GlobalState";
 
 function Payments() {
   const session = useSession();
-
-  const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [visiblePayments, setVisiblePayments] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const { payments, refreshOrgReports, loading } = useContext(GlobalState);
 
-  const getOrganizationPayments = async () => {
-    let { success, data, message } = await getOrgPayments(
-      session.data.user.orgno
-    );
+  //   const getOrganizationPayments = async () => {
+  //     let { success, data, message } = await getOrgPayments(
+  //       session.data.user.orgno
+  //     );
 
-    if (success) {
-      setPayments(data);
-      setVisiblePayments(data);
-      setLoading(false);
-    }
-  };
+  //     if (success) {
+  //       setPayments(data);
+  //       setVisiblePayments(data);
+  //       setLoading(false);
+  //     }
+  //   };
 
   useEffect(() => {
     if (searchQuery == "") {
@@ -62,9 +62,13 @@ function Payments() {
 
   useEffect(() => {
     if (session.status == "authenticated") {
-      payments.length == 0 && getOrganizationPayments();
+      if (permissions.managePayments.includes(session.data.user.role)) {
+        if (payments.length > 0) {
+          setVisiblePayments(payments);
+        }
+      }
     }
-  }, [session.status]);
+  }, [session.status, payments]);
 
   if (session.status == "authenticated") {
     if (permissions.managePayments.includes(session.data.user.role) == false) {
@@ -101,62 +105,70 @@ function Payments() {
             </Button>
           </div>
 
-          {loading == true ? (
-            <div className="flex items-center justify-center">
-              <Spinner />
+          {loading == true && (
+            <Progress
+              radius="none"
+              size="sm"
+              classNames={{
+                indicator: "bg-neutral-600 h-1",
+              }}
+              isIndeterminate
+            />
+          )}
+
+          {searchOpen && (
+            <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={20}
+                height={20}
+                className="shrink-0"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.55}
+                  d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                ></path>
+              </svg>
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search for a facility"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm outline-none h-full w-full ml-3"
+                name=""
+              />
+              <button
+                onClick={() => {
+                  setSearchOpen(false);
+                  setVisiblePayments(payments);
+                  setSearchQuery("");
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={20}
+                  height={20}
+                  viewBox="0 0 36 36"
+                >
+                  <path
+                    fill="currentColor"
+                    d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
+                    className="clr-i-outline clr-i-outline-path-1"
+                  ></path>
+                  <path fill="none" d="M0 0h36v36H0z"></path>
+                </svg>
+              </button>
             </div>
-          ) : (
+          )}
+
+          {payments.length != 0 && (
             <>
-              {searchOpen && (
-                <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={20}
-                    height={20}
-                    className="shrink-0"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.55}
-                      d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
-                    ></path>
-                  </svg>
-                  <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Search for a facility"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-transparent text-sm outline-none h-full w-full ml-3"
-                    name=""
-                  />
-                  <button
-                    onClick={() => {
-                      setSearchOpen(false);
-                      setVisiblePayments(payments);
-                      setSearchQuery("");
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={20}
-                      height={20}
-                      viewBox="0 0 36 36"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
-                        className="clr-i-outline clr-i-outline-path-1"
-                      ></path>
-                      <path fill="none" d="M0 0h36v36H0z"></path>
-                    </svg>
-                  </button>
-                </div>
-              )}
               <div className="hidden md:block whitespace-nowrap overflow-auto shrink-0 pb-24">
                 <table className="w-fit lg:w-full text-left">
                   <thead className="bg-neutral-100 border-y">
@@ -184,7 +196,7 @@ function Payments() {
                           payment={payment}
                           index={index}
                           key={index}
-                          flagCallback={getOrganizationPayments}
+                          flagCallback={refreshOrgReports}
                         />
                       );
                     })}
@@ -202,7 +214,7 @@ function Payments() {
                       <PCard
                         payment={payment}
                         index={index}
-                        flagCallback={getOrganizationPayments}
+                        flagCallback={refreshOrgReports}
                         key={index}
                       />
                     );

@@ -3,6 +3,7 @@
 import GlobalState from "@/context/GlobalState";
 import { getEmployees } from "@/prisma/employee";
 import { getFacilities } from "@/prisma/facility";
+import { getOrgPayments } from "@/prisma/payments";
 import { getOrgReports } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import { useSession } from "next-auth/react";
@@ -14,6 +15,7 @@ function Content({ children }) {
   const [reports, setReports] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [facilities, setFacilities] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const refreshOrgReports = async () => {
@@ -23,6 +25,7 @@ function Content({ children }) {
     );
     if (success) {
       setReports(data);
+      refreshOrgPayments();
     } else {
       setReports([]);
     }
@@ -57,6 +60,21 @@ function Content({ children }) {
     }
   };
 
+  const refreshOrgPayments = async () => {
+    if (permissions.managePayments.includes(session.data.user.role)) {
+      setLoading(true);
+      let { success, data, message } = await getOrgPayments(
+        session.data.user.orgno
+      );
+
+      if (success) {
+        setPayments(data);
+      }
+
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (session.status == "authenticated") {
       refreshOrgReports();
@@ -78,6 +96,9 @@ function Content({ children }) {
           facilities,
           setFacilities,
           refreshOrgFacilities,
+          payments,
+          setPayments,
+          refreshOrgPayments,
           loading,
         }}
       >
