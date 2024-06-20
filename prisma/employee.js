@@ -201,7 +201,7 @@ export const getEmployees = async (orgno) => {
   }
 };
 
-export const createEmployee = async (data) => {
+export const createEmployee = async (data, signature = "") => {
   try {
     let empno = await generateUniqueEmpno();
     let password = randomstring.generate({
@@ -222,6 +222,7 @@ export const createEmployee = async (data) => {
         zipcode: data.zipcode,
         orgno: data.orgno,
         designation: data.designation,
+        signature,
       },
       include: {
         organization: true,
