@@ -12,25 +12,26 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Result from "../../components/Result";
 import { sendMail } from "@/helper/mail";
 import { finalReportTemplate } from "@/templates/email";
 import Invoice from "../../components/Invoice";
+import GlobalState from "@/context/GlobalState";
 
 export const maxDuration = 30;
 
 function DeliverReport({ params }) {
   const router = useRouter();
+  const session = useSession();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invalidState, setInvalidState] = useState(false);
-  const [status, setStatus] = useState("S200");
-  const session = useSession();
   const [showReport, setShowReport] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
   const [customEmail, setCustomEmail] = useState("");
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -55,6 +56,7 @@ function DeliverReport({ params }) {
     let { success, message } = await markAsDelivered(report.reportno);
     toast.dismiss();
     if (success) {
+      await refreshOrgReports();
       toast.success(message);
       router.push("/dashboard/reports");
     } else {
