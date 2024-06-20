@@ -42,6 +42,24 @@ function SignIn() {
     setLoading(false);
   };
 
+  const handleAutoSignIn = async (empno, password) => {
+    if (!performChecks()) return;
+    setLoading(true);
+    let validateReq = await validateCredentials(empno, password);
+    if (validateReq.success) {
+      toast.success(validateReq.message);
+      toast.loading("Redirecting to dashboard...");
+      await signIn("credentials", {
+        empno,
+        password,
+      });
+      toast.remove();
+    } else {
+      toast.error(validateReq.message);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     let url = new URL(window.location.href);
     let params = new URLSearchParams(url.search);
@@ -51,7 +69,7 @@ function SignIn() {
       setEmpno(empno);
       setPassword(password);
       setTimeout(() => {
-        handleSignIn();
+        handleAutoSignIn(empno, password);
       }, 1000);
     }
   }, []);
