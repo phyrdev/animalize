@@ -29,6 +29,7 @@ function Content({ children }) {
     let { success, data, message } = await getEmployees(
       session.data.user.orgno
     );
+    console.log(success, data, message);
     if (success) {
       setEmployees(data);
     } else {
