@@ -43,7 +43,6 @@ function SignIn() {
   };
 
   const handleAutoSignIn = async (empno, password) => {
-    if (!performChecks()) return;
     setLoading(true);
     let validateReq = await validateCredentials(empno, password);
     if (validateReq.success) {
