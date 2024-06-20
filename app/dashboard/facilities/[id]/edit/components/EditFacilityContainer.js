@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { facilityavailability, testparameteruits } from "@/static/lists";
 import { permissions } from "@/static/permissions";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import CustomSelect from "@/app/dashboard/components/CustomSelect";
+import GlobalState from "@/context/GlobalState";
 
 function EditFacilityContainer({ o_facility }) {
   const session = useSession();
@@ -42,6 +43,8 @@ function EditFacilityContainer({ o_facility }) {
     low: "",
     high: "",
   });
+
+  const { refreshOrgFacilities } = useContext(GlobalState);
 
   const addFacility = () => {
     if (
@@ -89,6 +92,7 @@ function EditFacilityContainer({ o_facility }) {
       setLoading(true);
       let updatedfacilityReq = await updateFacility(o_facility.id, facility);
       if (updatedfacilityReq.success) {
+        await refreshOrgFacilities();
         toast.success(updatedfacilityReq.message);
         router.push("/dashboard/facilities");
         router.refresh();
