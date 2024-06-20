@@ -88,12 +88,17 @@ function Content({ children }) {
     }
   };
 
+  const loadOrgData = async () => {
+    await refreshOrgReports();
+    await refreshOrgEmployees();
+    await refreshOrgFacilities();
+    await refreshOrgPayments();
+    await refreshOrgIssues();
+  };
+
   useEffect(() => {
     if (session.status == "authenticated") {
-      refreshOrgReports();
-      refreshOrgEmployees();
-      refreshOrgFacilities();
-      refreshOrgIssues();
+      loadOrgData();
     }
   }, [session.status]);
 
