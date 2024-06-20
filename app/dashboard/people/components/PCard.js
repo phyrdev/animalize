@@ -17,7 +17,7 @@ import { resetPassword } from "@/prisma/employee";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-function PCard({ person }) {
+function PCard({ person, index, deleteCallback }) {
   const router = useRouter();
   const session = useSession();
   return (

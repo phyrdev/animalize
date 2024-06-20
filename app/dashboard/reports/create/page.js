@@ -14,7 +14,7 @@ import { DateInput } from "@nextui-org/react";
 import { CalendarDate } from "@internationalized/date";
 import { RadioGroup, Radio } from "@nextui-org/react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import CustomList from "../../components/CustomList";
@@ -34,6 +34,7 @@ import { getFacilities } from "@/prisma/facility";
 import { getCurrencySymbol } from "@/helper/refactor";
 import { createReport, sendInvoice } from "@/prisma/report";
 import Invoice from "../components/Invoice";
+import GlobalState from "@/context/GlobalState";
 
 export const maxDuration = 30;
 
@@ -79,6 +80,8 @@ function CreateReport() {
     createDoctordoggyAccount: false,
     additionalNotes: "",
   });
+
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
@@ -205,6 +208,7 @@ function CreateReport() {
       toast.dismiss();
 
       if (createReportReq.success) {
+        refreshOrgReports();
         toast.loading("Sending invoice...");
         await sendInvoice(createReportReq.data.reportno);
         toast.remove();

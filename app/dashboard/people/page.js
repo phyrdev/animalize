@@ -11,7 +11,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../components/PermissionDenied";
 import FRow from "../facilities/components/FRow";
 import FCard from "../facilities/components/FCard";
@@ -21,37 +21,40 @@ import { getEmployees } from "@/prisma/employee";
 import PRow from "./components/PRow";
 import { getRole } from "@/helper/refactor";
 import PCard from "./components/PCard";
+import GlobalState from "@/context/GlobalState";
 
 function People() {
   const router = useRouter();
-  const [employees, setEmployees] = useState([]);
+  //const [employees, setEmployees] = useState([]);
   const [visibleEmployees, setVisibleEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { employees, refreshOrgEmployees } = useContext(GlobalState);
 
   const session = useSession();
 
-  const getOrgEmployees = async () => {
-    let { success, data, message } = await getEmployees(
-      session.data.user.orgno
-    );
-    if (success) {
-      setEmployees(data);
-      setVisibleEmployees(data);
-      setLoading(false);
-    }
-  };
+  //   const getOrgEmployees = async () => {
+  //     let { success, data, message } = await getEmployees(
+  //       session.data.user.orgno
+  //     );
+  //     if (success) {
+  //       setEmployees(data);
+  //       setVisibleEmployees(data);
+  //       setLoading(false);
+  //     }
+  //   };
 
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.manageEmployees.includes(session.data.user.role)) {
-        if (employees.length == 0) {
-          getOrgEmployees();
+        if (employees.length > 0) {
+          setVisibleEmployees(employees);
         }
+        setLoading(false);
       }
     }
-  }, [session.status]);
+  }, [session.status, employees]);
 
   useEffect(() => {
     if (searchQuery == "") {
@@ -202,7 +205,7 @@ function People() {
                           key={employee.id}
                           person={employee}
                           index={index}
-                          deleteCallback={getOrgEmployees}
+                          deleteCallback={refreshOrgEmployees}
                         />
                       );
                     })}
@@ -217,7 +220,12 @@ function People() {
                 <ul className="mt-5 space-y-2">
                   {visibleEmployees.map((person, index) => {
                     return (
-                      <PCard key={person.id} person={person} index={index} />
+                      <PCard
+                        key={person.id}
+                        person={person}
+                        index={index}
+                        deleteCallback={refreshOrgEmployees}
+                      />
                     );
                   })}
                 </ul>

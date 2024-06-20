@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Breadcrumbs,
   BreadcrumbItem,
@@ -15,45 +15,29 @@ import PermissionDenied from "../components/PermissionDenied";
 import RRow from "./components/RRow";
 import RCard from "./components/RCard";
 import { reportstatus } from "@/static/lists";
+import GlobalState from "@/context/GlobalState";
 
 export const maxDuration = 30;
 
 function Reports() {
   const router = useRouter();
   const session = useSession();
-  const [reports, setReports] = useState([]);
   const [visibleReports, setVisibleReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVialOpen, setSearchVialOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchVialQuery, setSearchVialQuery] = useState("");
-
-  const getOrganizationReports = async () => {
-    let { success, data, message } = await getOrgReports(
-      session.data.user.orgno
-    );
-    console.log(message, success);
-    if (success) {
-      setReports(data);
-      setVisibleReports(data);
-      setLoading(false);
-    } else {
-      setReports([]);
-      setVisibleReports([]);
-      setLoading(false);
-    }
-  };
+  const { reports, refreshOrgReports } = useContext(GlobalState);
 
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.viewReports.includes(session.data.user.role)) {
-        if (reports.length == 0) {
-          getOrganizationReports();
-        }
+        setVisibleReports(reports);
+        setLoading(false);
       }
     }
-  }, [session.status]);
+  }, [reports, session.status]);
 
   useEffect(() => {
     if (searchQuery == "") {
@@ -308,7 +292,7 @@ function Reports() {
                             key={index}
                             report={report}
                             index={index}
-                            flagCallback={getOrganizationReports}
+                            flagCallback={refreshOrgReports}
                           />
                         );
                       }
@@ -331,7 +315,7 @@ function Reports() {
                           key={index}
                           report={report}
                           index={index}
-                          flagCallback={getOrganizationReports}
+                          flagCallback={refreshOrgReports}
                         />
                       );
                     }
