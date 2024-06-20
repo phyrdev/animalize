@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../../components/PermissionDenied";
 import { permissions } from "@/static/permissions";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
@@ -11,6 +11,7 @@ import { issuepriorities, issuestatus } from "@/static/lists";
 import { createIssue } from "@/prisma/issue";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
+import GlobalState from "@/context/GlobalState";
 export const maxDuration = 30;
 
 function CreateIssue() {
@@ -28,6 +29,8 @@ function CreateIssue() {
     empno: "",
   });
 
+  const { refreshOrgIssues } = useContext(GlobalState);
+
   const handleSave = async () => {
     if (tIssue.title == "" || tIssue.description == "") {
       toast.error("Please fill all fields.");
@@ -37,6 +40,7 @@ function CreateIssue() {
     setLoading(true);
     let { success, message } = await createIssue(tIssue, emails);
     if (success) {
+      await refreshOrgIssues();
       toast.success("Issue created successfully");
       router.push("/dashboard/issues");
     } else {
