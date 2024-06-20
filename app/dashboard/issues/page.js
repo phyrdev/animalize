@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../components/PermissionDenied";
 import { permissions } from "@/static/permissions";
 import {
@@ -13,6 +13,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Progress,
   Spinner,
 } from "@nextui-org/react";
 import { deleteIssue, getIssues } from "@/prisma/issue";
@@ -20,42 +21,30 @@ import { useRouter } from "next/navigation";
 import { capitalizeFirstLetter } from "@/helper/refactor";
 import toast from "react-hot-toast";
 import IRow from "./components/IRow";
+import GlobalState from "@/context/GlobalState";
 
 function Issues() {
   const router = useRouter();
   const session = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [issues, setIssues] = useState([]);
   const [visibleIssues, setVisibleIssues] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [showClosed, setShowClosed] = useState(true);
-
-  const getOrgIssues = async () => {
-    let { success, data, message } = await getIssues(session.data.user.orgno);
-    if (success) {
-      console.log(data);
-      setIssues(data);
-      setVisibleIssues(data);
-      setLoading(false);
-    } else {
-      console.log(message);
-    }
-  };
+  const { issues, refreshOrgIssues, loading } = useContext(GlobalState);
 
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.manageIssues.includes(session.data.user.role)) {
-        if (issues.length == 0) {
-          getOrgIssues();
+        if (issues.length > 0) {
+          setVisibleIssues(issues);
         }
       }
     }
-  }, [session.status]);
+  }, [session.status, issues]);
 
   useEffect(() => {
     if (searchQuery == "") {
-      setIssues(issues);
+      setVisibleIssues(issues);
     } else {
       let filteredIssues = issues.filter((issue) => {
         return issue.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -119,95 +108,104 @@ function Issues() {
               </Button>
             )}
           </div>
-          {loading == true ? (
-            <div className="flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <>
-              {searchOpen ? (
-                <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+          {loading == true && (
+            <Progress
+              radius="none"
+              size="sm"
+              classNames={{
+                indicator: "bg-neutral-600 h-1",
+              }}
+              isIndeterminate
+            />
+          )}
+
+          <>
+            {searchOpen ? (
+              <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={20}
+                  height={20}
+                  className="shrink-0"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.55}
+                    d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                  ></path>
+                </svg>
+                <input
+                  type="text"
+                  id="search-input"
+                  placeholder={
+                    showClosed ? "Search all issues" : "Search open issues"
+                  }
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent text-sm outline-none h-full w-full ml-3"
+                  name=""
+                />
+                <button
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setVisibleIssues(issues);
+                    setSearchQuery("");
+                  }}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width={20}
                     height={20}
-                    className="shrink-0"
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 36 36"
                   >
                     <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.55}
-                      d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                      fill="currentColor"
+                      d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
+                      className="clr-i-outline clr-i-outline-path-1"
                     ></path>
+                    <path fill="none" d="M0 0h36v36H0z"></path>
                   </svg>
-                  <input
-                    type="text"
-                    id="search-input"
-                    placeholder={
-                      showClosed ? "Search all issues" : "Search open issues"
-                    }
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-transparent text-sm outline-none h-full w-full ml-3"
-                    name=""
+                </button>
+              </div>
+            ) : (
+              <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M4 3h16a1 1 0 0 1 1 1v1.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707v6.305a1 1 0 0 1-1.243.97l-2-.5a1 1 0 0 1-.757-.97v-5.805a1 1 0 0 0-.293-.707L3.293 6.293A1 1 0 0 1 3 5.586V4a1 1 0 0 1 1-1"
                   />
-                  <button
-                    onClick={() => {
-                      setSearchOpen(false);
-                      setVisibleIssues(issues);
-                      setSearchQuery("");
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={20}
-                      height={20}
-                      viewBox="0 0 36 36"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m19.41 18l8.29-8.29a1 1 0 0 0-1.41-1.41L18 16.59l-8.29-8.3a1 1 0 0 0-1.42 1.42l8.3 8.29l-8.3 8.29A1 1 0 1 0 9.7 27.7l8.3-8.29l8.29 8.29a1 1 0 0 0 1.41-1.41Z"
-                        className="clr-i-outline clr-i-outline-path-1"
-                      ></path>
-                      <path fill="none" d="M0 0h36v36H0z"></path>
-                    </svg>
-                  </button>
-                </div>
-              ) : (
-                <div className="h-12 border-y md:border-b-0 flex items-center px-5 md:px-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M4 3h16a1 1 0 0 1 1 1v1.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707v6.305a1 1 0 0 1-1.243.97l-2-.5a1 1 0 0 1-.757-.97v-5.805a1 1 0 0 0-.293-.707L3.293 6.293A1 1 0 0 1 3 5.586V4a1 1 0 0 1 1-1"
-                    />
-                  </svg>
-                  <span className="ml-3 text-sm text-neutral-600">
-                    Show closed issues
-                  </span>
+                </svg>
+                <span className="ml-3 text-sm text-neutral-600">
+                  Show closed issues
+                </span>
 
-                  <input
-                    type="checkbox"
-                    checked={showClosed}
-                    onChange={(e) => setShowClosed(!showClosed)}
-                    className="h-4 w-4 ml-3 cursor-pointer"
-                    name=""
-                    id=""
-                  />
-                </div>
-              )}
+                <input
+                  type="checkbox"
+                  checked={showClosed}
+                  onChange={(e) => setShowClosed(!showClosed)}
+                  className="h-4 w-4 ml-3 cursor-pointer"
+                  name=""
+                  id=""
+                />
+              </div>
+            )}
+          </>
 
+          {issues.length != 0 && (
+            <>
               <div className="hidden md:block whitespace-nowrap overflow-auto shrink-0 pb-24">
                 <table className="w-fit lg:w-full text-left">
                   <thead className="bg-neutral-100 border-y">
@@ -237,7 +235,7 @@ function Issues() {
                           key={index}
                           issue={issue}
                           index={index}
-                          deleteCallback={getOrgIssues}
+                          deleteCallback={refreshOrgIssues}
                           showClosed={showClosed}
                         />
                       );

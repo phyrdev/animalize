@@ -3,6 +3,7 @@
 import GlobalState from "@/context/GlobalState";
 import { getEmployees } from "@/prisma/employee";
 import { getFacilities } from "@/prisma/facility";
+import { getIssues } from "@/prisma/issue";
 import { getOrgPayments } from "@/prisma/payments";
 import { getOrgReports } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
@@ -16,6 +17,7 @@ function Content({ children }) {
   const [employees, setEmployees] = useState([]);
   const [facilities, setFacilities] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const refreshOrgReports = async () => {
@@ -75,11 +77,23 @@ function Content({ children }) {
     }
   };
 
+  const refreshOrgIssues = async () => {
+    if (permissions.manageIssues.includes(session.data.user.role)) {
+      setLoading(true);
+      let { success, data, message } = await getIssues(session.data.user.orgno);
+      if (success) {
+        setIssues(data);
+      }
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (session.status == "authenticated") {
       refreshOrgReports();
       refreshOrgEmployees();
       refreshOrgFacilities();
+      refreshOrgIssues();
     }
   }, [session.status]);
 
@@ -99,6 +113,9 @@ function Content({ children }) {
           payments,
           setPayments,
           refreshOrgPayments,
+          issues,
+          setIssues,
+          refreshOrgIssues,
           loading,
         }}
       >
