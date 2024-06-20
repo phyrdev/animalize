@@ -130,13 +130,13 @@ function Settings() {
                     Use a stylus or your finger / mouse to sign in the box
                     below.
                   </p>
-                  <div className="border w-fit h-fit mt-2">
+                  <div className="border w-full h-fit mt-2">
                     <ReactSignatureCanvas
                       ref={signref}
                       penColor="black"
                       backgroundColor="white"
                       canvasProps={{
-                        width: "400px",
+                        width: "full",
                         height: 200,
                         className: "sigCanvas",
                       }}
