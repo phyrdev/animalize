@@ -208,7 +208,7 @@ function Settings() {
               </div>
             </div>
           </details>
-          {session.data.user.role == "super-admin" && (
+          {/* {session.data.user.role == "super-admin" && (
             <details id="organization-details" className="mt-10" open>
               <summary>
                 <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
@@ -321,7 +321,7 @@ function Settings() {
                 </div>
               </div>
             </details>
-          )}
+          )} */}
         </div>
       </div>
     );
