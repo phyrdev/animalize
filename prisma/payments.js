@@ -15,6 +15,9 @@ export const getOrgPayments = async (orgno) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return {

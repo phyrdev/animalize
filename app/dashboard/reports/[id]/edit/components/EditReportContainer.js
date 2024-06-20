@@ -1,13 +1,14 @@
 "use client";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import CustomSelect from "@/app/dashboard/components/CustomSelect";
+import GlobalState from "@/context/GlobalState";
 import { getCurrencySymbol } from "@/helper/refactor";
 import { updateReport } from "@/prisma/report";
 import { paymentmodes, paymentstatus } from "@/static/lists";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,7 @@ function EditReportContainer({ report }) {
   const session = useSession();
   const router = useRouter();
   const params = useSearchParams();
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const closeAllDetails = () => {
     document.getElementById("parent-details-dd").open = false;
@@ -72,6 +74,7 @@ function EditReportContainer({ report }) {
 
       if (createReportReq.success) {
         toast.success(createReportReq.message);
+        await refreshOrgReports();
 
         if (params.get("redirect")) {
           switch (params.get("redirect")) {
