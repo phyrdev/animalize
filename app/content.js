@@ -12,29 +12,32 @@ function Content({ children }) {
   const session = useSession();
   const [reports, setReports] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const refreshOrgReports = async () => {
+    setLoading(true);
     let { success, data, message } = await getOrgReports(
       session.data.user.orgno
     );
     if (success) {
-      console.log(data);
       setReports(data);
     } else {
       setReports([]);
     }
+    setLoading(false);
   };
 
   const refreshOrgEmployees = async () => {
+    setLoading(true);
     let { success, data, message } = await getEmployees(
       session.data.user.orgno
     );
-    console.log(success, data, message);
     if (success) {
       setEmployees(data);
     } else {
       toast.error(message);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -45,6 +48,7 @@ function Content({ children }) {
       }
     }
   }, [session.status]);
+
   return (
     <>
       <GlobalState.Provider
@@ -55,6 +59,7 @@ function Content({ children }) {
           employees,
           setEmployees,
           refreshOrgEmployees,
+          loading,
         }}
       >
         {children}

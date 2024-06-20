@@ -6,6 +6,7 @@ import {
   BreadcrumbItem,
   Button,
   Spinner,
+  Progress,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -23,18 +24,16 @@ function Reports() {
   const router = useRouter();
   const session = useSession();
   const [visibleReports, setVisibleReports] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVialOpen, setSearchVialOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchVialQuery, setSearchVialQuery] = useState("");
-  const { reports, refreshOrgReports } = useContext(GlobalState);
+  const { reports, refreshOrgReports, loading } = useContext(GlobalState);
 
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.viewReports.includes(session.data.user.role)) {
         setVisibleReports(reports);
-        setLoading(false);
       }
     }
   }, [reports, session.status]);
@@ -150,9 +149,14 @@ function Reports() {
             )}
           </div>
           {loading == true ? (
-            <div className="flex items-center justify-center">
-              <Spinner />
-            </div>
+            <Progress
+              radius="none"
+              size="sm"
+              classNames={{
+                indicator: "bg-neutral-400 h-1",
+              }}
+              isIndeterminate
+            />
           ) : (
             <>
               {searchOpen && (

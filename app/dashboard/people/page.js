@@ -8,6 +8,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Progress,
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
@@ -27,10 +28,10 @@ function People() {
   const router = useRouter();
   //const [employees, setEmployees] = useState([]);
   const [visibleEmployees, setVisibleEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { employees, refreshOrgEmployees } = useContext(GlobalState);
+  const { employees, refreshOrgEmployees, loading } = useContext(GlobalState);
 
   const session = useSession();
 
@@ -51,7 +52,6 @@ function People() {
         if (employees.length > 0) {
           setVisibleEmployees(employees);
         }
-        setLoading(false);
       }
     }
   }, [session.status, employees]);
@@ -122,10 +122,16 @@ function People() {
               </Button>
             )}
           </div>
+
           {loading == true ? (
-            <div className="flex items-center justify-center">
-              <Spinner />
-            </div>
+            <Progress
+              radius="none"
+              size="sm"
+              classNames={{
+                indicator: "bg-neutral-400 h-1",
+              }}
+              isIndeterminate
+            />
           ) : (
             <>
               {searchOpen && (
