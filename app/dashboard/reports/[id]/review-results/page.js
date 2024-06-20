@@ -3,6 +3,7 @@
 
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
+import GlobalState from "@/context/GlobalState";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import {
   failReport,
@@ -20,7 +21,7 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 function Review({ params }) {
@@ -34,6 +35,7 @@ function Review({ params }) {
   const [retestOpen, setRetestOpen] = useState(false);
   const [addSigntureOpen, setAddSigntureOpen] = useState(false);
   const [failStatement, setFailStatement] = useState("");
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -72,6 +74,7 @@ function Review({ params }) {
       );
       toast.remove();
       if (success) {
+        await refreshOrgReports();
         toast.success("Report approved successfully.");
         router.push("/dashboard/reports");
       } else {

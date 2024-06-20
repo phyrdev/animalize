@@ -3,6 +3,7 @@
 
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
+import GlobalState from "@/context/GlobalState";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { feedResults, getReportById } from "@/prisma/report";
 import { testparameteruits } from "@/static/lists";
@@ -15,16 +16,17 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function FeedResults({ params }) {
   const router = useRouter();
+  const session = useSession();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
-  const session = useSession();
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -454,6 +456,7 @@ function FeedResults({ params }) {
                           );
                           toast.dismiss();
                           if (success) {
+                            await refreshOrgReports();
                             toast.success("Changes saved successfully");
                             router.push("/dashboard/reports");
                             router.refresh();

@@ -2,6 +2,7 @@
 "use client";
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
+import GlobalState from "@/context/GlobalState";
 import { capitalizeFirstLetter } from "@/helper/refactor";
 import {
   getReportById,
@@ -20,17 +21,18 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function TakeAction({ params }) {
   const router = useRouter();
+  const session = useSession();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
   const [status, setStatus] = useState("S200");
-  const session = useSession();
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -56,6 +58,7 @@ function TakeAction({ params }) {
         let revertSampleColReq = await revertSampleCollection(report.reportno);
         toast.dismiss();
         if (revertSampleColReq.success) {
+          await refreshOrgReports();
           toast.success("Changes saved successfully");
           router.push("/dashboard/reports");
           router.refresh();
@@ -68,6 +71,7 @@ function TakeAction({ params }) {
         let revertFeedResultReq = await revertFeedResults(report.reportno);
         toast.dismiss();
         if (revertFeedResultReq.success) {
+          await refreshOrgReports();
           toast.success("Changes saved successfully");
           router.push("/dashboard/reports");
           router.refresh();
@@ -80,6 +84,7 @@ function TakeAction({ params }) {
         let revertPathReviewReq = await revertPathologyReview(report.reportno);
         toast.dismiss();
         if (revertPathReviewReq.success) {
+          await refreshOrgReports();
           toast.success("Changes saved successfully");
           router.push("/dashboard/reports");
           router.refresh();

@@ -2,6 +2,7 @@
 "use client";
 
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
+import GlobalState from "@/context/GlobalState";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { getReportById, markSampleCollected } from "@/prisma/report";
 import { createVial, deleteVial, getVialsByReport } from "@/prisma/vial";
@@ -17,17 +18,18 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function CollectSample({ params }) {
   const router = useRouter();
+  const session = useSession();
   const [vials, setVials] = useState([]);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
-  const session = useSession();
+  const { refreshOrgReports } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -432,6 +434,7 @@ function CollectSample({ params }) {
                           toast.remove();
                           if (success) {
                             toast.success(message);
+                            await refreshOrgReports();
                             router.push("/dashboard/reports");
                             router.refresh();
                           } else {
