@@ -35,6 +35,8 @@ import { getCurrencySymbol } from "@/helper/refactor";
 import { createReport, sendInvoice } from "@/prisma/report";
 import Invoice from "../components/Invoice";
 import GlobalState from "@/context/GlobalState";
+import { AgeFromDate } from "age-calculator";
+import { calculateAge } from "@/helper/age";
 
 export const maxDuration = 30;
 
@@ -64,6 +66,7 @@ function CreateReport() {
     petSex: "male-intact",
     petWeight: "",
     petDob: "",
+    petAge: "",
     parentFirstName: "",
     parentLastName: "",
     parentEmail: "",
@@ -162,6 +165,13 @@ function CreateReport() {
     }
   }, [searchQuery]);
 
+  useEffect(() => {
+    if (pFile.petDob.trim().length > 0) {
+      let age = calculateAge(pFile.petDob);
+      setPFile({ ...pFile, petAge: age });
+    }
+  }, [pFile.petDob]);
+
   const handleSave = async () => {
     if (performChecks()) {
       setLoading(true);
@@ -180,6 +190,7 @@ function CreateReport() {
         parentZipcode: pFile.parentZipcode,
         petBreed: pFile.petBreed,
         petDob: new Date(pFile.petDob).toISOString(),
+        petAge: pFile.petAge,
         petId: pFile.petId,
         petName: pFile.petName,
         petSex: pFile.petSex,
@@ -252,10 +263,10 @@ function CreateReport() {
       toast.error("Please enter a valid weight");
       return false;
     }
-    if (pFile.petDob.trim().length == 0) {
+    if (pFile.petAge.trim().length == 0) {
       closeAllDetails();
       document.getElementById("pet-details-dd").open = true;
-      toast.error("Please enter a valid date of birth");
+      toast.error("Please enter a valid age");
       return false;
     }
     if (pFile.parentFirstName.trim().length == 0) {
@@ -454,6 +465,15 @@ function CreateReport() {
                     label="D.O.B"
                     type="date"
                     placeholder="1234567890"
+                  />
+                  <CustomInput
+                    value={pFile.petAge}
+                    onChange={(e) =>
+                      setPFile({ ...pFile, petAge: e.target.value })
+                    }
+                    label="Age"
+                    type="text"
+                    placeholder="2 years"
                   />
                 </div>
                 <div className="pb-6 flex items-center justify-end gap-2 mt-6">

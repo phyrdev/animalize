@@ -13,6 +13,7 @@
     "@nextui-org/react": "^2.4.0",
     "@prisma/client": "^5.14.0",
     "@sparticuz/chromium": "^123.0.1",
+    "age-calculator": "^1.0.0",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "framer-motion": "^11.2.6",

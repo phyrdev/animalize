@@ -100,7 +100,8 @@ model Report {
   parentPhone              String
   parentZipcode            String?
   petBreed                 String
-  petDob                   DateTime
+  petDob                   DateTime?
+  petAge                   String?
   petId                    String?
   petName                  String
   petSex                   String
