@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import CustomSelect from "../../components/CustomSelect";
 import { facilityavailability, testparameteruits } from "@/static/lists";
@@ -17,6 +17,7 @@ import PermissionDenied from "../../components/PermissionDenied";
 import toast from "react-hot-toast";
 import { createFacility } from "@/prisma/facility";
 import { useRouter } from "next/navigation";
+import GlobalState from "@/context/GlobalState";
 
 function CreateFacility() {
   const session = useSession();
@@ -29,7 +30,6 @@ function CreateFacility() {
     availability: "available",
     parameters: [],
   });
-
   const [tempParameter, setTempParameter] = React.useState({
     name: "",
     description: "",
@@ -37,6 +37,8 @@ function CreateFacility() {
     low: "",
     high: "",
   });
+
+  const { refreshOrgFacilities } = useContext(GlobalState);
 
   const addFacility = () => {
     if (
@@ -84,6 +86,7 @@ function CreateFacility() {
       setLoading(true);
       let createfacilityReq = await createFacility(facility);
       if (createfacilityReq.success) {
+        await refreshOrgFacilities();
         toast.success(createfacilityReq.message);
         router.push("/dashboard/facilities");
       } else {

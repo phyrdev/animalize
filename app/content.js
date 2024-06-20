@@ -2,6 +2,7 @@
 "use client";
 import GlobalState from "@/context/GlobalState";
 import { getEmployees } from "@/prisma/employee";
+import { getFacilities } from "@/prisma/facility";
 import { getOrgReports } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
 import { useSession } from "next-auth/react";
@@ -12,6 +13,7 @@ function Content({ children }) {
   const session = useSession();
   const [reports, setReports] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const refreshOrgReports = async () => {
@@ -28,24 +30,38 @@ function Content({ children }) {
   };
 
   const refreshOrgEmployees = async () => {
-    setLoading(true);
-    let { success, data, message } = await getEmployees(
-      session.data.user.orgno
-    );
-    if (success) {
-      setEmployees(data);
-    } else {
-      toast.error(message);
+    if (permissions.manageEmployees.includes(session.data.user.role)) {
+      setLoading(true);
+      let { success, data, message } = await getEmployees(
+        session.data.user.orgno
+      );
+      if (success) {
+        setEmployees(data);
+      } else {
+        toast.error(message);
+      }
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const refreshOrgFacilities = async () => {
+    if (permissions.manageFacilities.includes(session.data.user.role)) {
+      setLoading(true);
+      let { success, data, message } = await getFacilities(
+        session.data.user.orgno
+      );
+      if (success) {
+        setFacilities(data);
+      }
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (session.status == "authenticated") {
       refreshOrgReports();
-      if (permissions.manageEmployees.includes(session.data.user.role)) {
-        refreshOrgEmployees();
-      }
+      refreshOrgEmployees();
+      refreshOrgFacilities();
     }
   }, [session.status]);
 
@@ -59,6 +75,9 @@ function Content({ children }) {
           employees,
           setEmployees,
           refreshOrgEmployees,
+          facilities,
+          setFacilities,
+          refreshOrgFacilities,
           loading,
         }}
       >

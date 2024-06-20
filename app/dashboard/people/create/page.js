@@ -48,7 +48,7 @@ function CreatePerson() {
     setLoading(true);
     let { success, message } = await createEmployee(tperson);
     if (success) {
-      refreshOrgEmployees();
+      await refreshOrgEmployees();
       toast.success("Employee created successfully");
       router.push("/dashboard/people");
     } else {

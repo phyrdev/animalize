@@ -5,48 +5,50 @@ import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
+  Progress,
   Spinner,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PermissionDenied from "../components/PermissionDenied";
 import { getFacilities } from "@/prisma/facility";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import FCard from "./components/FCard";
 import FRow from "./components/FRow";
+import GlobalState from "@/context/GlobalState";
 
 function Facilities() {
   const router = useRouter();
   const session = useSession();
 
-  const [facilities, setFacilities] = useState([]);
+  //   const [facilities, setFacilities] = useState([]);
   const [visibleFacilities, setVisibleFacilities] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { facilities, refreshOrgFacilities, loading } = useContext(GlobalState);
 
-  const getOrgFacilities = async () => {
-    let { success, data, message } = await getFacilities(
-      session.data.user.orgno
-    );
-    console.log(success, data, message);
-    if (success) {
-      setFacilities(data);
-      setVisibleFacilities(data);
-      setLoading(false);
-    }
-  };
+  //   const getOrgFacilities = async () => {
+  //     let { success, data, message } = await getFacilities(
+  //       session.data.user.orgno
+  //     );
+  //     console.log(success, data, message);
+  //     if (success) {
+  //       setFacilities(data);
+  //       setVisibleFacilities(data);
+  //       setLoading(false);
+  //     }
+  //   };
 
   useEffect(() => {
     if (session.status == "authenticated") {
       if (permissions.manageFacilities.includes(session.data.user.role)) {
-        if (facilities.length == 0) {
-          getOrgFacilities();
+        if (facilities.length > 0) {
+          setVisibleFacilities(facilities);
         }
       }
     }
-  }, [session.status]);
+  }, [session.status, facilities]);
 
   useEffect(() => {
     if (searchQuery == "") {
@@ -117,9 +119,14 @@ function Facilities() {
             )}
           </div>
           {loading == true ? (
-            <div className="flex items-center justify-center">
-              <Spinner />
-            </div>
+            <Progress
+              radius="none"
+              size="sm"
+              classNames={{
+                indicator: "bg-neutral-400 h-1",
+              }}
+              isIndeterminate
+            />
           ) : (
             <>
               {searchOpen && (

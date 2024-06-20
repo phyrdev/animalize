@@ -208,7 +208,7 @@ function CreateReport() {
       toast.dismiss();
 
       if (createReportReq.success) {
-        refreshOrgReports();
+        await refreshOrgReports();
         toast.loading("Sending invoice...");
         await sendInvoice(createReportReq.data.reportno);
         toast.remove();
