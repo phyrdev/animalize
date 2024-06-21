@@ -160,6 +160,10 @@ function Reports() {
                       break;
                     case "search-by-date":
                       setSearchCalendarOpen(!searchCalendarOpen);
+                      setSearchOpen(false);
+                      setSearchVialOpen(false);
+                      setSearchQuery("");
+                      setSearchVialQuery("");
                       break;
                     case "regresh-reports":
                       refreshOrgReports();

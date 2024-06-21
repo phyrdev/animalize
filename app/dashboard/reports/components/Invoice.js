@@ -160,6 +160,10 @@ function Invoice({
               <span>Print receipt</span>
             </Button>
             <Button
+              isDisabled={
+                report.parentEmail == null ||
+                report.parentEmail.trim().length == 0
+              }
               onClick={async () => {
                 toast.loading("Sending email");
                 await sendInvoice(report.reportno);
@@ -168,7 +172,7 @@ function Invoice({
               }}
               className="rounded bg-neutral-800 text-white"
             >
-              {firstInvoice ? "Send invoice" : "Resend invoice"}
+              {firstInvoice ? "Send invoice email" : "Resend invoice email"}
             </Button>
           </div>
           <div className="w-full h-[1px] bg-neutral-200 mt-16"></div>

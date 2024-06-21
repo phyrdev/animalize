@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
+import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import GlobalState from "@/context/GlobalState";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
@@ -123,91 +124,89 @@ function CollectSample({ params }) {
               </div>
 
               <div className="p-5 md:p-10">
-                <details id="auto-fill-dd">
+                <details id="patient-details">
                   <summary>
                     <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
-                      Patient information
+                      Patient details
                     </div>
                   </summary>
                   <div className="pt-5 md:pl-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl">
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Report no:</span>
-                        <span>{report.reportno}</span>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mt-8">
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Pet name:</span>
-                        <span>{report.petName}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Pet species:</span>
-                        <span>{capitalizeFirstLetter(report.petSpecies)}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Pet breed:</span>
-                        <span>{report.petBreed}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Pet sex:</span>
-                        <span>{capitalizeFirstLetter(report.petSex)}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Pet dob:</span>
-                        <span>
-                          {new Date(report.petDob).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    </div>
+                    <div className="max-w-3xl">
+                      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Report no"
+                          value={capitalizeFirstLetter(report.reportno)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Name"
+                          value={capitalizeFirstLetter(report.petName)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Species"
+                          value={capitalizeFirstLetter(report.petSpecies)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Breed"
+                          value={capitalizeFirstLetter(report.petBreed)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Sex"
+                          value={capitalizeFirstLetter(report.petSex)}
+                          readOnly
+                        />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mt-8">
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Parent name:</span>
-                        <span>{report.parentFirstName}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-neutral-600">Phone:</span>
-                        <span>{report.parentPhone}</span>
-                      </div>
-                    </div>
-
-                    {report.payment.paymentStatus === "pending" && (
-                      <div className="grid grid-cols-3 max-w-3xl mt-16 bg-red-50 p-3">
-                        <div className="flex items-center gap-3">
-                          <span className="text-neutral-600">
-                            Payment status:
+                        <CustomInput
+                          label="D.O.B"
+                          type="text"
+                          onChange={(e) => e.preventDefault()}
+                          value={
+                            report.petDob
+                              ? new Date(report.petDob).toDateString()
+                              : ""
+                          }
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Weight"
+                          value={report.petWeight}
+                          onChange={(e) => e.preventDefault()}
+                          endContent={
+                            <span className="text-neutral-500 text-sm">Kg</span>
+                          }
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Age"
+                          onChange={(e) => e.preventDefault()}
+                          value={
+                            report.petAge ||
+                            calculateAge(new Date(report.petDob))
+                          }
+                          readOnly
+                        />
+                        <div className="md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+                          <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
+                            Add. notes
                           </span>
-                          <span>
-                            {capitalizeFirstLetter(
-                              report.payment.paymentStatus
-                            )}
-                          </span>
+                          <textarea
+                            className="w-full h-full resize-none p-3 outline-none"
+                            placeholder="Residential address"
+                            value={report.additionalNotes}
+                            onChange={(e) => e.preventDefault()}
+                            name=""
+                            id=""
+                          ></textarea>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-neutral-600">Subtotal:</span>
-                          <span>
-                            {getCurrencySymbol(report.payment.currency)}
-                            {report.payment.subtotal}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-neutral-600">Paid amt:</span>
-                          <span>
-                            {getCurrencySymbol(report.payment.currency)}
-                            {report.payment.paidAmount}
-                          </span>
-                        </div>
                       </div>
-                    )}
-                    <div className="pb-6 h-14 flex items-center justify-end">
-                      <Button onClick={() => {}} className="rounded">
-                        Proceed
-                      </Button>
                     </div>
                   </div>
                 </details>

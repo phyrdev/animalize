@@ -125,16 +125,9 @@ function FinalReport({ params }) {
                                 </span>
                               </p>
                               <p>
-                                D.O.B:{" "}
+                                Age:{" "}
                                 <span className="text-black">
-                                  {new Date(report.petDob).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    }
-                                  )}
+                                  {report.petAge}
                                 </span>
                               </p>
                             </div>

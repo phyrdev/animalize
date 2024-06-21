@@ -4,6 +4,7 @@
 import CustomInput from "@/app/dashboard/components/CustomInput";
 import PermissionDenied from "@/app/dashboard/components/PermissionDenied";
 import GlobalState from "@/context/GlobalState";
+import { calculateAge } from "@/helper/age";
 import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
 import { feedResults, getReportById } from "@/prisma/report";
 import { testparameteruits } from "@/static/lists";
@@ -127,11 +128,21 @@ function FeedResults({ params }) {
 
                           <CustomInput
                             label="D.O.B"
-                            type="date"
+                            type="text"
+                            onChange={(e) => e.preventDefault()}
                             value={
-                              new Date(report.petDob)
-                                .toISOString()
-                                .split("T")[0]
+                              report.petDob
+                                ? new Date(report.petDob).toDateString()
+                                : ""
+                            }
+                            readOnly
+                          />
+                          <CustomInput
+                            label="Age"
+                            onChange={(e) => e.preventDefault()}
+                            value={
+                              report.petAge ||
+                              calculateAge(new Date(report.petDob))
                             }
                             readOnly
                           />
@@ -145,22 +156,19 @@ function FeedResults({ params }) {
                             }
                             readOnly
                           />
-                        </div>
-
-                        <div className="pb-6 h-14 flex items-center justify-end mt-8">
-                          <Button
-                            onClick={() => {
-                              document.getElementById(
-                                "patient-details"
-                              ).open = false;
-                              document.getElementById(
-                                "auto-fill-t1"
-                              ).open = true;
-                            }}
-                            className="rounded"
-                          >
-                            Proceed
-                          </Button>
+                          <div className="md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+                            <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
+                              Add. notes
+                            </span>
+                            <textarea
+                              className="w-full h-full resize-none p-3 outline-none"
+                              placeholder="Residential address"
+                              value={report.additionalNotes}
+                              onChange={(e) => e.preventDefault()}
+                              name=""
+                              id=""
+                            ></textarea>
+                          </div>
                         </div>
                       </div>
                     </div>

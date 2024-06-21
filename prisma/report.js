@@ -271,14 +271,16 @@ export const markSampleCollected = async (reportno, empno) => {
       },
     });
 
-    await sendMail(
-      report.parentEmail,
-      `Sample collected for Rept no: ${report.reportno}`,
-      generalUpdateTemplate(
-        report.reportno,
-        `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. To know the progress of your report, <a href=https://animalize.io/status/${reportno}>Click here</a>. You can also track the progress at  <br/><br/> Regards, <br/> Team Animalize`
-      )
-    );
+    if (report.parentEmail != null && report.parentEmail.trim().length != 0) {
+      await sendMail(
+        report.parentEmail,
+        `Sample collected for Rept no: ${report.reportno}`,
+        generalUpdateTemplate(
+          report.reportno,
+          `Your pet's sample for Reptno: ${reportno} has been collected successfully. We will keep you updated on the progress. To know the progress of your report, <a href=https://animalize.io/status/${reportno}>Click here</a>. You can also track the progress at  <br/><br/> Regards, <br/> Team Animalize`
+        )
+      );
+    }
 
     return {
       success: true,

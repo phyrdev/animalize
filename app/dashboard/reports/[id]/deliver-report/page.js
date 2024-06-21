@@ -19,6 +19,8 @@ import { sendMail } from "@/helper/mail";
 import { finalReportTemplate } from "@/templates/email";
 import Invoice from "../../components/Invoice";
 import GlobalState from "@/context/GlobalState";
+import { capitalizeFirstLetter, getCurrencySymbol } from "@/helper/refactor";
+import { calculateAge } from "@/helper/age";
 
 export const maxDuration = 30;
 
@@ -114,7 +116,7 @@ function DeliverReport({ params }) {
                     }}
                     className="ml-auto w-fit md:px-6 md:ml-auto h-10 rounded-md bg-neutral-800 text-white"
                   >
-                    Save changes
+                    Mark as delivered
                   </Button>
                 )}
               </div>
@@ -128,21 +130,27 @@ function DeliverReport({ params }) {
                   </summary>
                   <div className="pt-5 md:pl-5">
                     <div className="max-w-3xl">
-                      <div className="grid grid-cols-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <CustomInput
                           label="Email"
                           value={customEmail}
                           onChange={(e) => setCustomEmail(e.target.value)}
                           placeholder={"Recepient's email"}
                         />
-                        <Button
-                          onClick={async () => {
-                            sendReportToEmail(customEmail);
-                          }}
-                          className="h-full rounded-md w-fit ml-2"
-                        >
-                          Send report
-                        </Button>
+                        <div className="flex justify-end md:justify-start">
+                          <Button
+                            onClick={async () => {
+                              if (customEmail.trim().length > 0) {
+                                sendReportToEmail(customEmail.trim());
+                              } else {
+                                toast.error("Email canot be empty");
+                              }
+                            }}
+                            className="h-12 rounded-md w-fit"
+                          >
+                            Send report
+                          </Button>
+                        </div>
                       </div>
                       <div className="mt-8 flex flex-wrap gap-2">
                         <Button
@@ -189,6 +197,10 @@ function DeliverReport({ params }) {
                           <span>Print invoice</span>
                         </Button>
                         <Button
+                          isDisabled={
+                            report.parentEmail == null ||
+                            report.parentEmail.trim().length == 0
+                          }
                           onClick={async () => sendReportToEmail()}
                           className="rounded-md bg-transparent border w-fit"
                         >
@@ -210,30 +222,158 @@ function DeliverReport({ params }) {
                           <span>Send to parents email</span>
                         </Button>
                       </div>
-                      <div className="flex items-center gap-3 rounded-md w-fit mt-16">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width={28}
-                          height={28}
-                          viewBox="0 0 48 48"
-                        >
-                          <g
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinejoin="round"
-                            strokeWidth={4}
-                          >
-                            <path d="M41 14L24 4L7 14v20l17 10l17-10z"></path>
-                            <path
-                              strokeLinecap="round"
-                              d="M24 22v8m8-12v12m-16-4v4"
-                            ></path>
-                          </g>
-                        </svg>
-                        <p>
-                          On saving, this report will be marked as delivered to
-                          parent
-                        </p>
+                    </div>
+                  </div>
+                </details>
+
+                <details id="patient-details" className="mt-10">
+                  <summary>
+                    <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                      Patient details
+                    </div>
+                  </summary>
+                  <div className="pt-5 md:pl-5">
+                    <div className="max-w-3xl">
+                      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-2">
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Report no"
+                          value={capitalizeFirstLetter(report.reportno)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Name"
+                          value={capitalizeFirstLetter(report.petName)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Species"
+                          value={capitalizeFirstLetter(report.petSpecies)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Breed"
+                          value={capitalizeFirstLetter(report.petBreed)}
+                          readOnly
+                        />
+                        <CustomInput
+                          onChange={(e) => e.preventDefault()}
+                          label="Sex"
+                          value={capitalizeFirstLetter(report.petSex)}
+                          readOnly
+                        />
+
+                        <CustomInput
+                          label="D.O.B"
+                          type="text"
+                          onChange={(e) => e.preventDefault()}
+                          value={
+                            report.petDob
+                              ? new Date(report.petDob).toDateString()
+                              : ""
+                          }
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Weight"
+                          value={report.petWeight}
+                          onChange={(e) => e.preventDefault()}
+                          endContent={
+                            <span className="text-neutral-500 text-sm">Kg</span>
+                          }
+                          readOnly
+                        />
+                        <CustomInput
+                          label="Age"
+                          onChange={(e) => e.preventDefault()}
+                          value={
+                            report.petAge ||
+                            calculateAge(new Date(report.petDob))
+                          }
+                          readOnly
+                        />
+                        <div className="md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+                          <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
+                            Add. notes
+                          </span>
+                          <textarea
+                            className="w-full h-full resize-none p-3 outline-none"
+                            placeholder="Residential address"
+                            value={report.additionalNotes}
+                            onChange={(e) => e.preventDefault()}
+                            name=""
+                            id=""
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details id="parent-details-dd" className="mt-10">
+                  <summary>
+                    <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                      Parent details
+                    </div>
+                  </summary>
+                  <div className="pt-5 md:pl-5">
+                    <div className="max-w-3xl">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-2">
+                        <CustomInput
+                          value={report.parentFirstName}
+                          readOnly
+                          onChange={(e) => {
+                            e.preventDefault();
+                          }}
+                          label="First name"
+                          placeholder=""
+                        />
+                        <CustomInput
+                          value={report.parentLastName}
+                          readOnly
+                          onChange={(e) => {
+                            e.preventDefault();
+                          }}
+                          label="Last name"
+                          placeholder=""
+                        />
+                        <CustomInput
+                          value={report.parentEmail}
+                          onChange={(e) => e.preventDefault()}
+                          readOnly
+                          label="Email"
+                          placeholder=""
+                        />
+                        <CustomInput
+                          value={report.parentPhone}
+                          onChange={(e) => e.preventDefault()}
+                          readOnly
+                          label="Phone no."
+                          placeholder=""
+                        />
+                        <CustomInput
+                          value={report.parentZipcode}
+                          onChange={(e) => e.preventDefault()}
+                          readOnly
+                          label="Zipcode"
+                          placeholder=""
+                        />
+                        <div className="md:col-span-2 md:border w-full md:rounded flex h-20 overflow-hidden">
+                          <span className="h-full w-24 px-3 border-r bg-neutral-50 flex py-3 text-sm text-neutral-500 shrink-0">
+                            Address
+                          </span>
+                          <textarea
+                            className="w-full h-full resize-none p-3 outline-none"
+                            placeholder="Residential address"
+                            value={report.parentAddress}
+                            onChange={(e) => e.preventDefault()}
+                            readOnly
+                            name=""
+                            id=""
+                          ></textarea>
+                        </div>
                       </div>
                     </div>
                   </div>

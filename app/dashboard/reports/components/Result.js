@@ -53,6 +53,10 @@ function Result({ report, closeCallBack = () => {} }) {
             <span>Print result</span>
           </Button>
           <Button
+            isDisabled={
+              report.parentEmail == null ||
+              report.parentEmail.trim().length == 0
+            }
             onClick={async () => {
               toast.loading("Sending email...");
               try {
@@ -118,14 +122,7 @@ function Result({ report, closeCallBack = () => {} }) {
                         </span>
                       </p>
                       <p>
-                        D.O.B:{" "}
-                        <span className="text-black">
-                          {new Date(report.petDob).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </span>
+                        Age: <span className="text-black">{report.petAge}</span>
                       </p>
                     </div>
                     <div className="space-y-3 text-sm text-neutral-600">

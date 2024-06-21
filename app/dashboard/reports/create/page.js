@@ -189,7 +189,7 @@ function CreateReport() {
         parentPhone: pFile.parentPhone,
         parentZipcode: pFile.parentZipcode,
         petBreed: pFile.petBreed,
-        petDob: new Date(pFile.petDob).toISOString(),
+        petDob: pFile.petDob ? new Date(pFile.petDob).toISOString() : null,
         petAge: pFile.petAge,
         petId: pFile.petId,
         petName: pFile.petName,
@@ -220,9 +220,11 @@ function CreateReport() {
 
       if (createReportReq.success) {
         await refreshOrgReports();
-        toast.loading("Sending invoice...");
-        await sendInvoice(createReportReq.data.reportno);
-        toast.remove();
+        if (pFile.parentEmail.trim().length != 0) {
+          toast.loading("Sending invoice...");
+          await sendInvoice(createReportReq.data.reportno);
+          toast.remove();
+        }
         toast.success("Report created successfully");
         setCreatedReport(createReportReq.data);
       } else {
