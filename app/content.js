@@ -111,9 +111,12 @@ function Content({ children }) {
         ? "wss://test.mosquitto.org:8081"
         : "wss://test.mosquitto.org:8081";
 
+    let topic = `animalize/client-realtime-window/${session.data.user.orgno}`;
+    console.log("Connecting to MQTT broker", host, topic);
+
     let client_ = mqtt.connect(host);
     client_.on("connect", () => {
-      client_.subscribe(`animalize/client-realtime-window`, (err) => {
+      client_.subscribe(topic, (err) => {
         if (!err) {
           setMqttClient(client_);
           toast.success("Connected to server");
@@ -169,7 +172,7 @@ function Content({ children }) {
         {children}
         <audio id="audio" src="../static/notification.wav" muted></audio>
         {humanVerification == false && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-20">
             <div className="w-[400px] py-6 bg-white rounded-md flex flex-col items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
