@@ -29,7 +29,7 @@ function Settings() {
           <span className="text-xl font-semibold md:hidden">Review</span>
         </div>
         <div className="p-5 md:px-10">
-          <details id="account-details" open>
+          <details id="account-details">
             <summary>
               <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                 Your account
@@ -69,7 +69,7 @@ function Settings() {
               </div>
             </div>
           </details>
-          <details id="security-details" className="mt-10" open>
+          <details id="security-details" className="mt-10">
             <summary>
               <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                 Change password
@@ -97,7 +97,7 @@ function Settings() {
               </div>
             </div>
           </details>
-          <details id="signature-details" className="mt-10" open>
+          <details id="signature-details" className="mt-10">
             <summary>
               <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                 Digital signature

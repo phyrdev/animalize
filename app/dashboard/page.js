@@ -17,7 +17,7 @@ function Dashboard() {
     useState([]);
   const [readyToDeliver, setReadyToDeliver] = useState([]);
   const [needsAttention, setNeedsAttention] = useState([]);
-  const { payments, reports } = useContext(GlobalState);
+  const { payments, reports, issues } = useContext(GlobalState);
 
   useEffect(() => {
     setDate(
@@ -84,7 +84,7 @@ function Dashboard() {
             Personal suggestions
           </span>
 
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
             {pendingPayments.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
                 <h1 className="text-3xl font-semibold">
@@ -187,32 +187,39 @@ function Dashboard() {
           <span className="text-neutral-700 font-medium">Open issues</span>
 
           <div className="mt-6 md:mt-4 grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-3">
-            <div className="md:p-4 md:border border-b pb-5 md:rounded">
-              <h2 className="font-medium">Issue title</h2>
-              <p className="text-sm leading-7 md:leading-7 mt-2 text-neutral-600">
-                This is a demo issue. You can create a new issue by clicking the
-                button below.
-              </p>
-              <div className="flex items-center justify-between mt-3">
-                <button className="text-sm text-blue-500 font-medium">
-                  Respond
-                </button>
-                <span className="text-xs">2 June, 2024</span>
-              </div>
-            </div>
-            <div className="md:p-4 md:border border-b last:border-b-0 md:last:border pb-5 md:rounded">
-              <h2 className="font-medium">Issue title</h2>
-              <p className="text-sm leading-7 md:leading-7 mt-2 text-neutral-600">
-                This is a demo issue. You can create a new issue by clicking the
-                button below.
-              </p>
-              <div className="flex items-center justify-between mt-3">
-                <button className="text-sm text-blue-500 font-medium">
-                  Respond
-                </button>
-                <span className="text-xs">2 June, 2024</span>
-              </div>
-            </div>
+            {issues.length != 0
+              ? issues.map((issue, index) => {
+                  if (issue.status == "open") {
+                    return (
+                      <div
+                        key={index}
+                        className="md:p-4 md:border border-b pb-5 md:rounded flex flex-col"
+                      >
+                        <h2 className="font-medium">{issue.title}</h2>
+                        <p className="text-sm leading-7 md:leading-7 mt-2 text-neutral-600 line-clamp-2 mb-3">
+                          {issue.description}
+                        </p>
+                        <div className="flex items-center justify-between mt-auto">
+                          <button
+                            onClick={() => router.push(`/dashboard/issues`)}
+                            className="text-sm text-blue-500 font-medium"
+                          >
+                            Respond
+                          </button>
+                          <span className="text-xs">
+                            {new Date(issue.createdAt).toLocaleString("en-US", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+                })
+              : null}
           </div>
         </div>
       </div>
