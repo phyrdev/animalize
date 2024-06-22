@@ -1,12 +1,23 @@
 "use client";
+import GlobalState from "@/context/GlobalState";
 import { actionslist } from "@/static/lists";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 
 function Dashboard() {
   const session = useSession();
+  const router = useRouter();
   const [date, setDate] = useState("");
+  const [pendingPayments, setPendingPayments] = useState([]);
+  const [readyForSampleCollection, setReadyForSampleCollection] = useState([]);
+  const [readyForDiagnosis, setReadyForDiagnosis] = useState([]);
+  const [awaitingPathologistApproval, setAwaitingPathologistApproval] =
+    useState([]);
+  const [readyToDeliver, setReadyToDeliver] = useState([]);
+  const [needsAttention, setNeedsAttention] = useState([]);
+  const { payments, reports } = useContext(GlobalState);
 
   useEffect(() => {
     setDate(
@@ -18,6 +29,30 @@ function Dashboard() {
       })
     );
   }, []);
+
+  useEffect(() => {
+    if (payments.length != 0) {
+      let pending = payments.filter(
+        (payment) => payment.paymentStatus == "pending"
+      );
+      setPendingPayments(pending);
+    }
+  }, [payments]);
+
+  useEffect(() => {
+    if (reports.length != 0) {
+      let s200 = reports.filter((report) => report.status == "S200");
+      let s201 = reports.filter((report) => report.status == "S201");
+      let s202 = reports.filter((report) => report.status == "S202");
+      let s203 = reports.filter((report) => report.status == "S203");
+      let s204 = reports.filter((report) => report.status == "S204");
+      setReadyForSampleCollection(s200);
+      setReadyForDiagnosis(s201);
+      setAwaitingPathologistApproval(s202);
+      setReadyToDeliver(s203);
+      setNeedsAttention(s204);
+    }
+  }, [reports]);
 
   if (session.status == "authenticated") {
     return (
@@ -50,15 +85,102 @@ function Dashboard() {
           </span>
 
           <div className="mt-4 flex flex-wrap gap-3">
-            <div className="p-4 bg-neutral-100 rounded">
-              <h1 className="text-3xl font-semibold">2</h1>
-              <p className="mt-2 text-neutral-700 text-sm">
-                payments are still pending
-              </p>
-              <button className="text-sm text-blue-500 mt-3 font-medium">
-                Open payments
-              </button>
-            </div>
+            {pendingPayments.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {pendingPayments.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  payments are still pending
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/payments")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open payments
+                </button>
+              </div>
+            )}
+            {readyForSampleCollection.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {readyForSampleCollection.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  reports ready for sample collection
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/reports")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open reports
+                </button>
+              </div>
+            )}
+            {needsAttention.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {needsAttention.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  reports need attention
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/reports")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open reports
+                </button>
+              </div>
+            )}
+            {readyForDiagnosis.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {readyForDiagnosis.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  reports ready for feeding result
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/reports")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open reports
+                </button>
+              </div>
+            )}
+            {awaitingPathologistApproval.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {awaitingPathologistApproval.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  reports awaiting pathologist approval
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/reports")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open reports
+                </button>
+              </div>
+            )}
+            {readyToDeliver.length != 0 && (
+              <div className="p-4 bg-neutral-100 rounded">
+                <h1 className="text-3xl font-semibold">
+                  {readyToDeliver.length}
+                </h1>
+                <p className="mt-2 text-neutral-700 text-sm">
+                  reports ready for delivery
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/reports")}
+                  className="text-sm text-blue-500 mt-3 font-medium"
+                >
+                  Open reports
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-16">
