@@ -210,7 +210,7 @@ function Nav() {
 
   const BottomNav = () => {
     return (
-      <div className="w-full h-14 bg-neutral-100 fixed bg-fixed bottom-0 inset-x-0 md:hidden z-20">
+      <div className="w-full h-20 bg-neutral-100 fixed bg-fixed bottom-0 inset-x-0 md:hidden z-20">
         <div className="flex items-center justify-evenly h-full">
           {navmenuitems.map((item, index) => {
             if (item.visibleSm == false) return;
