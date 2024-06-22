@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import GlobalState from "@/context/GlobalState";
 import { actionslist } from "@/static/lists";
+import { permissions } from "@/static/permissions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,16 +43,26 @@ function Dashboard() {
 
   useEffect(() => {
     if (reports.length != 0) {
-      let s200 = reports.filter((report) => report.status == "S200");
-      let s201 = reports.filter((report) => report.status == "S201");
-      let s202 = reports.filter((report) => report.status == "S202");
-      let s203 = reports.filter((report) => report.status == "S203");
-      let s204 = reports.filter((report) => report.status == "S204");
-      setReadyForSampleCollection(s200);
-      setReadyForDiagnosis(s201);
-      setAwaitingPathologistApproval(s202);
-      setReadyToDeliver(s203);
-      setNeedsAttention(s204);
+      if (permissions.collectSamples.includes(session.data.user.role) == true) {
+        let s200 = reports.filter((report) => report.status == "S200");
+        setReadyForSampleCollection(s200);
+      }
+      if (permissions.feedResults.includes(session.data.user.role) == true) {
+        let s201 = reports.filter((report) => report.status == "S201");
+        setReadyForDiagnosis(s201);
+      }
+      if (permissions.reviewResults.includes(session.data.user.role) == true) {
+        let s202 = reports.filter((report) => report.status == "S202");
+        setAwaitingPathologistApproval(s202);
+      }
+      if (permissions.takeAction.includes(session.data.user.role) == true) {
+        let s204 = reports.filter((report) => report.status == "S204");
+        setNeedsAttention(s204);
+      }
+      if (permissions.createReport.includes(session.data.user.role) == true) {
+        let s203 = reports.filter((report) => report.status == "S203");
+        setReadyToDeliver(s203);
+      }
     }
   }, [reports]);
 
