@@ -35,7 +35,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-qr-code": "^2.0.14",
-    "react-signature-canvas": "^1.0.6",
+    "react-signature-canvas": "^1.0.3",
     "react-to-print": "^2.15.1"
   },
   "devDependencies": {

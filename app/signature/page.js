@@ -11,12 +11,9 @@ function Page() {
         <ReactSignatureCanvas
           ref={ref}
           penColor="black"
-          dotSize={1}
-          throttle={1}
-          minWidth={1}
-          maxWidth={1}
+          velocityFilterWeight={0.1}
           backgroundColor="white"
-          canvasProps={{ width: 300, height: 100, className: "sigCanvas" }}
+          canvasProps={{ width: 500, height: 300, className: "sigCanvas" }}
         />
       </div>
 

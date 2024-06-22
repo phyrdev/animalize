@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { Suspense } from "react";
 import Nav from "./components/Nav";
-import { useSession } from "next-auth/react";
-import { Spinner } from "@nextui-org/react";
+import { signOut, useSession } from "next-auth/react";
+import { Button, Progress, Spinner } from "@nextui-org/react";
 
 function Layout({ children }) {
   const session = useSession();
@@ -15,8 +16,23 @@ function Layout({ children }) {
 
       {(session.status == "loading" || session.status == "unauthenticated") && (
         <div className="fixed inset-0 z-20 bg-white h-full w-full flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center">
-            <Spinner />
+          <div className="w-fit h-fit flex flex-col items-center justify-center">
+            <Spinner color="current" />
+            <h1 className="text-lg font-medium mt-8">
+              Estabilishing secure connection
+            </h1>
+            <p className="mt-2 text-sm">This may take some time</p>
+            <div className="flex items-center justify-center text-sm mt-6 space-x-4">
+              <button
+                onClick={() => location.reload()}
+                className="bg-neutral-100 px-4 py-2 rounded-sm"
+              >
+                Refresh
+              </button>
+              <button onClick={() => signOut()} className="py-2">
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}
