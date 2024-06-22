@@ -99,7 +99,7 @@ function Dashboard() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
             {pendingPayments.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {pendingPayments.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
@@ -115,7 +115,7 @@ function Dashboard() {
             )}
             {readyForSampleCollection.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {readyForSampleCollection.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
@@ -131,7 +131,7 @@ function Dashboard() {
             )}
             {needsAttention.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {needsAttention.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
@@ -147,7 +147,7 @@ function Dashboard() {
             )}
             {readyForDiagnosis.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {readyForDiagnosis.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
@@ -163,7 +163,7 @@ function Dashboard() {
             )}
             {awaitingPathologistApproval.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {awaitingPathologistApproval.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
@@ -179,7 +179,7 @@ function Dashboard() {
             )}
             {readyToDeliver.length != 0 && (
               <div className="p-4 bg-neutral-100 rounded">
-                <h1 className="text-3xl font-semibold">
+                <h1 className="text-xl md:text-3xl font-semibold">
                   {readyToDeliver.length}
                 </h1>
                 <p className="mt-2 text-neutral-700 text-sm">
