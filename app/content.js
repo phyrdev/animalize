@@ -23,7 +23,7 @@ function Content({ children }) {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mqttClient, setMqttClient] = useState(null);
-  const [humanVerification, setHumanVerification] = useState(false);
+  const [topic, setTopic] = useState("null");
 
   const refreshOrgReports = async () => {
     setLoading(true);
@@ -111,23 +111,62 @@ function Content({ children }) {
       process.env.NODE_ENV === "development"
         ? "wss://test.mosquitto.org:8081"
         : "wss://test.mosquitto.org:8081";
+    let topic_ = `animalize/client-realtime-window/${session.data.user.orgno}`;
 
-    let topic = `animalize/client-realtime-window/${session.data.user.orgno}`;
-    console.log("Connecting to MQTT broker", host, topic);
+    console.log("Connecting to MQTT broker", host, topic_);
 
     let client_ = mqtt.connect(host);
     client_.on("connect", () => {
-      client_.subscribe(topic, (err) => {
+      client_.subscribe(topic_, (err) => {
         if (!err) {
           setMqttClient(client_);
+          setTopic(topic_);
           console.log("Connected to server");
+          // client_.publish(topic, null, { qos: 1, retain: true }); to clear retained messages
         }
       });
     });
 
     client_.on("message", (topic, message) => {
-      console.log("Received message", message.toString());
+      handleIncomingMessage(message);
     });
+  };
+
+  const publish = (message) => {
+    if (mqttClient) {
+      mqttClient.publish(topic, message, { qos: 1, retain: false });
+      // console.log("Published message", message);
+    } else {
+      toast.error("Server not connected");
+    }
+  };
+
+  const handleIncomingMessage = (message) => {
+    let data = JSON.parse(message.toString()) || message;
+    if (data.from == session.data.user.empno) {
+      return;
+    }
+
+    switch (data.command) {
+      case "refresh-reports":
+        refreshOrgReports();
+        break;
+      case "refresh-employees":
+        refreshOrgEmployees();
+        break;
+      case "refresh-facilities":
+        refreshOrgFacilities();
+        break;
+      case "refresh-payments":
+        refreshOrgPayments();
+        break;
+      case "refresh-issues":
+        refreshOrgIssues();
+        break;
+      default:
+        console.log("Unknown command", data.command);
+        break;
+    }
   };
 
   useEffect(() => {
@@ -136,12 +175,6 @@ function Content({ children }) {
       reconnectMQTT();
     }
   }, [session.status]);
-
-  useEffect(() => {
-    if (mqttClient) {
-      console.log("MQTT client connected");
-    }
-  }, [mqttClient]);
 
   return (
     <>
@@ -163,6 +196,7 @@ function Content({ children }) {
           setIssues,
           refreshOrgIssues,
           loading,
+          publish,
         }}
       >
         {children}

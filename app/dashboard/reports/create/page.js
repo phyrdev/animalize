@@ -84,7 +84,7 @@ function CreateReport() {
     additionalNotes: "",
   });
 
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish } = useContext(GlobalState);
 
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
@@ -227,6 +227,14 @@ function CreateReport() {
         }
         toast.success("Report created successfully");
         setCreatedReport(createReportReq.data);
+        publish(
+          JSON.stringify({
+            command: "refresh-reports",
+            orgno: session.data.user.orgno,
+            from: session.data.user.empno,
+            to: "all",
+          })
+        );
       } else {
         toast.error(createReportReq.message);
       }
