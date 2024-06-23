@@ -203,29 +203,50 @@ function FinalReport({ params }) {
                                           </span>
                                         </div>
                                         <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                          <span
-                                            style={{
-                                              color: getParamColor(param),
-                                            }}
-                                            className="text-sm"
-                                          >
-                                            {param.value || ""}
-                                          </span>
+                                          {param.unit == "boolean" ? (
+                                            <span
+                                              style={{
+                                                color: param.value
+                                                  .toLowerCase()
+                                                  .includes("positive")
+                                                  ? "red"
+                                                  : "blue",
+                                              }}
+                                              className="text-sm"
+                                            >
+                                              {param.value || ""}
+                                            </span>
+                                          ) : (
+                                            <span
+                                              style={{
+                                                color: getParamColor(param),
+                                              }}
+                                              className="text-sm"
+                                            >
+                                              {param.value || ""}
+                                            </span>
+                                          )}
                                         </div>
                                         <div className="text-neutral-700 h-9 px-3 flex items-center">
                                           <span className="text-sm">
-                                            {param.unit}
+                                            {param.unit == "boolean"
+                                              ? ""
+                                              : param.unit}
                                           </span>
                                         </div>
                                         <div className="text-neutral-700 grid grid-cols-2">
                                           <div className="h-9 px-3 flex items-center">
                                             <span className="text-sm">
-                                              {param.low}
+                                              {param.unit == "boolean"
+                                                ? ""
+                                                : param.low}
                                             </span>
                                           </div>
                                           <div className="h-9 px-3 flex items-center">
                                             <span className="text-sm">
-                                              {param.high}
+                                              {param.unit == "boolean"
+                                                ? ""
+                                                : param.high}
                                             </span>
                                           </div>
                                         </div>
