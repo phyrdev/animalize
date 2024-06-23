@@ -302,14 +302,29 @@ function Review({ params }) {
                                         </span>
                                       </div>
                                       <div className="text-neutral-700 h-12 px-3 flex items-center">
-                                        <span
-                                          style={{
-                                            color: getParamColor(param),
-                                          }}
-                                          className="text-base"
-                                        >
-                                          {param.value || ""}
-                                        </span>
+                                        {param.unit == "boolean" ? (
+                                          <span
+                                            style={{
+                                              color: param.value
+                                                .toLowerCase()
+                                                .includes("positive")
+                                                ? "red"
+                                                : "blue",
+                                            }}
+                                            className="text-sm"
+                                          >
+                                            {param.value || ""}
+                                          </span>
+                                        ) : (
+                                          <span
+                                            style={{
+                                              color: getParamColor(param),
+                                            }}
+                                            className="text-sm"
+                                          >
+                                            {param.value || ""}
+                                          </span>
+                                        )}
                                       </div>
                                       <div className="text-neutral-700 h-12 px-3 flex items-center">
                                         <span className="text-base">
@@ -319,12 +334,16 @@ function Review({ params }) {
                                       <div className="text-neutral-700 grid grid-cols-2 divide-x">
                                         <div className="h-12 px-3 flex items-center">
                                           <span className="text-base">
-                                            {param.low}
+                                            {param.unit == "boolean"
+                                              ? ""
+                                              : param.low}
                                           </span>
                                         </div>
                                         <div className="h-12 px-3 flex items-center">
                                           <span className="text-base">
-                                            {param.high}
+                                            {param.unit == "boolean"
+                                              ? ""
+                                              : param.high}
                                           </span>
                                         </div>
                                       </div>
@@ -356,20 +375,37 @@ function Review({ params }) {
                                       <div className="text-neutral-700 col-span-2 h-14 px-3 flex items-center">
                                         <div className="text-sm flex flex-wrap gap-1">
                                           <span>{param.name}</span>&nbsp;
-                                          <div className="text-xs text-neutral-500 mt-1">
-                                            {param.low} - {param.high}
-                                          </div>
+                                          {param.unit != "boolean" && (
+                                            <div className="text-xs text-neutral-500 mt-1">
+                                              {param.low} - {param.high}
+                                            </div>
+                                          )}
                                         </div>
                                       </div>
-                                      <div className="text-neutral-700 h-12 px-3 flex items-center">
-                                        <span
-                                          style={{
-                                            color: getParamColor(param),
-                                          }}
-                                          className="text-base"
-                                        >
-                                          {param.value || ""}
-                                        </span>
+                                      <div className="text-neutral-700 h-14 px-3 flex items-center">
+                                        {param.unit == "boolean" ? (
+                                          <span
+                                            style={{
+                                              color: param.value
+                                                .toLowerCase()
+                                                .includes("positive")
+                                                ? "red"
+                                                : "blue",
+                                            }}
+                                            className="text-sm"
+                                          >
+                                            {param.value || ""}
+                                          </span>
+                                        ) : (
+                                          <span
+                                            style={{
+                                              color: getParamColor(param),
+                                            }}
+                                            className="text-sm"
+                                          >
+                                            {param.value || ""}
+                                          </span>
+                                        )}
                                       </div>
                                       <div className="text-neutral-700 text-sm h-14 px-3 flex items-center">
                                         <span>{param.unit}</span>

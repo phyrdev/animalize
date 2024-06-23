@@ -184,25 +184,46 @@ function Result({ report, closeCallBack = () => {} }) {
                                   <span className="text-sm">{param.name}</span>
                                 </div>
                                 <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                  <span
-                                    style={{
-                                      color: getParamColor(param),
-                                    }}
-                                    className="text-sm"
-                                  >
-                                    {param.value || ""}
-                                  </span>
+                                  {param.unit == "boolean" ? (
+                                    <span
+                                      style={{
+                                        color: param.value
+                                          .toLowerCase()
+                                          .includes("positive")
+                                          ? "red"
+                                          : "blue",
+                                      }}
+                                      className="text-sm"
+                                    >
+                                      {param.value || ""}
+                                    </span>
+                                  ) : (
+                                    <span
+                                      style={{
+                                        color: getParamColor(param),
+                                      }}
+                                      className="text-sm"
+                                    >
+                                      {param.value || ""}
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                  <span className="text-sm">{param.unit}</span>
+                                  <span className="text-sm">
+                                    {param.unit == "boolean" ? "" : param.unit}
+                                  </span>
                                 </div>
                                 <div className="text-neutral-700 grid grid-cols-2">
                                   <div className="h-9 px-3 flex items-center">
-                                    <span className="text-sm">{param.low}</span>
+                                    <span className="text-sm">
+                                      {param.unit == "boolean" ? "" : param.low}
+                                    </span>
                                   </div>
                                   <div className="h-9 px-3 flex items-center">
                                     <span className="text-sm">
-                                      {param.high}
+                                      {param.unit == "boolean"
+                                        ? ""
+                                        : param.high}
                                     </span>
                                   </div>
                                 </div>
@@ -236,7 +257,7 @@ function Result({ report, closeCallBack = () => {} }) {
                   <div className="mt-10 flex flex-wrap gap-24">
                     <div>
                       <img
-                        className="w-[200px] h-[80px]"
+                        className="w-[150px] h-[80px]"
                         src={report.reviewedBy?.signature || ""}
                         alt=""
                       />
@@ -250,7 +271,7 @@ function Result({ report, closeCallBack = () => {} }) {
                         </span>
                       </div>
                       <p className="mt-2 text-neutral-600 text-sm">
-                        Reviewed on:
+                        Dated on:
                         <span className="text-black ml-2">
                           {new Date(report.reviewedAt).toLocaleDateString(
                             "en-US",
@@ -268,13 +289,26 @@ function Result({ report, closeCallBack = () => {} }) {
                     </div>
                     <div>
                       <img
-                        className="w-[200px] h-[80px]"
+                        className="w-[150px] h-[80px]"
                         src={report.resultsFedBy?.signature || ""}
                         alt=""
                       />
                       <div className="flex items-center">
                         <span>{report.resultsFedBy?.name}</span>
                       </div>
+                      <p className="mt-2 text-neutral-600 text-sm">
+                        Dated on:
+                        <span className="text-black ml-2">
+                          {new Date(report.resultsFedAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </span>
+                      </p>
                       <p className="text-sm text-neutral-600 mt-2">
                         Lab technician
                       </p>
