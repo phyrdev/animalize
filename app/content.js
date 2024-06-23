@@ -174,6 +174,7 @@ function Content({ children }) {
     switch (data.command) {
       case "refresh-reports":
         refreshOrgReports();
+        refreshOrgPayments();
         break;
       case "refresh-employees":
         refreshOrgEmployees();
