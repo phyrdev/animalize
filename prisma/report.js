@@ -7,7 +7,6 @@ import {
   caseCreatedTemplate,
   finalReportTemplate,
   generalUpdateTemplate,
-  minimizedInvoiceTemplate,
 } from "@/templates/email";
 import axios from "axios";
 
