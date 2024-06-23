@@ -104,6 +104,15 @@ function Review({ params }) {
     let { success, message } = await failReport(report.reportno, failMessage);
     toast.remove();
     if (success) {
+      await refreshOrgReports();
+      publish(
+        JSON.stringify({
+          command: "refresh-reports",
+          orgno: session.data.user.orgno,
+          from: clientId,
+          to: "all",
+        })
+      );
       toast.success("Report applied for retest successfully.");
       router.push("/dashboard/reports");
     } else {
