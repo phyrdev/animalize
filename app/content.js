@@ -14,6 +14,7 @@ import mqtt from "mqtt";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import randomString from "randomstring";
 
 function Content({ children }) {
   const session = useSession();
@@ -26,6 +27,7 @@ function Content({ children }) {
   const [loading, setLoading] = useState(false);
   const [mqttClient, setMqttClient] = useState(null);
   const [topic, setTopic] = useState("null");
+  const [clientId, setClientId] = useState("");
 
   const refreshOrg = async () => {
     setLoading(true);
@@ -128,15 +130,21 @@ function Content({ children }) {
         ? "wss://test.mosquitto.org:8081"
         : "wss://test.mosquitto.org:8081";
     let topic_ = `animalize/client-realtime-window/${session.data.user.orgno}`;
+    let clientId_ = randomString.generate({
+      length: 10,
+      charset: "alphanumeric",
+    });
 
     console.log("Connecting to MQTT broker", host, topic_);
 
     let client_ = mqtt.connect(host);
+
     client_.on("connect", () => {
       client_.subscribe(topic_, (err) => {
         if (!err) {
           setMqttClient(client_);
           setTopic(topic_);
+          setClientId(clientId_);
           console.log("Connected to server");
           // client_.publish(topic, null, { qos: 1, retain: true }); to clear retained messages
         }
@@ -151,7 +159,6 @@ function Content({ children }) {
   const publish = (message) => {
     if (mqttClient) {
       mqttClient.publish(topic, message, { qos: 1, retain: false });
-      // console.log("Published message", message);
     } else {
       toast.error("Server not connected");
     }
@@ -159,7 +166,8 @@ function Content({ children }) {
 
   const handleIncomingMessage = (message) => {
     let data = JSON.parse(message.toString()) || message;
-    if (data.from == session.data.user.empno) {
+
+    if (data.from == clientId) {
       return;
     }
 
@@ -213,6 +221,7 @@ function Content({ children }) {
           refreshOrgIssues,
           loading,
           publish,
+          clientId,
           organization,
           refreshOrg,
         }}

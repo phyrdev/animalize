@@ -19,7 +19,8 @@ function Dashboard() {
     useState([]);
   const [readyToDeliver, setReadyToDeliver] = useState([]);
   const [needsAttention, setNeedsAttention] = useState([]);
-  const { payments, reports, issues, publish } = useContext(GlobalState);
+  const { payments, reports, issues, publish, clientId } =
+    useContext(GlobalState);
 
   useEffect(() => {
     setDate(
@@ -80,7 +81,7 @@ function Dashboard() {
                 JSON.stringify({
                   command: "refresh-reports",
                   orgno: session.data.user.orgno,
-                  from: session.data.user.empno,
+                  from: clientId,
                   to: "all",
                 })
               )
