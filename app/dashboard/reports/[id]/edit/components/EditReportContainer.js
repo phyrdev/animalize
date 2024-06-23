@@ -401,7 +401,7 @@ function EditReportContainer({ report }) {
                 Fallback operation
               </div>
             </summary>
-            <div className="pt-5 md:pl-5 grid grid-cols-2">
+            <div className="pt-5 md:pl-5 grid grid-cols-1 md:grid-cols-2">
               <CustomSelect
                 label="Status"
                 value={pFile.status}
