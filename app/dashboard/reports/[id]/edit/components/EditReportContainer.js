@@ -4,7 +4,12 @@ import CustomSelect from "@/app/dashboard/components/CustomSelect";
 import GlobalState from "@/context/GlobalState";
 import { getCurrencySymbol } from "@/helper/refactor";
 import { updateReport } from "@/prisma/report";
-import { paymentmodes, paymentstatus } from "@/static/lists";
+import {
+  paymentmodes,
+  paymentstatus,
+  reportstatus,
+  reportstatuslist,
+} from "@/static/lists";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -52,6 +57,7 @@ function EditReportContainer({ report }) {
         tests: pFile.tests,
         empno: pFile.empno,
         orgno: pFile.orgno,
+        status: pFile.status,
       };
 
       let billingSpecifics = {
@@ -99,10 +105,6 @@ function EditReportContainer({ report }) {
   const performChecks = () => {
     if (pFile.parentFirstName == "") {
       toast.error("Please enter parent's first name");
-      return false;
-    }
-    if (pFile.parentEmail == "") {
-      toast.error("Please enter parent's email");
       return false;
     }
     if (pFile.parentPhone == "") {
@@ -160,7 +162,7 @@ function EditReportContainer({ report }) {
         </div>
 
         <div className="md:px-10 px-5 mt-5 max-w-4xl">
-          <details id="parent-details-dd" className="mt-8" open>
+          <details id="parent-details-dd" className="mt-8">
             <summary>
               <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                 Parent details
@@ -249,7 +251,7 @@ function EditReportContainer({ report }) {
               </div>
             </div>
           </details>
-          <details id="billing-details-dd" className="mt-8" open>
+          <details id="billing-details-dd" className="mt-8">
             <summary>
               <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
                 Billing details
@@ -383,6 +385,21 @@ function EditReportContainer({ report }) {
                   ""
                 )}
               </div>
+            </div>
+          </details>
+          <details id="fallback-details-dd" className="mt-8">
+            <summary>
+              <div className="inline-flex pl-2 font-medium text-base cursor-pointer select-none">
+                Fallback operation
+              </div>
+            </summary>
+            <div className="pt-5 md:pl-5 grid grid-cols-2">
+              <CustomSelect
+                label="Status"
+                value={pFile.status}
+                onChange={(e) => setPFile({ ...pFile, status: e.target.value })}
+                options={reportstatuslist}
+              />
             </div>
           </details>
         </div>

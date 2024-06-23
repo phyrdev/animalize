@@ -502,3 +502,30 @@ export const reportstatus = {
     target: "deliver-report",
   },
 };
+
+export const reportstatuslist = [
+  {
+    label: "Ready for sample collection",
+    value: "S200",
+  },
+  {
+    label: "Ready for diagnosis",
+    value: "S201",
+  },
+  {
+    label: "Ready for review",
+    value: "S202",
+  },
+  {
+    label: "Ready for delivery",
+    value: "S203",
+  },
+  {
+    label: "Needs retesting",
+    value: "S204",
+  },
+  {
+    label: "Delivered successfully",
+    value: "S205",
+  },
+];
