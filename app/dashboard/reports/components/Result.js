@@ -20,6 +20,7 @@ function Result({ report, closeCallBack = () => {} }) {
     content: () => componentRef.current,
     documentTitle: `Report-${report.reportno}`,
   });
+
   const getParamColor = (param) => {
     if (parseFloat(param.value) > parseFloat(param.high)) {
       return "red";
@@ -190,55 +191,65 @@ function Result({ report, closeCallBack = () => {} }) {
                         <div className="">
                           {test.parameters.map((param, j) => {
                             return (
-                              <div key={j} className="grid grid-cols-4">
-                                <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                  <span className="text-sm">{param.name}</span>
-                                </div>
-                                <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                  {param.unit == "boolean" ? (
-                                    <span
-                                      style={{
-                                        color: param.value
-                                          .toLowerCase()
-                                          .includes("positive")
-                                          ? "red"
-                                          : "blue",
-                                      }}
-                                      className="text-sm"
-                                    >
-                                      {param.value || ""}
-                                    </span>
-                                  ) : (
-                                    <span
-                                      style={{
-                                        color: getParamColor(param),
-                                      }}
-                                      className="text-sm"
-                                    >
-                                      {param.value || ""}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-neutral-700 h-9 px-3 flex items-center">
-                                  <span className="text-sm">
-                                    {param.unit == "boolean" ? "" : param.unit}
-                                  </span>
-                                </div>
-                                <div className="text-neutral-700 grid grid-cols-2">
-                                  <div className="h-9 px-3 flex items-center">
+                              <>
+                                <div key={j} className="grid grid-cols-4">
+                                  <div className="text-neutral-700 h-9 px-3 flex items-center">
                                     <span className="text-sm">
-                                      {param.unit == "boolean" ? "" : param.low}
+                                      {param.name}
                                     </span>
                                   </div>
-                                  <div className="h-9 px-3 flex items-center">
+                                  <div className="text-neutral-700 h-9 px-3 flex items-center">
+                                    {param.unit == "boolean" ? (
+                                      <span
+                                        style={{
+                                          color: param.value
+                                            .toLowerCase()
+                                            .includes("positive")
+                                            ? "red"
+                                            : "blue",
+                                        }}
+                                        className="text-sm"
+                                      >
+                                        {param.value || ""}
+                                      </span>
+                                    ) : (
+                                      <span
+                                        style={{
+                                          color: getParamColor(param),
+                                        }}
+                                        className="text-sm"
+                                      >
+                                        {param.value || ""}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-neutral-700 h-9 px-3 flex items-center">
                                     <span className="text-sm">
                                       {param.unit == "boolean"
                                         ? ""
-                                        : param.high}
+                                        : param.unit}
                                     </span>
                                   </div>
+                                  <div className="text-neutral-700 grid grid-cols-2">
+                                    <div className="h-9 px-3 flex items-center">
+                                      <span className="text-sm">
+                                        {param.unit == "boolean"
+                                          ? ""
+                                          : param.low}
+                                      </span>
+                                    </div>
+                                    <div className="h-9 px-3 flex items-center">
+                                      <span className="text-sm">
+                                        {param.unit == "boolean"
+                                          ? ""
+                                          : param.high}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
+
+                                {j == 10 && <footer></footer>}
+                              </>
                             );
                           })}
                         </div>
