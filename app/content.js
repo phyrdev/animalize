@@ -5,6 +5,7 @@ import GlobalState from "@/context/GlobalState";
 import { getEmployees } from "@/prisma/employee";
 import { getFacilities } from "@/prisma/facility";
 import { getIssues } from "@/prisma/issue";
+import { getOrganization } from "@/prisma/organization";
 import { getOrgPayments } from "@/prisma/payments";
 import { getOrgReports } from "@/prisma/report";
 import { permissions } from "@/static/permissions";
@@ -16,6 +17,7 @@ import toast from "react-hot-toast";
 
 function Content({ children }) {
   const session = useSession();
+  const [organization, setOrganization] = useState({});
   const [reports, setReports] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -24,6 +26,19 @@ function Content({ children }) {
   const [loading, setLoading] = useState(false);
   const [mqttClient, setMqttClient] = useState(null);
   const [topic, setTopic] = useState("null");
+
+  const refreshOrg = async () => {
+    setLoading(true);
+    let { success, data, message } = await getOrganization(
+      session.data.user.orgno
+    );
+    if (success) {
+      setOrganization(data);
+    } else {
+      setOrganization({});
+    }
+    setLoading(false);
+  };
 
   const refreshOrgReports = async () => {
     setLoading(true);
@@ -94,6 +109,7 @@ function Content({ children }) {
   };
 
   const loadOrgData = async () => {
+    await refreshOrg();
     await refreshOrgReports();
     await refreshOrgEmployees();
     await refreshOrgFacilities();
@@ -197,6 +213,8 @@ function Content({ children }) {
           refreshOrgIssues,
           loading,
           publish,
+          organization,
+          refreshOrg,
         }}
       >
         {children}

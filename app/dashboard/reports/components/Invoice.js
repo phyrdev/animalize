@@ -181,7 +181,7 @@ function Invoice({
               ref={componentRef}
               className="p-10 leading-8 relative w-[896px]"
             >
-              <img src="/explogo.svg" className="w-32" alt="" />
+              <h1 className="text-3xl">{report.organization.name}</h1>
               <div className="text-neutral-600 text-sm flex mt-6">
                 <span className="font-medium text-neutral-700">Report no:</span>
                 <span className="ml-2">{report.reportno}</span>
@@ -293,10 +293,15 @@ function Invoice({
                 )}
               </div>
 
-              <div className="mt-16">
-                <h1 className="text-lg">Thank You</h1>
-                <p className="text-sm text-neutral-600 mt-2">
-                  We are commited to care
+              <div className="mt-16 flex items-end justify-between">
+                <div>
+                  <h1 className="text-lg">Thank You</h1>
+                  <p className="text-sm text-neutral-600 mt-2">
+                    We are commited to care
+                  </p>
+                </div>
+                <p className="text-xs text-neutral-600">
+                  Powered by animalize.io
                 </p>
               </div>
             </div>

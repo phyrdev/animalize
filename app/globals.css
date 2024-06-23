@@ -11,8 +11,3 @@
     page-break-after: always;
   }
 }
-
-@page {
-  size: auto;
-  margin-bottom: 20mm;
-}

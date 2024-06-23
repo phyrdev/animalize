@@ -118,3 +118,44 @@ export const getOrganization = async (orgno) => {
     };
   }
 };
+
+export const updateOrganization = async (orgno, data) => {
+  try {
+    let org = await prisma.organization.update({
+      where: {
+        orgno: orgno,
+      },
+      data: {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        zipcode: data.zipcode,
+        type: data.type,
+        size: data.size,
+        address: data.address,
+        currency: data.currency,
+        printMarginTop: data.printMarginTop,
+        printMarginBottom: data.printMarginBottom,
+        printMarginLeft: data.printMarginLeft,
+        printMarginRight: data.printMarginRight,
+      },
+    });
+    if (org) {
+      return {
+        success: true,
+        message: "Organization updated successfully",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Failed to update organization",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};

@@ -14,25 +14,30 @@ datasource db {
 }
 
 model Organization {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String
-  phone        String
-  zipcode      String
-  logo         String?
-  orgno        String        @unique
-  type         String
-  size         String
-  currency     String
-  verified     Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  employees    Employee[]
-  facilities   Facility[]
-  issues       Issue[]
-  payments     Payment[]
-  reports      Report[]
-  vials        Vial[]
-  observations Observation[]
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String
+  phone             String
+  zipcode           String
+  logo              String?
+  orgno             String        @unique
+  type              String
+  size              String
+  currency          String
+  verified          Boolean       @default(false)
+  createdAt         DateTime      @default(now())
+  printMarginTop    String?
+  printMarginBottom String?
+  printMarginLeft   String?
+  printMarginRight  String?
+  address           String?
+  employees         Employee[]
+  facilities        Facility[]
+  issues            Issue[]
+  payments          Payment[]
+  reports           Report[]
+  vials             Vial[]
+  observations      Observation[]
 }
 
 model Employee {

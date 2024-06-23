@@ -2,17 +2,19 @@
 
 "use client";
 
+import GlobalState from "@/context/GlobalState";
 import { sendMail } from "@/helper/mail";
 import { capitalizeFirstLetter } from "@/helper/refactor";
 import { sendReport } from "@/prisma/report";
 import { finalReportTemplate } from "@/templates/email";
 import { Button } from "@nextui-org/react";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
 function Result({ report, closeCallBack = () => {} }) {
+  const { organization } = useContext(GlobalState);
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -28,8 +30,17 @@ function Result({ report, closeCallBack = () => {} }) {
     }
   };
 
+  const getPageMargins = () => {
+    return `@page { margin: ${organization.printMarginTop || 0}mm ${
+      organization.printMarginRight || 0
+    }mm ${organization.printMarginBottom || 0}mm ${
+      organization.printMarginLeft || 0
+    }mm !important; }`;
+  };
+
   return (
     <div className="fixed inset-0 h-full w-full bg-black/50 flex md:justify-center pt-10 pb-10 z-20 overflow-y-auto">
+      <style>{getPageMargins()}</style>
       <div className="w-fit bg-white pb-10 h-fit">
         <div className="flex items-center p-5">
           <Button onClick={handlePrint} className="rounded bg-neutral-100">
