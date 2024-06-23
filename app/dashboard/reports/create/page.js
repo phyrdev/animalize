@@ -84,7 +84,7 @@ function CreateReport() {
     additionalNotes: "",
   });
 
-  const { refreshOrgReports, publish } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const closeAllDetails = () => {
     document.getElementById("auto-fill-dd").open = false;
@@ -231,7 +231,7 @@ function CreateReport() {
           JSON.stringify({
             command: "refresh-reports",
             orgno: session.data.user.orgno,
-            from: session.data.user.empno,
+            from: clientId,
             to: "all",
           })
         );

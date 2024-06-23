@@ -33,7 +33,7 @@ function DeliverReport({ params }) {
   const [showReport, setShowReport] = useState(false);
   const [showInvoice, setShowInvoice] = useState(false);
   const [customEmail, setCustomEmail] = useState("");
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -59,6 +59,14 @@ function DeliverReport({ params }) {
     toast.dismiss();
     if (success) {
       await refreshOrgReports();
+      publish(
+        JSON.stringify({
+          command: "refresh-reports",
+          orgno: session.data.user.orgno,
+          from: clientId,
+          to: "all",
+        })
+      );
       toast.success(message);
       router.push("/dashboard/reports");
     } else {

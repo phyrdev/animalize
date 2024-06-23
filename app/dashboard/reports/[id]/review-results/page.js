@@ -35,7 +35,7 @@ function Review({ params }) {
   const [retestOpen, setRetestOpen] = useState(false);
   const [addSigntureOpen, setAddSigntureOpen] = useState(false);
   const [failStatement, setFailStatement] = useState("");
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -75,6 +75,14 @@ function Review({ params }) {
       toast.remove();
       if (success) {
         await refreshOrgReports();
+        publish(
+          JSON.stringify({
+            command: "refresh-reports",
+            orgno: session.data.user.orgno,
+            from: clientId,
+            to: "all",
+          })
+        );
         toast.success("Report approved successfully.");
         router.push("/dashboard/reports");
       } else {

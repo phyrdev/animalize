@@ -74,21 +74,6 @@ function Dashboard() {
           <span className="text-xl font-semibold">Home</span>
           <span className="text-sm text-neutral-400">|</span>
           <span className="text-sm text-neutral-600">{date.toString()}</span>
-
-          <button
-            onClick={() =>
-              publish(
-                JSON.stringify({
-                  command: "refresh-reports",
-                  orgno: session.data.user.orgno,
-                  from: clientId,
-                  to: "all",
-                })
-              )
-            }
-          >
-            push to reresh
-          </button>
         </div>
         <div className="mt-10">
           <span className="text-neutral-700 font-medium">Actions</span>

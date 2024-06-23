@@ -25,7 +25,7 @@ function EditReportContainer({ report }) {
   const session = useSession();
   const router = useRouter();
   const params = useSearchParams();
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const closeAllDetails = () => {
     document.getElementById("parent-details-dd").open = false;
@@ -81,6 +81,14 @@ function EditReportContainer({ report }) {
       if (createReportReq.success) {
         toast.success(createReportReq.message);
         await refreshOrgReports();
+        publish(
+          JSON.stringify({
+            command: "refresh-reports",
+            orgno: session.data.user.orgno,
+            from: clientId,
+            to: "all",
+          })
+        );
 
         if (params.get("redirect")) {
           switch (params.get("redirect")) {

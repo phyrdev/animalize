@@ -30,7 +30,7 @@ function CollectSample({ params }) {
   const [loading, setLoading] = useState(true);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -434,6 +434,14 @@ function CollectSample({ params }) {
                           if (success) {
                             toast.success(message);
                             await refreshOrgReports();
+                            publish(
+                              JSON.stringify({
+                                command: "refresh-reports",
+                                orgno: session.data.user.orgno,
+                                from: clientId,
+                                to: "all",
+                              })
+                            );
                             router.push("/dashboard/reports");
                             router.refresh();
                           } else {

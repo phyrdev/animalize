@@ -32,7 +32,7 @@ function TakeAction({ params }) {
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const [invalidState, setInvalidState] = useState(false);
   const [status, setStatus] = useState("S200");
-  const { refreshOrgReports } = useContext(GlobalState);
+  const { refreshOrgReports, publish, clientId } = useContext(GlobalState);
 
   const getReport = async () => {
     let { success, data, message } = await getReportById(params.id);
@@ -95,6 +95,14 @@ function TakeAction({ params }) {
       default:
         break;
     }
+    publish(
+      JSON.stringify({
+        command: "refresh-reports",
+        orgno: session.data.user.orgno,
+        from: clientId,
+        to: "all",
+      })
+    );
   };
 
   const getParamColor = (param) => {

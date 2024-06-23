@@ -212,7 +212,7 @@ function Facilities() {
                           facility={facility}
                           key={index}
                           index={index}
-                          deleteCallback={() => getOrgFacilities()}
+                          deleteCallback={() => refreshOrgFacilities()}
                         />
                       );
                     })}
@@ -231,7 +231,7 @@ function Facilities() {
                         facility={facility}
                         key={index}
                         index={index}
-                        deleteCallback={() => getOrgFacilities()}
+                        deleteCallback={() => refreshOrgFacilities()}
                       />
                     );
                   })}
