@@ -155,12 +155,14 @@ function Result({ report, closeCallBack = () => {} }) {
                     </div>
                     <div className="space-y-3 text-sm text-neutral-600">
                       <span className="text-black block font-medium">
-                        Lenus Vet labs
+                        {report.organization.name}
                       </span>
                       <span className="text-black block">
-                        lenuslabs@gmail.com
+                        {report.organization.email}
                       </span>
-                      <span className="text-black block">7735592041</span>
+                      <span className="text-black block">
+                        {report.organization.phone}
+                      </span>
                     </div>
                   </div>
                   <div className="border mt-8">
